@@ -3277,6 +3277,20 @@ const PROJECTS = [
     link: "https://www.gov.br/antaq/pt-br/assuntos/leiloes"
   },
   {
+    id: 1177,
+    name: "Maceió — MAC11A (Terminal Origem Energia)",
+    type: "Terminal", region: "Nordeste", state: "AL",
+    lat: -9.666, lng: -35.735,
+    status: "Em Operação",
+    companies: ["Origem Energia"],
+    fuel: "Combustíveis · Petróleo · Granéis Líquidos",
+    capacity: "—",
+    investment: "R$ 46,4 mi",
+    description: "Terminal de granéis líquidos da Origem Energia no Porto de Maceió (AL), arrematado em leilão portuário. Ainda não opera em capacidade plena: sem operações de mistura de combustíveis nem abastecimento rodoviário.",
+    year: "Em operação parcial",
+    flag: "🇧🇷"
+  },
+  {
     id: 1164,
     name: "Rio Grande - TUP Projeto Natureza (CMPC)",
     type: "Terminal", region: "Sul", state: "RS",
