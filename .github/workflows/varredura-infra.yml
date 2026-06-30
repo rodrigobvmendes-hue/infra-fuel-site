@@ -1,0 +1,39 @@
+name: Varredura Infra Combustíveis
+
+on:
+  schedule:
+    # 10:00 UTC = 07:00 BRT, toda segunda-feira
+    - cron: "0 10 * * 1"
+  workflow_dispatch: {}   # permite disparo manual para teste
+
+permissions:
+  contents: write          # necessário para commitar o JSON de volta
+
+jobs:
+  varredura:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Rodar varredura
+        env:
+          CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+        run: node scripts/varredura-infra.cjs
+
+      - name: Commitar arquivo de revisão
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dados_brutos/*.json
+          if git diff --staged --quiet; then
+            echo "Nenhum arquivo novo para commitar."
+          else
+            git commit -m "Varredura infra $(date -u +%Y-%m-%d)"
+            git push
+          fi

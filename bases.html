@@ -659,8 +659,8 @@
 
   <!-- Scripts -->
   <script src="bases-data.js"></script>
+  <script src="terminals-data.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
   <script>
     console.log('Página de Bases carregando...');
     console.log('BASES:', typeof BASES, BASES ? BASES.length : 'undefined');
@@ -1040,37 +1040,15 @@
       ));
     }
 
-    async function loadTerminalsFromWorkbook() {
-      if (!window.XLSX) {
-        console.warn('SheetJS não carregado; terminais não serão exibidos.');
+    function loadTerminalsFromWorkbook() {
+      if (typeof TERMINALS === 'undefined' || !TERMINALS.length) {
+        console.warn('terminals-data.js não carregado.');
         return;
       }
-
-      try {
-        const response = await fetch('arquivos_apoio/ANP%20Dados%20-%20Bases%20e%20Terminais.xlsx');
-        const buffer = await response.arrayBuffer();
-        const workbook = XLSX.read(buffer, { type: 'array' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(worksheet, { range: 3, defval: '' });
-
-        terminals = rows
-          .filter(row => normalizeText(row.Segmento) === 'TERMINAL')
-          .map((row, index) => ({
-            id: 2000 + index,
-            name: String(row.NomeEmpresarial || '').trim(),
-            municipality: String(row.Municipio || '').trim(),
-            state: String(row.Uf || '').trim(),
-            terminalType: String(row.DetalheInstalacao || '').trim(),
-            tankCount: row['Nº de Tanques'] || null,
-            capacity: formatCapacityInThousands(row['Tancagem Total (m³)']),
-          }));
-
-        terminalsLoaded = true;
-        updateFilterOptions();
-        render();
-      } catch (error) {
-        console.error('Erro ao carregar terminais do Excel:', error);
-      }
+      terminals = TERMINALS;
+      terminalsLoaded = true;
+      updateFilterOptions();
+      render();
     }
 
     function initMap() {
