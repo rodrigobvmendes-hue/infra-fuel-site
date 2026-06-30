@@ -1,0 +1,16 @@
+relationship Rel_Empresa_InstalacoesANP
+	fromColumn: Fato_Instalacoes_ANP.Empresa_Normalizada
+	toColumn: Dim_Empresa.Empresa_Normalizada
+
+relationship Rel_Empresa_BasesAutorizadas
+	fromColumn: Fato_Bases_Autorizadas.Empresa_Normalizada
+	toColumn: Dim_Empresa.Empresa_Normalizada
+
+relationship Rel_Localizacao_InstalacoesANP
+	fromColumn: Fato_Instalacoes_ANP.Localizacao_Key
+	toColumn: Dim_Localizacao.Localizacao_Key
+
+relationship Rel_Localizacao_BasesAutorizadas
+	fromColumn: Fato_Bases_Autorizadas.Localizacao_Key
+	toColumn: Dim_Localizacao.Localizacao_Key
+

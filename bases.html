@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bases de Distribuição · InfraFuel</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root {
+      --color-primary: #E61E2D;
+      --color-secondary: #1B3A5F;
+      --color-gray: #6b7280;
+    }
+    
+    .bases-header {
+      background: linear-gradient(135deg, #1B3A5F 0%, #E61E2D 100%);
+      color: white;
+      padding: 3rem 0;
+      text-align: center;
+    }
+    
+    .bases-header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    
+    .bases-header p {
+      margin: 0.5rem 0 0;
+      opacity: 0.95;
+      font-size: 1.1rem;
+    }
+    
+    .bases-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--color-primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .stat-card .number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    #stat-capacity {
+      font-size: 1.55rem;
+      line-height: 1.15;
+      word-break: normal;
+      overflow-wrap: anywhere;
+    }
+    
+    .stat-card .label {
+      font-size: 0.85rem;
+      color: var(--color-gray);
+      margin-top: 0.5rem;
+    }
+    
+    .content-wrapper {
+      display: block;
+      margin-bottom: 2rem;
+    }
+    
+    .filters-panel {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1200;
+      overflow: visible;
+      margin-bottom: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: end;
+    }
+    
+    .filters-panel h3 {
+      margin-top: 0;
+      margin-bottom: 0.2rem;
+      color: #1f2937;
+      font-size: 0.95rem;
+      width: 100%;
+    }
+    
+    .filter-group {
+      margin-bottom: 0;
+      flex: 1 1 150px;
+      min-width: 140px;
+    }
+    
+    .filter-group label {
+      display: block;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.35rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    
+    .filter-group select,
+    .filter-group input {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-family: inherit;
+    }
+
+    .filter-group small {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.66rem;
+      color: #6b7280;
+    }
+
+    .filter-group--wide {
+      flex: 1.35 1 220px;
+    }
+
+    .check-dropdown {
+      position: relative;
+    }
+
+    .check-dropdown-summary {
+      list-style: none;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: #ffffff;
+      padding: 0.5rem 0.6rem;
+      font-size: 0.8rem;
+      color: #111827;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      user-select: none;
+    }
+
+    .check-dropdown-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .check-dropdown-summary::after {
+      content: '▾';
+      float: right;
+      color: #6b7280;
+    }
+
+    .check-dropdown[open] .check-dropdown-summary {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+    }
+
+    .check-dropdown-menu {
+      position: absolute;
+      z-index: 4000;
+      top: calc(100% + 0.3rem);
+      left: 0;
+      right: 0;
+      max-height: 220px;
+      overflow: auto;
+      background: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 0.45rem;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+    }
+
+    .check-option {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.25rem 0.15rem;
+      font-size: 0.78rem;
+      color: #111827;
+      cursor: pointer;
+    }
+
+    .check-option input {
+      width: auto;
+      margin: 0;
+    }
+    
+    .filter-group select:focus,
+    .filter-group input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+    }
+    
+    .btn-reset {
+      width: auto;
+      min-width: 140px;
+      padding: 0.55rem 0.9rem;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.78rem;
+      transition: background 0.2s;
+    }
+    
+    .btn-reset:hover {
+      background: var(--color-secondary);
+    }
+    
+    .map-section {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+    
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+    
+    .map-info {
+      padding: 1rem;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      font-size: 0.9rem;
+      color: var(--color-gray);
+    }
+    
+    .results-section {
+      margin-top: 2rem;
+    }
+    
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0 0.5rem;
+    }
+    
+    .results-header h2 {
+      margin: 0;
+      font-size: 1.3rem;
+      color: #1f2937;
+    }
+    
+    .results-count {
+      font-size: 0.9rem;
+      color: var(--color-gray);
+    }
+    
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+    
+    .result-card {
+      background: white;
+      padding: 0.9rem;
+      border-radius: 6px;
+      border-left: 3px solid var(--color-primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    
+    .result-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    
+    .result-name {
+      font-weight: 600;
+      color: #1f2937;
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.2;
+    }
+    
+    .result-meta {
+      font-size: 0.75rem;
+      color: var(--color-gray);
+      margin: 0.2rem 0;
+      line-height: 1.3;
+    }
+    
+    .result-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      background: #eef2ff;
+      color: #3730a3;
+      border: 1px solid #c7d2fe;
+      border-radius: 3px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      margin-right: 0.35rem;
+      margin-top: 0.4rem;
+    }
+
+    .result-badge--regional {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fecaca;
+    }
+
+    .result-badge--major {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #86efac;
+    }
+
+    .result-badge--concmerc {
+      background: #ffedd5;
+      color: #9a3412;
+      border-color: #fdba74;
+    }
+
+    .result-badge--ale {
+      background: #dbeafe;
+      color: #1e3a8a;
+      border-color: #93c5fd;
+    }
+
+    .result-badge--terminal {
+      background: #fef9c3;
+      color: #854d0e;
+      border-color: #fde047;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--color-gray);
+    }
+    
+    .legend {
+      padding: 1rem;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      font-size: 0.85rem;
+      border: 1px solid #e5e7eb;
+      margin-top: 0.9rem;
+    }
+
+    .legend strong {
+      color: #0f172a;
+      font-weight: 700;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .legend--horizontal .legend-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+    }
+
+    .legend--horizontal .legend-item {
+      margin-bottom: 0;
+      font-size: 0.78rem;
+    }
+    
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+    
+    @media (max-width: 1024px) {
+      .filters-panel {
+        position: static;
+        margin-bottom: 1rem;
+      }
+      
+      #map {
+        height: 400px;
+      }
+      
+      .results-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .bases-header {
+        padding: 2rem 0;
+      }
+      
+      .bases-header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+      
+      .stat-card {
+        padding: 1rem;
+      }
+      
+      .stat-card .number {
+        font-size: 1.5rem;
+      }
+      
+      .stat-card .label {
+        font-size: 0.75rem;
+      }
+      
+      #map {
+        height: 300px;
+      }
+      
+      .results-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.5rem;
+      }
+      
+      .result-card {
+        padding: 0.7rem;
+      }
+      
+      .result-name {
+        font-size: 0.75rem;
+      }
+      
+      .result-meta {
+        font-size: 0.65rem;
+      }
+      
+      .result-badge {
+        font-size: 0.6rem;
+        padding: 0.15rem 0.4rem;
+      }
+
+      .check-dropdown-menu {
+        position: fixed;
+        left: 1rem;
+        right: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-icon">⛽</span>
+        <div>
+          <span class="brand-title">InfraFuel</span>
+          <span class="brand-sub">Projetos de Infraestrutura</span>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="index.html">Projetos</a>
+        <a href="bases.html" style="border-bottom: 3px solid #E61E2D;">📦 Bases</a>
+        <a href="index.html#mapa">Mapa</a>
+        <a href="index.html#sobre">Sobre</a>
+        <a href="index.html#fontes">Fontes</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="bases-header">
+    <div class="bases-container">
+      <h1>📦 Bases de Distribuição</h1>
+      <p>472 bases de combustível registradas na ANP</p>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="bases-container">
+    
+    <!-- Stats -->
+    <div class="stats-grid" id="stats">
+      <div class="stat-card">
+        <div class="number" id="stat-total">—</div>
+        <div class="label">Total de Bases</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="stat-pool">—</div>
+        <div class="label">Bases Pool</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="stat-propria">—</div>
+        <div class="label">Bases Próprias</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="stat-terminal">—</div>
+        <div class="label">Terminais</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="stat-capacity">—</div>
+        <div class="label">Capacidade</div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+      
+      <!-- Filters -->
+      <div class="filters-panel">
+        <h3>🔍 Filtros</h3>
+        
+        <div class="filter-group">
+          <label>Classificação</label>
+          <details id="filter-class" class="check-dropdown">
+            <summary id="filter-class-summary" class="check-dropdown-summary">TODAS</summary>
+            <div id="filter-class-menu" class="check-dropdown-menu">
+              <label class="check-option"><input type="checkbox" value="__ALL__" checked> TODAS</label>
+              <label class="check-option"><input type="checkbox" value="REGIONAL"> REGIONAL</label>
+              <label class="check-option"><input type="checkbox" value="MAJOR"> MAJOR</label>
+              <label class="check-option"><input type="checkbox" value="CONC MERC"> CONC MERC</label>
+              <label class="check-option"><input type="checkbox" value="ALE"> ALE</label>
+            </div>
+          </details>
+        </div>
+        
+        <div class="filter-group">
+          <label>Tipo</label>
+          <details id="filter-type" class="check-dropdown">
+            <summary id="filter-type-summary" class="check-dropdown-summary">TODOS</summary>
+            <div id="filter-type-menu" class="check-dropdown-menu">
+              <label class="check-option"><input type="checkbox" value="__ALL__" checked> TODOS</label>
+              <label class="check-option"><input type="checkbox" value="BASE POOL"> BASE POOL</label>
+              <label class="check-option"><input type="checkbox" value="BASE PRÓPRIA"> BASE PRÓPRIA</label>
+              <label class="check-option"><input type="checkbox" value="TERMINAL"> TERMINAL</label>
+            </div>
+          </details>
+        </div>
+
+        <div class="filter-group filter-group--wide">
+          <label>Região</label>
+          <details id="filter-region" class="check-dropdown">
+            <summary id="filter-region-summary" class="check-dropdown-summary">TODAS</summary>
+            <div id="filter-region-menu" class="check-dropdown-menu">
+              <label class="check-option"><input type="checkbox" value="__ALL__" checked> TODAS</label>
+              <label class="check-option"><input type="checkbox" value="NO"> 🗺️ Norte (NO)</label>
+              <label class="check-option"><input type="checkbox" value="NNE"> 🗺️ Nordeste (NNE)</label>
+              <label class="check-option"><input type="checkbox" value="CO"> 🗺️ Centro-Oeste (CO)</label>
+              <label class="check-option"><input type="checkbox" value="SSE"> 🗺️ Sudeste (SSE)</label>
+              <label class="check-option"><input type="checkbox" value="SU"> 🗺️ Sul (SU)</label>
+            </div>
+          </details>
+          <small>Lista suspensa com seleção múltipla</small>
+        </div>
+
+        <div class="filter-group filter-group--wide">
+          <label>UF</label>
+          <details id="filter-state" class="check-dropdown">
+            <summary id="filter-state-summary" class="check-dropdown-summary">TODAS</summary>
+            <div id="filter-state-menu" class="check-dropdown-menu">
+              <label class="check-option"><input type="checkbox" value="__ALL__" checked> TODAS</label>
+            </div>
+          </details>
+          <small>Lista suspensa com seleção múltipla</small>
+        </div>
+        
+        <div class="filter-group">
+          <label>Tamanho</label>
+          <details id="filter-size" class="check-dropdown">
+            <summary id="filter-size-summary" class="check-dropdown-summary">TODOS</summary>
+            <div id="filter-size-menu" class="check-dropdown-menu">
+              <label class="check-option"><input type="checkbox" value="__ALL__" checked> TODOS</label>
+              <label class="check-option"><input type="checkbox" value="Pequena"> 🔹 Pequena (≤3.000 m³)</label>
+              <label class="check-option"><input type="checkbox" value="Média"> 🟡 Média (3.000-10.000 m³)</label>
+              <label class="check-option"><input type="checkbox" value="Grande"> 🟠 Grande (>10.000 m³)</label>
+            </div>
+          </details>
+        </div>
+        
+        <div class="filter-group">
+          <label>Buscar</label>
+          <input type="text" id="search" onkeyup="render()" placeholder="Nome, município...">
+        </div>
+        
+        <button class="btn-reset" onclick="resetFilters()">Limpar Filtros</button>
+        
+      </div>
+      
+      <!-- Map -->
+      <div class="map-section">
+        <div id="map"></div>
+        <div class="map-info" id="map-info">Carregando mapa...</div>
+      </div>
+
+      <div class="legend legend--horizontal">
+        <strong style="font-size: 0.86rem; display: block; margin-bottom: 0.65rem;">Legenda</strong>
+        <div class="legend-items">
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #DC2626;"></div>
+            <span>REGIONAL</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #16A34A;"></div>
+            <span>MAJOR</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #F97316;"></div>
+            <span>CONC MERC</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #0B2A6F;"></div>
+            <span>ALE</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #FACC15;"></div>
+            <span>TERMINAIS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <div class="results-header">
+        <h2>📋 Resultados</h2>
+        <div class="results-count"><span id="result-count">—</span> item(ns)</div>
+      </div>
+      <div class="results-grid" id="results">
+        <div class="loading">Carregando dados...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="bases-data.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+  <script>
+    console.log('Página de Bases carregando...');
+    console.log('BASES:', typeof BASES, BASES ? BASES.length : 'undefined');
+
+    let map = null;
+    let markers = [];
+    let terminalMarkers = [];
+    let terminals = [];
+    let terminalsLoaded = false;
+    const TYPE_TERMINAL = 'TERMINAL';
+    const MULTI_ALL_VALUE = '__ALL__';
+    const REGION_CODE_BY_STATE = {
+      AC: 'NO', AM: 'NO', AP: 'NO', PA: 'NO', RO: 'NO', RR: 'NO', TO: 'NO',
+      AL: 'NNE', BA: 'NNE', CE: 'NNE', MA: 'NNE', PB: 'NNE', PE: 'NNE', PI: 'NNE', RN: 'NNE', SE: 'NNE',
+      DF: 'CO', GO: 'CO', MT: 'CO', MS: 'CO',
+      PR: 'SU', SC: 'SU', RS: 'SU',
+      ES: 'SSE', MG: 'SSE', RJ: 'SSE', SP: 'SSE',
+    };
+
+    const TERMINAL_COORDINATE_OVERRIDES = new Map([
+      ['PETROBRAS TRANSPORTE S.A - TRANSPETRO|COARI|AM', [-3.9448047, -63.1619943]],
+      ['TERMINAIS FLUVIAIS DO BRASIL S/A|ITACOATIARA|AM', [-3.1513406, -58.4333156]],
+      ['PETROBRAS TRANSPORTE S.A - TRANSPETRO|MADRE DE DEUS|BA', [-12.7386642, -38.6010872]],
+      ['CATTALINI TERMINAIS MARITIMOS S.A.|PARANAGUA|PR', [-25.5086031, -48.5327938]],
+    ]);
+
+    function normalizeText(value) {
+      return String(value || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toUpperCase()
+        .trim();
+    }
+
+    function formatCapacityInThousands(valueInCubicMeters) {
+      const parsed = Number(valueInCubicMeters);
+      if (!Number.isFinite(parsed)) return 'Não informado';
+      return `${Math.round(parsed / 1000).toLocaleString('pt-BR')} mil m³`;
+    }
+
+    function formatAggregatedCapacity(valueInCubicMeters) {
+      return `${Math.round(valueInCubicMeters / 1000).toLocaleString('pt-BR')} mil m³`;
+    }
+
+    function buildCoordinateIndex() {
+      const municipalityCoords = new Map();
+      const stateCoords = new Map();
+
+      BASES.forEach(base => {
+        const municipalityKey = `${normalizeText(base.municipality)}|${normalizeText(base.state)}`;
+        const stateKey = normalizeText(base.state);
+
+        if (!municipalityCoords.has(municipalityKey)) {
+          municipalityCoords.set(municipalityKey, [base.lat, base.lng]);
+        }
+
+        if (!stateCoords.has(stateKey)) {
+          stateCoords.set(stateKey, [base.lat, base.lng]);
+        }
+      });
+
+      return { municipalityCoords, stateCoords };
+    }
+
+    const coordinateIndex = buildCoordinateIndex();
+
+    function getDeterministicJitter(seed, spread) {
+      let hash = 0;
+      for (let index = 0; index < seed.length; index += 1) {
+        hash = ((hash << 5) - hash) + seed.charCodeAt(index);
+        hash |= 0;
+      }
+
+      const angle = Math.abs(hash % 360) * (Math.PI / 180);
+      const radius = ((Math.abs(hash) % 1000) / 1000) * spread;
+      return [Math.sin(angle) * radius, Math.cos(angle) * radius];
+    }
+
+    function getTerminalCoordinates(terminal) {
+      const overrideKey = `${normalizeText(terminal.name)}|${normalizeText(terminal.municipality)}|${normalizeText(terminal.state)}`;
+      const override = TERMINAL_COORDINATE_OVERRIDES.get(overrideKey);
+      if (override) return override;
+
+      const municipalityKey = `${normalizeText(terminal.municipality)}|${normalizeText(terminal.state)}`;
+      const stateKey = normalizeText(terminal.state);
+      const exact = coordinateIndex.municipalityCoords.get(municipalityKey);
+      const fallback = coordinateIndex.stateCoords.get(stateKey) || [-14.5, -52];
+      const [lat, lng] = exact || fallback;
+      const spread = exact ? 0.11 : 0.26;
+      const [latOffset, lngOffset] = getDeterministicJitter(`${terminal.name}|${terminal.municipality}|${terminal.state}`, spread);
+      return [lat + latOffset, lng + lngOffset];
+    }
+
+    function getBaseCoordinates(base) {
+      const municipalityKey = `${normalizeText(base.municipality)}|${normalizeText(base.state)}`;
+      const exact = coordinateIndex.municipalityCoords.get(municipalityKey);
+      const [lat, lng] = exact || [base.lat, base.lng];
+      const [latOffset, lngOffset] = getDeterministicJitter(
+        `${base.id}|${base.name}|${base.municipality}|${base.state}|${base.baseType}`,
+        0.11
+      );
+
+      return [lat + latOffset, lng + lngOffset];
+    }
+
+    function getRegionCodeFromState(state) {
+      const uf = String(state || '').toUpperCase().trim();
+      return REGION_CODE_BY_STATE[uf] || '';
+    }
+
+    function getSelectedValues(filterId) {
+      const menu = document.getElementById(`${filterId}-menu`);
+      if (!menu) return [];
+
+      const checked = Array.from(menu.querySelectorAll('input[type="checkbox"]:checked')).map(input => input.value);
+      return checked.includes(MULTI_ALL_VALUE)
+        ? []
+        : checked.filter(value => value !== MULTI_ALL_VALUE);
+    }
+
+    function setAllSelection(filterId) {
+      const menu = document.getElementById(`${filterId}-menu`);
+      if (!menu) return;
+      const allInput = menu.querySelector(`input[value="${MULTI_ALL_VALUE}"]`);
+      menu.querySelectorAll('input[type="checkbox"]').forEach(input => {
+        input.checked = false;
+      });
+      if (allInput) allInput.checked = true;
+      normalizeAllSelection(filterId);
+    }
+
+    function updateDropdownSummary(filterId) {
+      const summary = document.getElementById(`${filterId}-summary`);
+      const values = getSelectedValues(filterId);
+      if (!summary) return;
+
+      const allLabel = (filterId === 'filter-type' || filterId === 'filter-size') ? 'TODOS' : 'TODAS';
+
+      if (values.length === 0) {
+        summary.textContent = allLabel;
+        return;
+      }
+
+      if (values.length <= 2) {
+        summary.textContent = values.join(', ');
+        return;
+      }
+
+      summary.textContent = `${values.length} selecionadas`;
+    }
+
+    function initMultiSelectDropdownFilters() {
+      ['filter-class', 'filter-type', 'filter-size', 'filter-region', 'filter-state'].forEach(filterId => {
+        normalizeAllSelection(filterId);
+        updateDropdownSummary(filterId);
+      });
+    }
+
+    function initSingleDropdownFilters() {
+      ['filter-class', 'filter-type', 'filter-size'].forEach(filterId => {
+        normalizeAllSelection(filterId);
+      });
+    }
+
+    function normalizeAllSelection(filterId, clickedValue = null) {
+      const menu = document.getElementById(`${filterId}-menu`);
+      if (!menu) return;
+
+      const checkboxes = Array.from(menu.querySelectorAll('input[type="checkbox"]'));
+      const allCheckbox = checkboxes.find(input => input.value === MULTI_ALL_VALUE);
+      if (!allCheckbox) return;
+
+      if (clickedValue === MULTI_ALL_VALUE) {
+        checkboxes.forEach(input => { input.checked = input.value === MULTI_ALL_VALUE; });
+      } else if (clickedValue !== null) {
+        allCheckbox.checked = false;
+        if (checkboxes.filter(input => input.checked).length === 0) allCheckbox.checked = true;
+      } else {
+        if (checkboxes.filter(input => input.checked).length === 0) allCheckbox.checked = true;
+      }
+
+      updateDropdownSummary(filterId);
+    }
+
+    function filteredExcluding(excludeKey) {
+      const search = document.getElementById('search')?.value?.toLowerCase() || '';
+      const classifications = getSelectedValues('filter-class');
+      const types = getSelectedValues('filter-type').filter(t => t !== TYPE_TERMINAL);
+      const sizes = getSelectedValues('filter-size');
+      const regions = getSelectedValues('filter-region');
+      const states = getSelectedValues('filter-state');
+
+      return BASES.filter(b => {
+        const effectiveClassification = getEffectiveClassification(b);
+        const matchSearch = !search ||
+          b.name.toLowerCase().includes(search) ||
+          (b.municipality || '').toLowerCase().includes(search) ||
+          (b.companies && b.companies[0] && b.companies[0].toLowerCase().includes(search));
+
+        const matchClass  = excludeKey === 'filter-class'  || classifications.length === 0 || classifications.includes(effectiveClassification);
+        const matchType   = excludeKey === 'filter-type'   || types.length === 0           || types.includes(b.baseType);
+        const matchSize   = excludeKey === 'filter-size'   || sizes.length === 0           || sizes.includes(b.sizeCategory);
+        const matchRegion = excludeKey === 'filter-region' || regions.length === 0         || regions.includes(getRegionCodeFromState(b.state));
+        const matchState  = excludeKey === 'filter-state'  || states.length === 0          || states.includes(String(b.state || '').toUpperCase().trim());
+
+        return matchSearch && matchClass && matchType && matchSize && matchRegion && matchState;
+      });
+    }
+
+    function rebuildCheckDropdown(filterId, allLabel, entries) {
+      const menu = document.getElementById(`${filterId}-menu`);
+      if (!menu) return;
+
+      const prevSelected = new Set(getSelectedValues(filterId));
+
+      menu.innerHTML = [
+        `<label class="check-option"><input type="checkbox" value="${MULTI_ALL_VALUE}"> ${allLabel}</label>`,
+        ...entries.map(e => `<label class="check-option"><input type="checkbox" value="${e.value}"> ${e.label}</label>`)
+      ].join('');
+
+      let restoredCount = 0;
+      Array.from(menu.querySelectorAll('input[type="checkbox"]')).forEach(input => {
+        if (input.value !== MULTI_ALL_VALUE && prevSelected.has(input.value)) {
+          input.checked = true;
+          restoredCount += 1;
+        }
+      });
+
+      if (restoredCount === 0) {
+        const allCheckbox = menu.querySelector(`input[value="${MULTI_ALL_VALUE}"]`);
+        if (allCheckbox) allCheckbox.checked = true;
+      }
+
+      updateDropdownSummary(filterId);
+    }
+
+    function updateFilterOptions() {
+      const SIZE_EMOJI = { 'Pequena': '🔹', 'Média': '🟡', 'Grande': '🟠' };
+      const REGION_ORDER = [
+        { value: 'NO',  label: '🗺️ Norte (NO)' },
+        { value: 'NNE', label: '🗺️ Nordeste (NNE)' },
+        { value: 'CO',  label: '🗺️ Centro-Oeste (CO)' },
+        { value: 'SSE', label: '🗺️ Sudeste (SSE)' },
+        { value: 'SU',  label: '🗺️ Sul (SU)' },
+      ];
+
+      const classPool  = filteredExcluding('filter-class');
+      const availClass = new Set(classPool.map(b => getEffectiveClassification(b)));
+      rebuildCheckDropdown('filter-class', 'TODAS',
+        ['REGIONAL', 'MAJOR', 'CONC MERC', 'ALE'].filter(c => availClass.has(c)).map(c => ({ value: c, label: c }))
+      );
+
+      const typePool   = filteredExcluding('filter-type');
+      const availTypes = new Set(typePool.map(b => b.baseType));
+      if (getTerminalsMatchingFiltersExcludingType().length > 0) availTypes.add(TYPE_TERMINAL);
+      rebuildCheckDropdown('filter-type', 'TODOS',
+        ['BASE POOL', 'BASE PRÓPRIA', 'TERMINAL'].filter(t => availTypes.has(t)).map(t => ({ value: t, label: t }))
+      );
+
+      const sizePool   = filteredExcluding('filter-size');
+      const availSizes = new Set(sizePool.map(b => b.sizeCategory).filter(Boolean));
+      rebuildCheckDropdown('filter-size', 'TODOS',
+        ['Pequena', 'Média', 'Grande'].filter(s => availSizes.has(s)).map(s => ({ value: s, label: `${SIZE_EMOJI[s] || ''} ${s}` }))
+      );
+
+      const regionPool   = filteredExcluding('filter-region');
+      const availRegions = new Set(regionPool.map(b => getRegionCodeFromState(b.state)).filter(Boolean));
+      terminals.forEach(t => { const rc = getRegionCodeFromState(t.state); if (rc) availRegions.add(rc); });
+      rebuildCheckDropdown('filter-region', 'TODAS',
+        REGION_ORDER.filter(r => availRegions.has(r.value))
+      );
+
+      const statePool   = filteredExcluding('filter-state');
+      const availStates = new Set(statePool.map(b => String(b.state || '').toUpperCase().trim()).filter(Boolean));
+      terminals.forEach(t => { const uf = String(t.state || '').toUpperCase().trim(); if (uf) availStates.add(uf); });
+
+      const selectedRegions = getSelectedValues('filter-region');
+      const allUfs = Array.from(new Set(BASES.map(b => String(b.state || '').toUpperCase().trim()).filter(Boolean)))
+        .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      const scopedUfs = selectedRegions.length === 0
+        ? allUfs
+        : allUfs.filter(uf => selectedRegions.includes(getRegionCodeFromState(uf)));
+      rebuildCheckDropdown('filter-state', 'TODAS',
+        scopedUfs.filter(uf => availStates.has(uf)).map(uf => ({ value: uf, label: uf }))
+      );
+
+      syncFilterState();
+    }
+
+    function initDropdownFilters() {
+      const classMenu = document.getElementById('filter-class-menu');
+      const typeMenu = document.getElementById('filter-type-menu');
+      const sizeMenu = document.getElementById('filter-size-menu');
+      const regionMenu = document.getElementById('filter-region-menu');
+      const stateMenu = document.getElementById('filter-state-menu');
+
+      if (classMenu) {
+        classMenu.addEventListener('change', (e) => {
+          normalizeAllSelection('filter-class', e.target.value);
+          updateFilterOptions();
+          render();
+        });
+      }
+      if (typeMenu) {
+        typeMenu.addEventListener('change', (e) => {
+          normalizeAllSelection('filter-type', e.target.value);
+          updateFilterOptions();
+          render();
+        });
+      }
+      if (sizeMenu) {
+        sizeMenu.addEventListener('change', (e) => {
+          normalizeAllSelection('filter-size', e.target.value);
+          updateFilterOptions();
+          render();
+        });
+      }
+
+      if (regionMenu) {
+        regionMenu.addEventListener('change', (e) => {
+          normalizeAllSelection('filter-region', e.target.value);
+          updateFilterOptions();
+          render();
+        });
+      }
+      if (stateMenu) {
+        stateMenu.addEventListener('change', (e) => {
+          normalizeAllSelection('filter-state', e.target.value);
+          updateFilterOptions();
+          render();
+        });
+      }
+    }
+
+    function getTerminalsMatchingFiltersExcludingType() {
+      if (!terminalsLoaded) return [];
+
+      const search = document.getElementById('search')?.value?.toLowerCase() || '';
+      const selectedClassifications = getSelectedValues('filter-class');
+      const selectedRegions = getSelectedValues('filter-region');
+      const selectedStates = getSelectedValues('filter-state');
+
+      if (selectedClassifications.length > 0) return [];
+
+      return terminals.filter(terminal => (
+        (!search ||
+          terminal.name.toLowerCase().includes(search) ||
+          terminal.municipality.toLowerCase().includes(search) ||
+          terminal.state.toLowerCase().includes(search) ||
+          terminal.terminalType.toLowerCase().includes(search)) &&
+        (selectedRegions.length === 0 || selectedRegions.includes(getRegionCodeFromState(terminal.state))) &&
+        (selectedStates.length === 0 || selectedStates.includes(String(terminal.state || '').toUpperCase().trim()))
+      ));
+    }
+
+    function getFilteredTerminals() {
+      if (!terminalsLoaded) return [];
+
+      const search = document.getElementById('search')?.value?.toLowerCase() || '';
+      const selectedClassifications = getSelectedValues('filter-class');
+      const selectedTypes = getSelectedValues('filter-type');
+      const selectedRegions = getSelectedValues('filter-region');
+      const selectedStates = getSelectedValues('filter-state');
+
+      if (selectedClassifications.length > 0) return [];
+      if (selectedTypes.length > 0 && !selectedTypes.includes(TYPE_TERMINAL)) return [];
+      if (!search && selectedRegions.length === 0 && selectedStates.length === 0 && selectedTypes.length === 0) return terminals;
+
+      return terminals.filter(terminal => (
+        (!search ||
+          terminal.name.toLowerCase().includes(search) ||
+          terminal.municipality.toLowerCase().includes(search) ||
+          terminal.state.toLowerCase().includes(search) ||
+          terminal.terminalType.toLowerCase().includes(search)) &&
+        (selectedRegions.length === 0 || selectedRegions.includes(getRegionCodeFromState(terminal.state))) &&
+        (selectedStates.length === 0 || selectedStates.includes(String(terminal.state || '').toUpperCase().trim()))
+      ));
+    }
+
+    async function loadTerminalsFromWorkbook() {
+      if (!window.XLSX) {
+        console.warn('SheetJS não carregado; terminais não serão exibidos.');
+        return;
+      }
+
+      try {
+        const response = await fetch('arquivos_apoio/ANP%20Dados%20-%20Bases%20e%20Terminais.xlsx');
+        const buffer = await response.arrayBuffer();
+        const workbook = XLSX.read(buffer, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(worksheet, { range: 3, defval: '' });
+
+        terminals = rows
+          .filter(row => normalizeText(row.Segmento) === 'TERMINAL')
+          .map((row, index) => ({
+            id: 2000 + index,
+            name: String(row.NomeEmpresarial || '').trim(),
+            municipality: String(row.Municipio || '').trim(),
+            state: String(row.Uf || '').trim(),
+            terminalType: String(row.DetalheInstalacao || '').trim(),
+            tankCount: row['Nº de Tanques'] || null,
+            capacity: formatCapacityInThousands(row['Tancagem Total (m³)']),
+          }));
+
+        terminalsLoaded = true;
+        updateFilterOptions();
+        render();
+      } catch (error) {
+        console.error('Erro ao carregar terminais do Excel:', error);
+      }
+    }
+
+    function initMap() {
+      if (map) return;
+      
+      console.log('Inicializando mapa...');
+      map = L.map('map').setView([-14.5, -52], 4);
+      
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap, © CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+      
+      console.log('Mapa inicializado');
+    }
+
+    function getFiltered() {
+      if (!BASES || !BASES.length) return [];
+      
+      const search = document.getElementById('search')?.value?.toLowerCase() || '';
+      const selectedClassifications = getSelectedValues('filter-class');
+      const selectedTypes = getSelectedValues('filter-type');
+      const selectedSizes = getSelectedValues('filter-size');
+      const selectedRegions = getSelectedValues('filter-region');
+      const selectedStates = getSelectedValues('filter-state');
+
+      if (selectedTypes.length > 0 && !selectedTypes.some(type => type === 'BASE POOL' || type === 'BASE PRÓPRIA')) {
+        return [];
+      }
+
+      const filteredBases = BASES.filter(b => {
+        const effectiveClassification = getEffectiveClassification(b);
+        const matchSearch = !search || 
+          b.name.toLowerCase().includes(search) || 
+          (b.municipality || '').toLowerCase().includes(search) ||
+          (b.companies && b.companies[0] && b.companies[0].toLowerCase().includes(search));
+        
+        const matchClass = selectedClassifications.length === 0 || selectedClassifications.includes(effectiveClassification);
+        const matchType = selectedTypes.length === 0 || selectedTypes.includes(b.baseType);
+        const matchSize = selectedSizes.length === 0 || selectedSizes.includes(b.sizeCategory);
+        const matchRegion = selectedRegions.length === 0 || selectedRegions.includes(getRegionCodeFromState(b.state));
+        const matchState = selectedStates.length === 0 || selectedStates.includes(String(b.state || '').toUpperCase().trim());
+        
+        return matchSearch && matchClass && matchType && matchSize && matchRegion && matchState;
+      });
+
+      return consolidateSharedPools(filteredBases);
+    }
+
+    function syncFilterState() {
+      const hasClassification = getSelectedValues('filter-class').length > 0;
+      const typeMenu = document.getElementById('filter-type-menu');
+      if (!typeMenu) return;
+
+      const terminalCheckbox = typeMenu.querySelector('input[type="checkbox"][value="TERMINAL"]');
+      if (terminalCheckbox) {
+        terminalCheckbox.disabled = hasClassification;
+        const label = terminalCheckbox.parentElement;
+        if (label) {
+          const suffix = hasClassification ? ' (indisponível com Classificação)' : '';
+          label.lastChild.textContent = ` TERMINAL${suffix}`;
+        }
+      }
+
+      if (hasClassification && terminalCheckbox?.checked) {
+        terminalCheckbox.checked = false;
+        normalizeAllSelection('filter-type');
+      }
+    }
+
+    function isAleBase(base) {
+      const target = normalizeText(`${base.name || ''} ${(base.companies || []).join(' ')}`);
+      return /(^|\W)ALE(\W|$)/.test(target);
+    }
+
+    function getEffectiveClassification(base) {
+      return isAleBase(base) ? 'ALE' : base.classification;
+    }
+
+    function parseCapacityToNumber(capacityText) {
+      return parseInt(String(capacityText || '').replace(/\D/g, ''), 10) || 0;
+    }
+
+    function getPoolGroupingKey(base) {
+      const roundedLat = Number(base.lat || 0).toFixed(3);
+      const roundedLng = Number(base.lng || 0).toFixed(3);
+      const capacity = parseCapacityToNumber(base.capacity);
+      return [
+        normalizeText(base.municipality),
+        normalizeText(base.state),
+        capacity,
+        roundedLat,
+        roundedLng,
+        normalizeText(base.baseType)
+      ].join('|');
+    }
+
+    function pickRepresentativeBase(candidates) {
+      const priority = { 'MAJOR': 4, 'CONC MERC': 3, 'REGIONAL': 2, 'ALE': 1 };
+      const sorted = [...candidates].sort((a, b) => {
+        const aScore = priority[getEffectiveClassification(a)] || 0;
+        const bScore = priority[getEffectiveClassification(b)] || 0;
+        if (aScore !== bScore) return bScore - aScore;
+        return String(a.name || '').localeCompare(String(b.name || ''), 'pt-BR');
+      });
+      return sorted[0] || candidates[0];
+    }
+
+    function consolidateSharedPools(bases) {
+      const output = [];
+      const groupedPools = new Map();
+
+      bases.forEach(base => {
+        if (base.baseType !== 'BASE POOL') {
+          output.push(base);
+          return;
+        }
+
+        const groupKey = getPoolGroupingKey(base);
+        const group = groupedPools.get(groupKey) || [];
+        group.push(base);
+        groupedPools.set(groupKey, group);
+      });
+
+      groupedPools.forEach((group, key) => {
+        if (group.length === 1) {
+          output.push(group[0]);
+          return;
+        }
+
+        const representative = pickRepresentativeBase(group);
+        const participantSet = new Set();
+
+        group.forEach(item => {
+          if (item.name) participantSet.add(item.name);
+          (item.companies || []).forEach(company => participantSet.add(company));
+        });
+
+        output.push({
+          ...representative,
+          id: `POOL-${key}`,
+          isPoolAggregate: true,
+          poolParticipantCount: participantSet.size,
+          poolParticipants: Array.from(participantSet).sort((a, b) => a.localeCompare(b, 'pt-BR'))
+        });
+      });
+
+      return output;
+    }
+
+    function getClassificationBadgeClass(classification) {
+      const badgeClassMap = {
+        'REGIONAL': 'result-badge--regional',
+        'MAJOR': 'result-badge--major',
+        'CONC MERC': 'result-badge--concmerc',
+        'ALE': 'result-badge--ale'
+      };
+
+      return badgeClassMap[classification] || '';
+    }
+
+    function renderMap() {
+      if (!map) initMap();
+      
+      // Limpar markers
+      markers.forEach(m => map.removeLayer(m));
+      terminalMarkers.forEach(m => map.removeLayer(m));
+      markers = [];
+      terminalMarkers = [];
+      
+      const filtered = getFiltered();
+      const filteredTerminals = getFilteredTerminals();
+      const colorMap = {
+        'REGIONAL': '#DC2626',
+        'MAJOR': '#16A34A',
+        'CONC MERC': '#F97316',
+        'ALE': '#0B2A6F'
+      };
+      
+      filtered.forEach(b => {
+        try {
+          const effectiveClassification = getEffectiveClassification(b);
+          const color = colorMap[effectiveClassification] || '#94a3b8';
+          const [lat, lng] = getBaseCoordinates(b);
+          const poolDetails = b.isPoolAggregate
+            ? `Pool compartilhado<br/>👥 ${b.poolParticipantCount} participante(s)<br/>${b.poolParticipants.slice(0, 6).join(' • ')}${b.poolParticipants.length > 6 ? ' • ...' : ''}<br/>`
+            : '';
+          const marker = L.circleMarker([lat, lng], {
+            radius: 5.5,
+            fillColor: color,
+            color: '#fff',
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.88
+          });
+          
+          marker.bindPopup(`
+            <strong>${b.name}</strong><br/>
+            ${b.municipality}, ${b.state}<br/>
+            ${effectiveClassification} • ${b.baseType}<br/>
+            ${poolDetails}
+            📦 ${formatCapacityInThousands(String(b.capacity).replace(/\D/g, ''))}
+          `);
+          
+          marker.addTo(map);
+          markers.push(marker);
+        } catch (e) {
+          console.error('Erro ao renderizar marker:', b.name, e);
+        }
+      });
+
+      filteredTerminals.forEach(terminal => {
+        try {
+          const [lat, lng] = getTerminalCoordinates(terminal);
+          const marker = L.circleMarker([lat, lng], {
+            radius: 6.75,
+            fillColor: '#FACC15',
+            color: '#713F12',
+            weight: 1.8,
+            opacity: 1,
+            fillOpacity: 0.95
+          });
+
+          marker.bindPopup(`
+            <strong>${terminal.name}</strong><br/>
+            ${terminal.municipality}, ${terminal.state}<br/>
+            Terminal ${terminal.terminalType.toLowerCase()}<br/>
+            🛢️ ${terminal.tankCount || '—'} tanque(s)<br/>
+            📦 ${terminal.capacity}
+          `);
+
+          marker.addTo(map);
+          marker.bringToFront();
+          terminalMarkers.push(marker);
+        } catch (error) {
+          console.error('Erro ao renderizar terminal:', terminal.name, error);
+        }
+      });
+      
+      const terminalStatus = terminalsLoaded
+        ? ` + ${terminalMarkers.length} terminal(is)`
+        : ' • terminais carregando...';
+      document.getElementById('map-info').textContent = `${markers.length} base(s) no mapa${terminalStatus}`;
+    }
+
+    function render() {
+      syncFilterState();
+      normalizeAllSelection('filter-region');
+      normalizeAllSelection('filter-state');
+
+      if (!BASES || !BASES.length) {
+        document.getElementById('results').innerHTML = '<div class="loading">Dados não carregados</div>';
+        document.getElementById('map-info').textContent = 'Aguardando dados...';
+        return;
+      }
+
+      const filtered = getFiltered();
+      const filteredTerminals = getFilteredTerminals();
+      
+      // Stats
+      const pool = filtered.filter(b => b.baseType === 'BASE POOL').length;
+      const propria = filtered.filter(b => b.baseType === 'BASE PRÓPRIA').length;
+      const terminalCount = filteredTerminals.length;
+      let capacity = 0;
+      filtered.forEach(b => {
+        const num = parseInt(b.capacity.replace(/\D/g, '')) || 0;
+        capacity += num;
+      });
+      filteredTerminals.forEach(terminal => {
+        const num = parseInt(String(terminal.capacity).replace(/\D/g, '')) || 0;
+        capacity += num;
+      });
+      
+      document.getElementById('stat-total').textContent = filtered.length;
+      document.getElementById('stat-pool').textContent = pool;
+      document.getElementById('stat-propria').textContent = propria;
+      document.getElementById('stat-terminal').textContent = terminalCount;
+      document.getElementById('stat-capacity').textContent = formatAggregatedCapacity(capacity);
+      document.getElementById('result-count').textContent = filtered.length + terminalCount;
+      
+      // Results
+      const sizeEmoji = { 'Pequena': '🔹', 'Média': '🟡', 'Grande': '🟠' };
+      const baseHtml = filtered.map(b => {
+        const effectiveClassification = getEffectiveClassification(b);
+        const classBadgeClass = getClassificationBadgeClass(effectiveClassification);
+        const poolMeta = b.isPoolAggregate
+          ? `<div class="result-meta">👥 ${b.poolParticipantCount} participante(s)</div><div class="result-meta">${b.poolParticipants.slice(0, 4).join(' • ')}${b.poolParticipants.length > 4 ? ' • ...' : ''}</div>`
+          : '';
+        return `<div class="result-card"><div class="result-name">${b.name}</div><div class="result-meta">📍 ${b.municipality}, ${b.state}</div><div class="result-meta">${effectiveClassification} • ${b.baseType}</div>${poolMeta}<div style="margin-top:0.3rem;"><span class="result-badge ${classBadgeClass}">${effectiveClassification}</span><span class="result-badge">${sizeEmoji[b.sizeCategory] || '—'} ${b.sizeCategory}</span><span class="result-badge">📦 ${formatCapacityInThousands(String(b.capacity).replace(/\D/g, ''))}</span></div></div>`;
+      });
+      const terminalHtml = filteredTerminals.map(terminal => `<div class="result-card"><div class="result-name">${terminal.name}</div><div class="result-meta">📍 ${terminal.municipality}, ${terminal.state}</div><div class="result-meta">TERMINAL • ${terminal.terminalType}</div><div style="margin-top:0.3rem;"><span class="result-badge result-badge--terminal">TERMINAL</span><span class="result-badge">🛢️ ${terminal.tankCount || '—'} tanque(s)</span><span class="result-badge">📦 ${terminal.capacity}</span></div></div>`);
+      const html = (baseHtml.length || terminalHtml.length)
+        ? [...baseHtml, ...terminalHtml].join('')
+        : '<div class="loading">Nenhuma base ou terminal encontrado</div>';
+      
+      document.getElementById('results').innerHTML = html;
+      
+      // Renderizar mapa
+      renderMap();
+    }
+
+    function resetFilters() {
+      setAllSelection('filter-class');
+      setAllSelection('filter-type');
+      setAllSelection('filter-size');
+      document.getElementById('search').value = '';
+      const regionAll = document.querySelector('#filter-region-menu input[value="__ALL__"]');
+      if (regionAll) {
+        document.querySelectorAll('#filter-region-menu input[type="checkbox"]').forEach(input => {
+          input.checked = false;
+        });
+        regionAll.checked = true;
+      }
+      updateFilterOptions();
+      render();
+    }
+
+    // Inicializar
+    if (BASES && BASES.length > 0) {
+      console.log('Dados carregados, renderizando...');
+      initMultiSelectDropdownFilters();
+      initDropdownFilters();
+      normalizeAllSelection('filter-region');
+      updateFilterOptions();
+      render();
+      loadTerminalsFromWorkbook();
+    } else {
+      console.log('BASES não encontrado ou vazio');
+      document.getElementById('results').innerHTML = '<div class="loading">Erro ao carregar dados</div>';
+      setTimeout(() => {
+        if (BASES && BASES.length > 0) {
+          initMultiSelectDropdownFilters();
+          initDropdownFilters();
+          normalizeAllSelection('filter-region');
+          updateFilterOptions();
+          render();
+          loadTerminalsFromWorkbook();
+        }
+      }, 1000);
+    }
+  </script>
+
+</body>
+</html>

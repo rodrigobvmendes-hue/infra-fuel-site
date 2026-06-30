@@ -1,0 +1,155 @@
+table Fato_Bases_Autorizadas
+	lineageTag: 603ad7cd-ae9b-454c-885a-98501c2eecd8
+
+	column CNPJ
+		dataType: string
+		lineageTag: 117762f4-04eb-4d46-8903-e4f03184aed7
+		sourceColumn: CNPJ
+
+	column 'Razão Social'
+		dataType: string
+		lineageTag: 917e052e-b5be-4ee0-838a-7e67d9c4bf40
+		sourceColumn: Razão Social
+
+	column 'NOME REDUZIDO'
+		dataType: string
+		lineageTag: c8f5f64e-b626-4069-a87d-451fba605711
+		sourceColumn: NOME REDUZIDO
+
+	column 'Tipo de Instalação'
+		dataType: string
+		lineageTag: ca40e224-46ac-4b5f-b5bf-0ea16fa0c02f
+		sourceColumn: Tipo de Instalação
+
+	column CLASSIFICAÇÃO
+		dataType: string
+		lineageTag: 938271d6-d575-499d-8c64-0d2f9642c27a
+		sourceColumn: CLASSIFICAÇÃO
+
+	column 'Endereço da Matriz'
+		dataType: string
+		lineageTag: 767aad52-b829-4974-904a-1e63f6b34172
+		sourceColumn: Endereço da Matriz
+
+	column Número
+		dataType: string
+		lineageTag: e30ebc74-847d-4bd1-bd64-ccbba32e17f5
+		sourceColumn: Número
+
+	column Bairro
+		dataType: string
+		lineageTag: 11dc49dd-85cd-4448-b2f5-445671ec43d1
+		sourceColumn: Bairro
+
+	column Complemento
+		dataType: string
+		lineageTag: 49a987c9-7d9e-4eba-86e8-083b4091ca14
+		sourceColumn: Complemento
+
+	column Município
+		dataType: string
+		lineageTag: 3f94b2c3-c17c-43e9-89ae-29dc901f09e5
+		sourceColumn: Município
+
+	column UF
+		dataType: string
+		lineageTag: 7654ca13-0794-4170-9219-ccda28ee2009
+		sourceColumn: UF
+
+	column 'Capacidade Total'
+		dataType: double
+		lineageTag: 9eef4c54-4164-4cd3-9513-cf62915e944c
+		sourceColumn: Capacidade Total
+
+	column 'Participação (%)'
+		dataType: double
+		lineageTag: 41d360f3-deea-4782-bb47-36a85f280d3a
+		sourceColumn: Participação (%)
+
+	column TIPO
+		dataType: string
+		lineageTag: ef28e568-88ce-4177-9af3-0219e94a78cb
+		sourceColumn: TIPO
+
+	column 'Número Autorização'
+		dataType: string
+		lineageTag: 4a4f6a0a-abbb-4c63-b4ea-34062c36a4a8
+		sourceColumn: Número Autorização
+
+	column 'Data Publicação'
+		dataType: dateTime
+		lineageTag: 33d8afee-09c4-4199-bacb-c23e9536b6b3
+		sourceColumn: Data Publicação
+
+	column Empresa_Normalizada
+		dataType: string
+		lineageTag: 7275cea1-638b-4d68-9425-1d69225cf6bd
+		sourceColumn: Empresa_Normalizada
+
+	column Municipio_Normalizado
+		dataType: string
+		lineageTag: abb239ed-f9a5-404d-a9e0-1642254f2992
+		sourceColumn: Municipio_Normalizado
+
+	column Localizacao_Key
+		dataType: string
+		lineageTag: 9e1adae8-d48a-4063-ae88-7b430aff12fb
+		sourceColumn: Localizacao_Key
+
+	column Id_Base_Autorizada
+		dataType: string
+		lineageTag: 1544b93a-0d91-4f30-a252-cb3f45eee3eb
+		sourceColumn: Id_Base_Autorizada
+
+	column Flag_CNPJ_Duplicado
+		dataType: string
+		lineageTag: 39f15ed5-099c-4c81-8d11-b44961e1f811
+		sourceColumn: Flag_CNPJ_Duplicado
+
+	column Flag_Dado_Incompleto
+		dataType: string
+		lineageTag: c8bd7c6d-cee6-40f2-8232-76c0710e2da8
+		sourceColumn: Flag_Dado_Incompleto
+
+	partition Fato_Bases_Autorizadas = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(pDataPath & "/bases_autorizadas.csv"),
+				        [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]
+				    ),
+				    #"Promoted Headers" = Table.PromoteHeaders(
+				        Source,
+				        [PromoteAllScalars=true]
+				    ),
+				    #"Changed Type" = Table.TransformColumnTypes(
+				        #"Promoted Headers",
+				        {
+				            {"CNPJ", type text},
+				            {"Razão Social", type text},
+				            {"NOME REDUZIDO", type text},
+				            {"Tipo de Instalação", type text},
+				            {"CLASSIFICAÇÃO", type text},
+				            {"Endereço da Matriz", type text},
+				            {"Número", type text},
+				            {"Bairro", type text},
+				            {"Complemento", type text},
+				            {"Município", type text},
+				            {"UF", type text},
+				            {"Capacidade Total", type number},
+				            {"Participação (%)", type number},
+				            {"TIPO", type text},
+				            {"Número Autorização", type text},
+				            {"Data Publicação", type date},
+				            {"Empresa_Normalizada", type text},
+				            {"Municipio_Normalizado", type text},
+				            {"Localizacao_Key", type text},
+				            {"Id_Base_Autorizada", type text},
+				            {"Flag_CNPJ_Duplicado", type text},
+				            {"Flag_Dado_Incompleto", type text}
+				        }
+				    )
+				in
+				    #"Changed Type"
+

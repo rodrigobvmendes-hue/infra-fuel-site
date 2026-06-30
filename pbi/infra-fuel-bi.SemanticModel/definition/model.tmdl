@@ -1,0 +1,19 @@
+model Model
+	culture: pt-BR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pt-BR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Dim_Empresa
+ref table Dim_Localizacao
+ref table Fato_Instalacoes_ANP
+ref table Fato_Bases_Autorizadas
+
+ref cultureInfo pt-BR
+

@@ -1,0 +1,71 @@
+table Dim_Empresa
+	lineageTag: 4ab1c405-d2ad-4e7e-9b9d-cff695f598be
+
+	column Empresa_Key
+		dataType: string
+		lineageTag: 64d1d88a-0c38-437d-87bc-b2654217fce6
+		sourceColumn: Empresa_Key
+
+	column Empresa_Normalizada
+		dataType: string
+		lineageTag: 9b61b615-1387-4cb5-94bb-27a3426a25b7
+		sourceColumn: Empresa_Normalizada
+
+	column Razao_Social_Referencia
+		dataType: string
+		lineageTag: 859fc50e-8e02-4ad7-87a0-267fa33bc526
+		sourceColumn: Razao_Social_Referencia
+
+	column Nome_Reduzido
+		dataType: string
+		lineageTag: fc3f497d-6b1c-419d-9afe-66e95b2e49fb
+		sourceColumn: Nome_Reduzido
+
+	column Tipo_Empresa
+		dataType: string
+		lineageTag: 0b0e25d8-dbf4-4f98-9871-fa144aacbeb4
+		sourceColumn: Tipo_Empresa
+
+	column Qtd_CNPJs
+		dataType: int64
+		lineageTag: 24a49037-3a52-4e0e-8d4a-e3b2978cffde
+		sourceColumn: Qtd_CNPJs
+
+	column Qtd_Instalacoes_ANP
+		dataType: int64
+		lineageTag: eb1053a8-7a77-48ed-a53a-88e3efa3e9de
+		sourceColumn: Qtd_Instalacoes_ANP
+
+	column Presente_ANP
+		dataType: string
+		lineageTag: 7befba7a-3954-447d-b942-3b20e56e6a80
+		sourceColumn: Presente_ANP
+
+	column Presente_Bases_Autorizadas
+		dataType: string
+		lineageTag: c915af5c-a4b8-4a34-bc37-31eacd8b6bc9
+		sourceColumn: Presente_Bases_Autorizadas
+
+	partition Dim_Empresa = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(pDataPath & "/dim_empresa.csv"),
+				        [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]
+				    ),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {
+				        {"Empresa_Key", type text},
+				        {"Empresa_Normalizada", type text},
+				        {"Razao_Social_Referencia", type text},
+				        {"Nome_Reduzido", type text},
+				        {"Tipo_Empresa", type text},
+				        {"Qtd_CNPJs", Int64.Type},
+				        {"Qtd_Instalacoes_ANP", Int64.Type},
+				        {"Presente_ANP", type text},
+				        {"Presente_Bases_Autorizadas", type text}
+				    })
+				in
+				    #"Changed Type"
+

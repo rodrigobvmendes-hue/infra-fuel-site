@@ -1,0 +1,52 @@
+# Credenciais e variáveis de ambiente
+.env
+.env.*
+!.env.example
+*.secret
+*.secrets
+*.token
+secrets.json
+
+# Bases e dados corporativos
+dados_brutos/
+dados_tratados/
+arquivos_apoio/
+*.xlsx
+*.xls
+*.xlsm
+*.csv
+*.zip
+
+# Power BI: arquivos locais, caches e backups
+**/.pbi/
+*.pbix
+*.pbit
+pbi_backup_antes_modelagem/
+pbi/*.zip
+
+# Estado local do Claude e Ruflo
+.claude/
+.claude-flow/
+**/.claude-flow/
+.mcp.json.backup
+
+# Dependências e arquivos temporários
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+dist/
+tmp/
+*.log
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Estado local de agentes e banco vetorial
+.swarm/
+ruvector.db
+
+# Configuração local de integrações MCP
+.mcp.json

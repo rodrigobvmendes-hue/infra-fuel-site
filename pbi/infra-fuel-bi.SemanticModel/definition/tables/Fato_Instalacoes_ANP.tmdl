@@ -1,0 +1,89 @@
+table Fato_Instalacoes_ANP
+	lineageTag: cae1152d-14d6-47be-addb-e080ca9c574b
+
+	column Uf
+		dataType: string
+		lineageTag: d54b6ba7-350f-4853-becb-1f0c2199e99e
+		sourceColumn: Uf
+
+	column Municipio
+		dataType: string
+		lineageTag: d6bd4ada-7f8c-4b65-9765-33eae04f9bc5
+		sourceColumn: Municipio
+
+	column NomeEmpresarial
+		dataType: string
+		lineageTag: 9ca2ef74-b49f-43d2-b4f1-5a38a28df43d
+		sourceColumn: NomeEmpresarial
+
+	column Segmento
+		dataType: string
+		lineageTag: a287c4eb-1117-47e8-b0b7-c93278eb85b0
+		sourceColumn: Segmento
+
+	column DetalheInstalacao
+		dataType: string
+		lineageTag: 4d0aa7b9-b84d-460c-9b02-982d294c389c
+		sourceColumn: DetalheInstalacao
+
+	column NumTanques
+		dataType: int64
+		lineageTag: 26ef25a4-8b37-4b6c-a66f-330c7eda4670
+		sourceColumn: NumTanques
+
+	column TancagemTotalM3
+		dataType: double
+		lineageTag: 758b7fa1-4ac5-4510-8426-c1f7bff789a9
+		sourceColumn: TancagemTotalM3
+
+	column Empresa_Normalizada
+		dataType: string
+		lineageTag: d119076d-5f61-4c6d-ab88-afd8f246ca4f
+		sourceColumn: Empresa_Normalizada
+
+	column Municipio_Normalizado
+		dataType: string
+		lineageTag: 4ba0062f-79f4-40b3-8255-ba5a902e0f9f
+		sourceColumn: Municipio_Normalizado
+
+	column Localizacao_Key
+		dataType: string
+		lineageTag: eaf13a3b-ccb8-426a-b389-3242154a9fd7
+		sourceColumn: Localizacao_Key
+
+	column Id_Instalacao_ANP
+		dataType: string
+		lineageTag: d2ee7474-4fa1-458d-8268-1bc8d15569da
+		sourceColumn: Id_Instalacao_ANP
+
+	partition Fato_Instalacoes_ANP = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(pDataPath & "/anp_instalacoes.csv"),
+				        [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]
+				    ),
+				    #"Promoted Headers" = Table.PromoteHeaders(
+				        Source,
+				        [PromoteAllScalars=true]
+				    ),
+				    #"Changed Type" = Table.TransformColumnTypes(
+				        #"Promoted Headers",
+				        {
+				            {"Uf", type text},
+				            {"Municipio", type text},
+				            {"NomeEmpresarial", type text},
+				            {"Segmento", type text},
+				            {"DetalheInstalacao", type text},
+				            {"NumTanques", Int64.Type},
+				            {"TancagemTotalM3", type number},
+				            {"Empresa_Normalizada", type text},
+				            {"Municipio_Normalizado", type text},
+				            {"Localizacao_Key", type text},
+				            {"Id_Instalacao_ANP", type text}
+				        }
+				    )
+				in
+				    #"Changed Type"
+

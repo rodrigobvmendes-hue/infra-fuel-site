@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "infra-fuel-bi"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "847ff1d9-90f7-4c41-bb1b-7c88036c330f"
+  }
+}

@@ -1,0 +1,59 @@
+table Dim_Localizacao
+	lineageTag: 6cdbee05-3220-4746-96ba-ac184cae52fa
+
+	column Localizacao_Key
+		dataType: string
+		lineageTag: 7aef4bce-fa42-4d96-9f19-7e1029a4ee52
+		sourceColumn: Localizacao_Key
+
+	column UF
+		dataType: string
+		lineageTag: d49fc93b-cdb4-4e52-b418-9354c8e2004a
+		sourceColumn: UF
+
+	column Municipio
+		dataType: string
+		lineageTag: b01c1549-b802-496e-bf64-227411d35bad
+		sourceColumn: Municipio
+
+	column Municipio_Normalizado
+		dataType: string
+		lineageTag: 9b1b9edb-26e3-4ebd-847f-16cf48e462a1
+		sourceColumn: Municipio_Normalizado
+
+	column Presente_ANP
+		dataType: string
+		lineageTag: e8c46f41-6e9f-4d0d-a1f3-4500e7832aa3
+		sourceColumn: Presente_ANP
+
+	column Presente_Bases_Autorizadas
+		dataType: string
+		lineageTag: 6322cbce-0180-4bc8-9845-b6c50274896a
+		sourceColumn: Presente_Bases_Autorizadas
+
+	partition Dim_Localizacao = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(pDataPath & "/dim_localizacao.csv"),
+				        [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]
+				    ),
+				    #"Promoted Headers" = Table.PromoteHeaders(
+				        Source,
+				        [PromoteAllScalars=true]
+				    ),
+				    #"Changed Type" = Table.TransformColumnTypes(
+				        #"Promoted Headers",
+				        {
+				            {"Localizacao_Key", type text},
+				            {"UF", type text},
+				            {"Municipio", type text},
+				            {"Municipio_Normalizado", type text},
+				            {"Presente_ANP", type text},
+				            {"Presente_Bases_Autorizadas", type text}
+				        }
+				    )
+				in
+				    #"Changed Type"
+

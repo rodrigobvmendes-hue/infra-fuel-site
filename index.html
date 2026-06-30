@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Combustíveis Claros no Brasil · Infraestrutura</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-icon">⛽</span>
+        <div>
+          <span class="brand-title">InfraFuel</span>
+          <span class="brand-sub">Projetos de Infraestrutura de Combustíveis</span>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="#projetos">Projetos</a>
+        <a href="bases.html">📦 Bases</a>
+        <a href="#mapa">Mapa</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#fontes">Fontes</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title">Infraestrutura de <span class="highlight">Combustíveis Claros no Brasil</span></h1>
+      <p class="hero-sub">Refinarias, oleodutos, terminais de distribuição e etanol — projetos reais documentados em fontes públicas como Petrobras, ANP, Transpetro, MME e Raízen.</p>
+    </div>
+  </section>
+
+  <!-- ── CONTROL BAR (sticky) ── -->
+  <section id="projetos" class="control-bar">
+    <div class="container control-bar-inner">
+      <div class="hero-stats" id="hero-stats">
+        <div class="stat"><span class="stat-num" id="stat-total">0</span><span class="stat-label">Projetos</span></div>
+        <div class="stat"><span class="stat-num" id="stat-active">0</span><span class="stat-label">Em Operação</span></div>
+        <div class="stat"><span class="stat-num" id="stat-construction">0</span><span class="stat-label">Em Construção</span></div>
+        <div class="stat"><span class="stat-num" id="stat-planned">0</span><span class="stat-label">Planejados</span></div>
+      </div>
+      <div class="control-filters">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Buscar por nome, país, empresa…" autocomplete="off" />
+          <button class="clear-btn" id="clear-search" aria-label="Limpar busca">✕</button>
+        </div>
+        <div class="filter-row">
+          <div class="filter-group">
+            <label class="filter-label">Tipo</label>
+            <div class="custom-select-wrap" id="type-wrap">
+              <button class="custom-select-btn" type="button">
+                <span class="custom-select-text">TODOS</span>
+                <span class="custom-select-arrow">▾</span>
+              </button>
+              <div class="custom-select-dropdown">
+                <select id="type-select" class="filter-select" multiple size="7">
+                  <option value="__ALL__" selected>TODOS</option>
+                  <option value="Refinaria">🏭 Refinaria</option>
+                  <option value="Oleoduto">🛢 Oleoduto</option>
+                  <option value="Terminal">🚢 Terminal</option>
+                  <option value="Etanol">🌿 Etanol</option>
+                  <option value="Ferrovia">🚆 Ferrovia</option>
+                  <option value="Base">📦 Base</option>
+                </select>
+                <small class="filter-help dropdown-help">Ctrl/Cmd + clique para multi-seleção</small>
+              </div>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Região</label>
+            <div class="custom-select-wrap" id="region-wrap">
+              <button class="custom-select-btn" type="button">
+                <span class="custom-select-text">TODAS</span>
+                <span class="custom-select-arrow">▾</span>
+              </button>
+              <div class="custom-select-dropdown">
+                <select id="region-select" class="filter-select" multiple size="6">
+                  <option value="__ALL__" selected>TODAS</option>
+                  <option value="NNE">Nordeste</option>
+                  <option value="CO">Centro-Oeste</option>
+                  <option value="NO">Norte</option>
+                  <option value="SU">Sul</option>
+                  <option value="SSE">Sudeste</option>
+                </select>
+                <small class="filter-help dropdown-help">Ctrl/Cmd + clique para multi-seleção</small>
+              </div>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">UF</label>
+            <div class="custom-select-wrap" id="state-wrap">
+              <button class="custom-select-btn" type="button">
+                <span class="custom-select-text">TODAS</span>
+                <span class="custom-select-arrow">▾</span>
+              </button>
+              <div class="custom-select-dropdown">
+                <select id="state-select" class="filter-select" multiple size="8">
+                  <option value="__ALL__" selected>TODAS</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Status do Projeto</label>
+            <div class="custom-select-wrap" id="status-wrap">
+              <button class="custom-select-btn" type="button">
+                <span class="custom-select-text">TODOS</span>
+                <span class="custom-select-arrow">▾</span>
+              </button>
+              <div class="custom-select-dropdown">
+                <select id="status-select" class="filter-select" multiple size="4">
+                  <option value="__ALL__" selected>TODOS</option>
+                  <option value="Em Operação">Em Operação</option>
+                  <option value="Em Desenvolvimento">Em Construção / Planejado</option>
+                  <option value="Suspenso">Suspenso</option>
+                </select>
+                <small class="filter-help dropdown-help">Ctrl/Cmd + clique para multi-seleção</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label class="toggle-row" for="toggle-hide-rail-duplicates">
+          <input type="checkbox" id="toggle-hide-rail-duplicates" />
+          <span>Ocultar duplicidades de ferrovias</span>
+        </label>
+        <div class="results-info" id="results-info"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROJECT GRID ── -->
+  <main class="container">
+    <div class="grid" id="project-grid"></div>
+    <div class="empty-state hidden" id="empty-state">
+      <p>Nenhum projeto encontrado com os filtros selecionados.</p>
+      <button class="btn-reset" id="btn-reset">Limpar filtros</button>
+    </div>
+  </main>
+
+  <!-- ── MAP ── -->
+  <section id="mapa" class="map-section">
+    <div class="container map-header">
+      <h2 class="section-title">Mapa da Infraestrutura</h2>
+      <p class="map-sub">Clique em um marcador para ver detalhes. Os filtros acima são aplicados ao mapa.</p>
+    </div>
+    <div id="map"></div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <section id="sobre" class="about-section">
+    <div class="container about-inner">
+      <div>
+        <h2>Sobre este painel</h2>
+        <p>Este painel reúne projetos <strong>reais e documentados</strong> de infraestrutura de combustíveis claros no Brasil — refinarias, oleodutos de derivados, terminais de distribuição e cadeia do etanol.</p>
+        <p>Os dados refletem o estado conhecido até <strong>junho de 2026</strong> e são apresentados com fins informativos e educacionais.</p>
+      </div>
+      <div>
+        <h2 id="fontes">Fontes</h2>
+        <ul class="source-list">
+          <li>Petrobras — Relatórios de Administração e Plano Estratégico 2026–2030</li>
+          <li>ANP — Agência Nacional do Petróleo, Gás Natural e Biocombustíveis</li>
+          <li>MME — Ministério de Minas e Energia / BEN</li>
+          <li>Transpetro — Infraestrutura de Dutos e Terminais</li>
+          <li>Raízen — Relatórios de Resultados e RI</li>
+          <li>Vibra Energia — Relatórios Anuais</li>
+          <li>UNICA — União da Indústria de Cana-de-Açúcar</li>
+          <li>Reuters / Bloomberg Energy</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>⛽ InfraFuel · Dados de fontes públicas · 2026</span>
+      <span>Apenas fins informativos — não constitui assessoria de investimento</span>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paleta de Cores · InfraFuel</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .color-section { padding: 2rem; }
+    .color-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .color-box { padding: 2rem; border-radius: 8px; text-align: center; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+    .color-label { font-weight: 600; font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .color-code { font-family: monospace; font-size: 0.9rem; opacity: 0.9; }
+    .color-primary { background: #1B3A5F; }
+    .color-primary-dark { background: #0F2436; }
+    .color-primary-light { background: #1B5894; }
+    .color-accent { background: #E61E2D; }
+    .color-accent-hover { background: #CC1A27; }
+    .color-secondary { background: #06B6D4; }
+    .examples { margin: 3rem 0; }
+    .btn-demo { padding: 1rem 2rem; margin: 0.5rem; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
+    .btn-red { background: #E61E2D; color: white; }
+    .btn-navy { background: #1B3A5F; color: white; }
+    .btn-teal { background: #06B6D4; color: white; }
+    .btn-red:hover { background: #CC1A27; }
+    .btn-navy:hover { background: #0F2436; }
+    .btn-teal:hover { background: #0891b2; }
+  </style>
+</head>
+<body>
+  <header class="site-header" style="border-bottom: 2px solid #E61E2D;">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-icon">🎨</span>
+        <div>
+          <span class="brand-title">InfraFuel Color Palette</span>
+          <span class="brand-sub">Nova identidade visual</span>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="index.html">Projetos</a>
+        <a href="bases.html">📦 Bases</a>
+        <a href="cores.html" style="border-bottom: 3px solid #E61E2D;">🎨 Cores</a>
+      </nav>
+    </div>
+  </header>
+
+  <section style="padding: 3rem 0; background: linear-gradient(135deg, #1B3A5F 0%, #E61E2D 100%); color: white; text-align: center;">
+    <div class="container">
+      <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">🎨 Nova Paleta de Cores</h1>
+      <p style="font-size: 1.1rem; opacity: 0.95;">Navy · Red · Teal — identidade corporativa moderna</p>
+    </div>
+  </section>
+
+  <div class="container color-section">
+    <h2>Cores Primárias</h2>
+    <div class="color-grid">
+      <div class="color-box color-primary">
+        <div class="color-label">Navy Primary</div>
+        <div class="color-code">#1B3A5F</div>
+      </div>
+      <div class="color-box color-primary-light">
+        <div class="color-label">Navy Light</div>
+        <div class="color-code">#1B5894</div>
+      </div>
+      <div class="color-box color-primary-dark">
+        <div class="color-label">Navy Dark</div>
+        <div class="color-code">#0F2436</div>
+      </div>
+    </div>
+
+    <h2>Cores de Ênfase</h2>
+    <div class="color-grid">
+      <div class="color-box color-accent">
+        <div class="color-label">Red</div>
+        <div class="color-code">#E61E2D</div>
+      </div>
+      <div class="color-box color-accent-hover">
+        <div class="color-label">Red Hover</div>
+        <div class="color-code">#CC1A27</div>
+      </div>
+      <div class="color-box color-secondary">
+        <div class="color-label">Teal/Cyan</div>
+        <div class="color-code">#06B6D4</div>
+      </div>
+    </div>
+
+    <h2>Exemplos de Uso</h2>
+    <div class="examples">
+      <div style="margin-bottom: 2rem;">
+        <h3>Botões</h3>
+        <button class="btn-demo btn-red">Red Button (Ação Principal)</button>
+        <button class="btn-demo btn-navy">Navy Button (Secundário)</button>
+        <button class="btn-demo btn-teal">Teal Button (Destaque)</button>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <h3>Componentes</h3>
+        <div style="background: white; padding: 1.5rem; border-left: 4px solid #E61E2D; border-radius: 6px; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <strong style="color: #1B3A5F;">Card com Red Border</strong>
+          <p style="color: #6b7280; margin-top: 0.5rem;">Este é um card com borda vermelha, estrutura Navy.</p>
+        </div>
+
+        <div style="background: white; padding: 1.5rem; border-left: 4px solid #1B5894; border-radius: 6px; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <strong style="color: #E61E2D;">Card com Navy Border</strong>
+          <p style="color: #6b7280; margin-top: 0.5rem;">Este é um card com borda marinha, destaque em red.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <h3>Gradientes</h3>
+        <div style="height: 100px; background: linear-gradient(135deg, #1B3A5F 0%, #E61E2D 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+          Navy → Red Gradient
+        </div>
+        <div style="height: 100px; background: linear-gradient(135deg, #E61E2D 0%, #06B6D4 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; margin-top: 1rem;">
+          Red → Teal Gradient
+        </div>
+      </div>
+    </div>
+
+    <h2>Uso em Classificações (Mapa)</h2>
+    <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div style="width: 20px; height: 20px; background: #E61E2D; border-radius: 50%;"></div>
+          <span style="color: #1f2937;"><strong>REGIONAL</strong> - Red</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div style="width: 20px; height: 20px; background: #1B5894; border-radius: 50%;"></div>
+          <span style="color: #1f2937;"><strong>MAJOR</strong> - Navy Light</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div style="width: 20px; height: 20px; background: #06B6D4; border-radius: 50%;"></div>
+          <span style="color: #1f2937;"><strong>CONC MERC</strong> - Teal</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer" style="margin-top: 4rem; border-top: 1px solid #E61E2D;">
+    <div class="container footer-inner">
+      <span>🎨 InfraFuel · Nova Paleta 2026</span>
+      <span>Navy #1B3A5F · Red #E61E2D · Teal #06B6D4</span>
+    </div>
+  </footer>
+</body>
+</html>
