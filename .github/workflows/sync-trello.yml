@@ -87,5 +87,5 @@ jobs:
             echo "Sem mudanças."
           else
             git commit -m "chore: sync Trello [$(date -u '+%Y-%m-%d %H:%M')] UTC"
-            git push
+            git push origin HEAD:main --force-with-lease
           fi
