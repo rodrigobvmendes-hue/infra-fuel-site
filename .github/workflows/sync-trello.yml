@@ -22,16 +22,12 @@ jobs:
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
         run: |
           BOARD_ID="69f24cd6f0e0329b17b7bcce"
-
           HTTP_STATUS=$(curl --silent --output /tmp/trello_raw.json --write-out "%{http_code}" \
             "https://api.trello.com/1/boards/${BOARD_ID}?cards=open&card_fields=name,idList,due,dueComplete,url&lists=open&list_fields=name&key=${TRELLO_API_KEY}&token=${TRELLO_TOKEN}")
-
           echo "HTTP status: $HTTP_STATUS"
-          echo "Resposta da API:"
-          cat /tmp/trello_raw.json
-
           if [ "$HTTP_STATUS" != "200" ]; then
             echo "ERRO: API retornou $HTTP_STATUS"
+            cat /tmp/trello_raw.json
             exit 1
           fi
 
@@ -87,6 +83,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "Sem mudanças."
           else
+            git pull --rebase origin main
             git commit -m "chore: sync Trello [$(date -u '+%Y-%m-%d %H:%M')] UTC"
             git push
           fi
