@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Buscar dados do Trello
         env:
@@ -81,11 +79,14 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
           git add trello-status.json
           if git diff --cached --quiet; then
             echo "Sem mudanças."
           else
+            git stash
+            git pull --rebase origin main
+            git stash pop
+            git add trello-status.json
             git commit -m "chore: sync Trello [$(date -u '+%Y-%m-%d %H:%M')] UTC"
-            git push origin HEAD:main --force-with-lease
+            git push origin main
           fi
