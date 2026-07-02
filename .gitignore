@@ -10,19 +10,13 @@ secrets.json
 # Bases e dados corporativos
 dados_brutos/
 dados_tratados/
-arquivos_apoio/
-*.xlsx
-*.xls
-*.xlsm
-*.csv
-*.zip
 
 # Power BI: arquivos locais, caches e backups
 **/.pbi/
 *.pbix
 *.pbit
 pbi_backup_antes_modelagem/
-pbi/*.zip
+
 
 # Estado local do Claude e Ruflo
 .claude/
