@@ -1,5 +1,302 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-07-02T22:03:43Z",
   "boardId": "69f24cd6f0e0329b17b7bcce",
-  "cards": []
+  "cards": [
+    {
+      "name": "Transpetro - Caxias - Duto",
+      "listName": "A fazer",
+      "status": "a-fazer",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/SAVFQnv4/34-transpetro-caxias-duto"
+    },
+    {
+      "name": "Projeto Inpasa",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/3poJ6FTq/30-projeto-inpasa"
+    },
+    {
+      "name": "Stang - Itajaí",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/AvvBPMRz/38-stang-itaja%C3%AD"
+    },
+    {
+      "name": "Greenfield - Itajaí - Rede galo",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/gSMODKlK/8-greenfield-itaja%C3%AD-rede-galo"
+    },
+    {
+      "name": "PECEM",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/qON4sNVZ/3-pecem"
+    },
+    {
+      "name": "Vitória - SPE - navegantes",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/2eV1Az70/15-vit%C3%B3ria-spe-navegantes"
+    },
+    {
+      "name": "Vitória - Base Santa Rosa",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/XLFTbGmr/31-vit%C3%B3ria-base-santa-rosa"
+    },
+    {
+      "name": "Vitória - Atlântica",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/0qZc8d7o/14-vit%C3%B3ria-atl%C3%A2ntica"
+    },
+    {
+      "name": "WM - Vila velha",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/if5aYqfE/36-wm-vila-velha"
+    },
+    {
+      "name": "Negociação EFEN - Caxias",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/jNUIX0qo/13-negocia%C3%A7%C3%A3o-efen-caxias"
+    },
+    {
+      "name": "Rumos - Uberlândia",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/HYXtcV4B/19-rumos-uberl%C3%A2ndia"
+    },
+    {
+      "name": "Paulínia - Torrão",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/pOP1QEF7/24-paul%C3%ADnia-torr%C3%A3o"
+    },
+    {
+      "name": "Chapecó - Maxsul",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/Bj6BXkGy/27-chapec%C3%B3-maxsul"
+    },
+    {
+      "name": "Formação de pool - LEM/Açailândia",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/kBGvH0LV/32-forma%C3%A7%C3%A3o-de-pool-lem-a%C3%A7ail%C3%A2ndia"
+    },
+    {
+      "name": "Ampliar o contrato da Pontual - Araucaria",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/bXwAKeFJ/35-ampliar-o-contrato-da-pontual-araucaria"
+    },
+    {
+      "name": "Ypetro - Maracanau (Ceará)",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/VaDEcACe/37-ypetro-maracanau-cear%C3%A1"
+    },
+    {
+      "name": "Vitória - Oiltank",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/R0dks6iu/39-vit%C3%B3ria-oiltank"
+    },
+    {
+      "name": "Paulínia - Opla",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/K9DCJOpx/40-paul%C3%ADnia-opla"
+    },
+    {
+      "name": "BID São Luís",
+      "listName": "Renovações",
+      "status": "renovacao",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/7ZzUlDPi/10-bid-s%C3%A3o-lu%C3%ADs"
+    },
+    {
+      "name": "BID Ipojuca",
+      "listName": "Renovações",
+      "status": "renovacao",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/HpAiHrZQ/11-bid-ipojuca"
+    },
+    {
+      "name": "Belém - TOP",
+      "listName": "Renovações",
+      "status": "renovacao",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/dN43g2c5/12-bel%C3%A9m-top"
+    },
+    {
+      "name": "oPhase Out BA (Jequié e Itabuna)",
+      "listName": "Análise de Phase-out",
+      "status": "em-analise",
+      "due": "2026-05-29T12:00:00.000Z",
+      "dueComplete": false,
+      "url": "https://trello.com/c/Alkg8d5b/7-ophase-out-ba-jequi%C3%A9-e-itabuna"
+    },
+    {
+      "name": "IPP Guarulhos+",
+      "listName": "Em Holding",
+      "status": "em-holding",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/83f9SFM3/2-ipp-guarulhos"
+    },
+    {
+      "name": "Pool de Paulínia",
+      "listName": "Em Holding",
+      "status": "em-holding",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/vHaFzr2O/16-pool-de-paul%C3%ADnia"
+    },
+    {
+      "name": "IPP SJRP",
+      "listName": "Em Holding",
+      "status": "em-holding",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/CZ42td05/1-ipp-sjrp"
+    },
+    {
+      "name": "Goiânia - Nexta",
+      "listName": "Em Holding",
+      "status": "em-holding",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/JGqB08cp/25-goi%C3%A2nia-nexta"
+    },
+    {
+      "name": "Santa Maria",
+      "listName": "Em Holding",
+      "status": "em-holding",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/doVXJzNU/26-santa-maria"
+    },
+    {
+      "name": "Inpasa - NDA",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": null,
+      "dueComplete": true,
+      "url": "https://trello.com/c/TfM7UZWf/9-inpasa-nda"
+    },
+    {
+      "name": "PetroBahia - Caxias",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": null,
+      "dueComplete": true,
+      "url": "https://trello.com/c/kotsy8by/23-petrobahia-caxias"
+    },
+    {
+      "name": "Capex de Goiâinia - Swap de Tanques",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": null,
+      "dueComplete": true,
+      "url": "https://trello.com/c/EdEsHVjz/33-capex-de-goi%C3%A2inia-swap-de-tanques"
+    },
+    {
+      "name": "Paulínia - S10 - Ipiranga",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": null,
+      "dueComplete": true,
+      "url": "https://trello.com/c/6NaruipS/29-paul%C3%ADnia-s10-ipiranga"
+    },
+    {
+      "name": "BID - Santos - Jun/26",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": null,
+      "dueComplete": true,
+      "url": "https://trello.com/c/Zqo2ULpR/28-bid-santos-jun-26"
+    },
+    {
+      "name": "Transpetro - Itajaí, Biguaçu, Guaramirim",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": null,
+      "dueComplete": true,
+      "url": "https://trello.com/c/NdPIw6hT/21-transpetro-itaja%C3%AD-bigua%C3%A7u-guaramirim"
+    },
+    {
+      "name": "Phase out Rio Grande",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": "2026-05-29T12:00:00.000Z",
+      "dueComplete": true,
+      "url": "https://trello.com/c/DrVH81BX/6-phase-out-rio-grande"
+    },
+    {
+      "name": "Phase-out Uberaba",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": "2026-05-29T12:00:00.000Z",
+      "dueComplete": true,
+      "url": "https://trello.com/c/tpN5zT9m/17-phase-out-uberaba"
+    },
+    {
+      "name": "Phase-Out Maceió",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": null,
+      "dueComplete": true,
+      "url": "https://trello.com/c/t45xilBr/4-phase-out-macei%C3%B3"
+    },
+    {
+      "name": "Phase-out Crato",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": null,
+      "dueComplete": true,
+      "url": "https://trello.com/c/wnuUchmA/5-phase-out-crato"
+    }
+  ]
 }
