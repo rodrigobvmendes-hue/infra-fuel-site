@@ -1,0 +1,87 @@
+name: Sync Trello Status
+
+on:
+  schedule:
+    - cron: '0 11 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    name: Fetch Trello & update JSON
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Buscar dados do Trello
+        env:
+          TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+        run: |
+          BOARD_ID="69f24cd6f0e0329b17b7bcce"
+          RESPONSE=$(curl --silent --fail \
+            "https://api.trello.com/1/boards/${BOARD_ID}?cards=open&card_fields=name,idList,due,dueComplete,url&lists=open&list_fields=name&key=${TRELLO_API_KEY}&token=${TRELLO_TOKEN}")
+          if [ $? -ne 0 ]; then
+            echo "ERRO: falha na API do Trello."
+            exit 1
+          fi
+          echo "$RESPONSE" > /tmp/trello_raw.json
+
+      - name: Gerar trello-status.json
+        run: |
+          python3 - <<'PYTHON'
+          import json
+          from datetime import datetime, timezone
+
+          with open("/tmp/trello_raw.json") as f:
+              raw = json.load(f)
+
+          list_map = {lst["id"]: lst["name"] for lst in raw.get("lists", [])}
+
+          STATUS_MAP = {
+              "A fazer":              "a-fazer",
+              "Em andamento/":        "em-andamento",
+              "Renovações":           "renovacao",
+              "Análise de Phase-out": "em-analise",
+              "Em Holding":           "em-holding",
+              "Concluído":            "concluido",
+          }
+
+          cards = []
+          for card in raw.get("cards", []):
+              list_name = list_map.get(card.get("idList"), "desconhecido")
+              cards.append({
+                  "name":        card.get("name", ""),
+                  "listName":    list_name,
+                  "status":      STATUS_MAP.get(list_name, "desconhecido"),
+                  "due":         card.get("due"),
+                  "dueComplete": card.get("dueComplete", False),
+                  "url":         card.get("url", ""),
+              })
+
+          output = {
+              "updatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+              "boardId":   "69f24cd6f0e0329b17b7bcce",
+              "cards":     cards,
+          }
+
+          with open("trello-status.json", "w", encoding="utf-8") as f:
+              json.dump(output, f, ensure_ascii=False, indent=2)
+
+          print(f"{len(cards)} cartões processados.")
+          PYTHON
+
+      - name: Commit se houve mudança
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add trello-status.json
+          if git diff --cached --quiet; then
+            echo "Sem mudanças."
+          else
+            git commit -m "chore: sync Trello [$(date -u '+%Y-%m-%d %H:%M')] UTC"
+            git push
+          fi
