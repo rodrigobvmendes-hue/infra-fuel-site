@@ -22,13 +22,18 @@ jobs:
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
         run: |
           BOARD_ID="69f24cd6f0e0329b17b7bcce"
-          RESPONSE=$(curl --silent --fail \
+
+          HTTP_STATUS=$(curl --silent --output /tmp/trello_raw.json --write-out "%{http_code}" \
             "https://api.trello.com/1/boards/${BOARD_ID}?cards=open&card_fields=name,idList,due,dueComplete,url&lists=open&list_fields=name&key=${TRELLO_API_KEY}&token=${TRELLO_TOKEN}")
-          if [ $? -ne 0 ]; then
-            echo "ERRO: falha na API do Trello."
+
+          echo "HTTP status: $HTTP_STATUS"
+          echo "Resposta da API:"
+          cat /tmp/trello_raw.json
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "ERRO: API retornou $HTTP_STATUS"
             exit 1
           fi
-          echo "$RESPONSE" > /tmp/trello_raw.json
 
       - name: Gerar trello-status.json
         run: |
