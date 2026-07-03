@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-03T12:55:02Z",
+  "updatedAt": "2026-07-03T19:38:41.029Z",
   "boardId": "69f24cd6f0e0329b17b7bcce",
   "cards": [
     {
@@ -8,12 +8,9 @@
       "status": "a-fazer",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/SAVFQnv4/34-transpetro-caxias-duto",
-      "createdAt": null,
-      "lastActivity": "2026-05-20T14:30:00.000Z",
-      "lat": -22.77,
-      "lng": -43.31,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/SAVFQnv4",
+      "createdAt": "2026-06-05T13:39:12.000Z",
+      "dateLastActivity": "2026-06-18T18:44:55.295Z"
     },
     {
       "name": "Projeto Inpasa",
@@ -21,12 +18,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/3poJ6FTq/30-projeto-inpasa",
-      "createdAt": "2026-05-27T17:03:00.000Z",
-      "lastActivity": "2026-07-02T11:00:00.000Z",
-      "lat": -15.6,
-      "lng": -56.09,
-      "createdAtSource": "confirmed"
+      "url": "https://trello.com/c/3poJ6FTq",
+      "createdAt": "2026-05-27T20:03:34.000Z",
+      "dateLastActivity": "2026-06-22T17:39:12.343Z"
     },
     {
       "name": "Stang - Itajaí",
@@ -34,12 +28,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/AvvBPMRz/38-stang-itaja%C3%AD",
-      "createdAt": null,
-      "lastActivity": "2026-06-30T16:00:00.000Z",
-      "lat": -26.91,
-      "lng": -48.66,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/AvvBPMRz",
+      "createdAt": "2026-06-18T19:29:33.000Z",
+      "dateLastActivity": "2026-06-22T17:41:38.588Z"
     },
     {
       "name": "Greenfield - Itajaí - Rede galo",
@@ -47,12 +38,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/gSMODKlK/8-greenfield-itaja%C3%AD-rede-galo",
-      "createdAt": null,
-      "lastActivity": "2026-06-20T10:30:00.000Z",
-      "lat": -26.91,
-      "lng": -48.66,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/gSMODKlK",
+      "createdAt": "2026-04-30T15:38:47.000Z",
+      "dateLastActivity": "2026-06-22T17:42:53.408Z"
     },
     {
       "name": "PECEM",
@@ -60,12 +48,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/qON4sNVZ/3-pecem",
-      "createdAt": null,
-      "lastActivity": "2026-06-15T09:00:00.000Z",
-      "lat": -3.55,
-      "lng": -38.72,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/qON4sNVZ",
+      "createdAt": "2026-04-29T18:26:24.000Z",
+      "dateLastActivity": "2026-06-22T17:45:56.764Z"
     },
     {
       "name": "Vitória - SPE - navegantes",
@@ -73,12 +58,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/2eV1Az70/15-vit%C3%B3ria-spe-navegantes",
-      "createdAt": null,
-      "lastActivity": "2026-07-01T13:00:00.000Z",
-      "lat": -26.9,
-      "lng": -48.65,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/2eV1Az70",
+      "createdAt": "2026-04-30T17:40:55.000Z",
+      "dateLastActivity": "2026-06-18T18:30:01.480Z"
     },
     {
       "name": "Vitória - Base Santa Rosa",
@@ -86,12 +68,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/XLFTbGmr/31-vit%C3%B3ria-base-santa-rosa",
-      "createdAt": null,
-      "lastActivity": "2026-06-25T14:00:00.000Z",
-      "lat": -20.31,
-      "lng": -40.33,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/XLFTbGmr",
+      "createdAt": "2026-05-27T20:17:46.000Z",
+      "dateLastActivity": "2026-06-18T18:27:13.419Z"
     },
     {
       "name": "Vitória - Atlântica",
@@ -99,12 +78,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/0qZc8d7o/14-vit%C3%B3ria-atl%C3%A2ntica",
-      "createdAt": null,
-      "lastActivity": "2026-06-28T10:00:00.000Z",
-      "lat": -20.33,
-      "lng": -40.29,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/0qZc8d7o",
+      "createdAt": "2026-04-30T17:40:45.000Z",
+      "dateLastActivity": "2026-06-18T18:27:17.841Z"
     },
     {
       "name": "WM - Vila velha",
@@ -112,12 +88,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/if5aYqfE/36-wm-vila-velha",
-      "createdAt": null,
-      "lastActivity": "2026-06-18T11:00:00.000Z",
-      "lat": -20.33,
-      "lng": -40.29,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/if5aYqfE",
+      "createdAt": "2026-06-18T18:09:02.000Z",
+      "dateLastActivity": "2026-06-22T17:36:30.925Z"
     },
     {
       "name": "Negociação EFEN - Caxias",
@@ -125,12 +98,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/jNUIX0qo/13-negocia%C3%A7%C3%A3o-efen-caxias",
-      "createdAt": null,
-      "lastActivity": "2026-06-01T09:00:00.000Z",
-      "lat": -22.77,
-      "lng": -43.31,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/jNUIX0qo",
+      "createdAt": "2026-04-30T17:40:31.000Z",
+      "dateLastActivity": "2026-06-30T18:46:59.149Z"
     },
     {
       "name": "Rumos - Uberlândia",
@@ -138,12 +108,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/HYXtcV4B/19-rumos-uberl%C3%A2ndia",
-      "createdAt": null,
-      "lastActivity": "2026-06-10T10:00:00.000Z",
-      "lat": -18.91,
-      "lng": -48.27,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/HYXtcV4B",
+      "createdAt": "2026-05-06T13:58:06.000Z",
+      "dateLastActivity": "2026-06-18T18:31:24.373Z"
     },
     {
       "name": "Paulínia - Torrão",
@@ -151,12 +118,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/pOP1QEF7/24-paul%C3%ADnia-torr%C3%A3o",
-      "createdAt": null,
-      "lastActivity": "2026-06-22T14:00:00.000Z",
-      "lat": -22.76,
-      "lng": -47.15,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/pOP1QEF7",
+      "createdAt": "2026-05-19T14:33:06.000Z",
+      "dateLastActivity": "2026-06-18T18:32:00.493Z"
     },
     {
       "name": "Chapecó - Maxsul",
@@ -164,12 +128,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/Bj6BXkGy/27-chapec%C3%B3-maxsul",
-      "createdAt": null,
-      "lastActivity": "2026-06-15T10:00:00.000Z",
-      "lat": -27.1,
-      "lng": -52.62,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/Bj6BXkGy",
+      "createdAt": "2026-05-22T18:31:39.000Z",
+      "dateLastActivity": "2026-06-18T18:34:49.444Z"
     },
     {
       "name": "Formação de pool - LEM/Açailândia",
@@ -177,12 +138,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/kBGvH0LV/32-forma%C3%A7%C3%A3o-de-pool-lem-a%C3%A7ail%C3%A2ndia",
-      "createdAt": null,
-      "lastActivity": "2026-05-15T11:00:00.000Z",
-      "lat": -12,
-      "lng": -44.71,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/kBGvH0LV",
+      "createdAt": "2026-05-28T18:27:35.000Z",
+      "dateLastActivity": "2026-06-22T17:53:36.167Z"
     },
     {
       "name": "Ampliar o contrato da Pontual - Araucaria",
@@ -190,12 +148,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/bXwAKeFJ/35-ampliar-o-contrato-da-pontual-araucaria",
-      "createdAt": null,
-      "lastActivity": "2026-07-01T09:00:00.000Z",
-      "lat": -25.59,
-      "lng": -49.41,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/bXwAKeFJ",
+      "createdAt": "2026-06-09T19:01:52.000Z",
+      "dateLastActivity": "2026-06-26T14:17:19.549Z"
     },
     {
       "name": "Ypetro - Maracanau (Ceará)",
@@ -203,12 +158,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/VaDEcACe/37-ypetro-maracanau-cear%C3%A1",
-      "createdAt": null,
-      "lastActivity": "2026-07-02T08:00:00.000Z",
-      "lat": -3.87,
-      "lng": -38.62,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/VaDEcACe",
+      "createdAt": "2026-06-18T18:18:24.000Z",
+      "dateLastActivity": "2026-06-30T18:50:38.604Z"
     },
     {
       "name": "Vitória - Oiltank",
@@ -216,12 +168,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/R0dks6iu/39-vit%C3%B3ria-oiltank",
-      "createdAt": null,
-      "lastActivity": "2026-07-01T12:00:00.000Z",
-      "lat": -20.31,
-      "lng": -40.33,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/R0dks6iu",
+      "createdAt": "2026-06-30T18:48:53.000Z",
+      "dateLastActivity": "2026-06-30T18:49:01.229Z"
     },
     {
       "name": "Paulínia - Opla",
@@ -229,12 +178,9 @@
       "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/K9DCJOpx/40-paul%C3%ADnia-opla",
-      "createdAt": null,
-      "lastActivity": "2026-06-25T15:00:00.000Z",
-      "lat": -22.76,
-      "lng": -47.15,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/K9DCJOpx",
+      "createdAt": "2026-06-30T18:50:11.000Z",
+      "dateLastActivity": "2026-06-30T18:52:36.228Z"
     },
     {
       "name": "BID São Luís",
@@ -242,12 +188,9 @@
       "status": "renovacao",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/7ZzUlDPi/10-bid-s%C3%A3o-lu%C3%ADs",
-      "createdAt": null,
-      "lastActivity": "2026-06-25T10:00:00.000Z",
-      "lat": -2.53,
-      "lng": -44.3,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/7ZzUlDPi",
+      "createdAt": "2026-04-30T15:46:15.000Z",
+      "dateLastActivity": "2026-06-22T17:54:37.091Z"
     },
     {
       "name": "BID Ipojuca",
@@ -255,12 +198,9 @@
       "status": "renovacao",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/HpAiHrZQ/11-bid-ipojuca",
-      "createdAt": null,
-      "lastActivity": "2026-06-18T11:00:00.000Z",
-      "lat": -8.4,
-      "lng": -35.07,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/HpAiHrZQ",
+      "createdAt": "2026-04-30T15:46:20.000Z",
+      "dateLastActivity": "2026-06-18T18:36:22.009Z"
     },
     {
       "name": "Belém - TOP",
@@ -268,25 +208,19 @@
       "status": "renovacao",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/dN43g2c5/12-bel%C3%A9m-top",
-      "createdAt": null,
-      "lastActivity": "2026-05-20T09:00:00.000Z",
-      "lat": -1.45,
-      "lng": -48.5,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/dN43g2c5",
+      "createdAt": "2026-04-30T15:46:39.000Z",
+      "dateLastActivity": "2026-06-22T17:56:58.314Z"
     },
     {
       "name": "oPhase Out BA (Jequié e Itabuna)",
       "listName": "Análise de Phase-out",
       "status": "em-analise",
-      "due": "2026-05-29T12:00:00.000Z",
+      "due": "2026-05-29",
       "dueComplete": false,
-      "url": "https://trello.com/c/Alkg8d5b/7-ophase-out-ba-jequi%C3%A9-e-itabuna",
-      "createdAt": null,
-      "lastActivity": "2026-06-10T14:00:00.000Z",
-      "lat": -13.86,
-      "lng": -40.08,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/Alkg8d5b",
+      "createdAt": "2026-04-29T18:32:56.000Z",
+      "dateLastActivity": "2026-06-18T18:40:08.352Z"
     },
     {
       "name": "IPP Guarulhos+",
@@ -294,12 +228,9 @@
       "status": "em-holding",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/83f9SFM3/2-ipp-guarulhos",
-      "createdAt": null,
-      "lastActivity": "2026-04-20T10:00:00.000Z",
-      "lat": -23.45,
-      "lng": -46.53,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/83f9SFM3",
+      "createdAt": "2026-04-29T18:25:06.000Z",
+      "dateLastActivity": "2026-05-01T14:40:32.607Z"
     },
     {
       "name": "Pool de Paulínia",
@@ -307,12 +238,9 @@
       "status": "em-holding",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/vHaFzr2O/16-pool-de-paul%C3%ADnia",
-      "createdAt": null,
-      "lastActivity": "2026-02-14T09:00:00.000Z",
-      "lat": -22.76,
-      "lng": -47.15,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/vHaFzr2O",
+      "createdAt": "2026-04-30T17:41:12.000Z",
+      "dateLastActivity": "2026-05-01T14:56:06.414Z"
     },
     {
       "name": "IPP SJRP",
@@ -320,12 +248,9 @@
       "status": "em-holding",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/CZ42td05/1-ipp-sjrp",
-      "createdAt": null,
-      "lastActivity": "2026-03-10T09:00:00.000Z",
-      "lat": -20.82,
-      "lng": -49.38,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/CZ42td05",
+      "createdAt": "2026-04-29T18:24:51.000Z",
+      "dateLastActivity": "2026-05-18T17:07:27.224Z"
     },
     {
       "name": "Goiânia - Nexta",
@@ -333,12 +258,9 @@
       "status": "em-holding",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/JGqB08cp/25-goi%C3%A2nia-nexta",
-      "createdAt": null,
-      "lastActivity": "2026-03-05T10:00:00.000Z",
-      "lat": -16.67,
-      "lng": -49.25,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/JGqB08cp",
+      "createdAt": "2026-05-19T14:35:56.000Z",
+      "dateLastActivity": "2026-06-09T20:22:47.295Z"
     },
     {
       "name": "Santa Maria",
@@ -346,12 +268,9 @@
       "status": "em-holding",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/doVXJzNU/26-santa-maria",
-      "createdAt": null,
-      "lastActivity": "2026-01-20T09:00:00.000Z",
-      "lat": -29.68,
-      "lng": -53.8,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/doVXJzNU",
+      "createdAt": "2026-05-19T14:41:17.000Z",
+      "dateLastActivity": "2026-06-09T20:22:52.447Z"
     },
     {
       "name": "Inpasa - NDA",
@@ -359,12 +278,9 @@
       "status": "concluido",
       "due": null,
       "dueComplete": true,
-      "url": "https://trello.com/c/TfM7UZWf/9-inpasa-nda",
-      "createdAt": null,
-      "lastActivity": "2026-04-30T16:00:00.000Z",
-      "lat": -15.6,
-      "lng": -56.09,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/TfM7UZWf",
+      "createdAt": "2026-04-30T15:38:56.000Z",
+      "dateLastActivity": "2026-05-29T17:36:11.231Z"
     },
     {
       "name": "PetroBahia - Caxias",
@@ -372,12 +288,9 @@
       "status": "concluido",
       "due": null,
       "dueComplete": true,
-      "url": "https://trello.com/c/kotsy8by/23-petrobahia-caxias",
-      "createdAt": null,
-      "lastActivity": "2026-05-10T14:00:00.000Z",
-      "lat": -22.77,
-      "lng": -43.31,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/kotsy8by",
+      "createdAt": "2026-05-18T17:36:31.000Z",
+      "dateLastActivity": "2026-05-28T18:37:52.819Z"
     },
     {
       "name": "Capex de Goiâinia - Swap de Tanques",
@@ -385,12 +298,9 @@
       "status": "concluido",
       "due": null,
       "dueComplete": true,
-      "url": "https://trello.com/c/EdEsHVjz/33-capex-de-goi%C3%A2inia-swap-de-tanques",
-      "createdAt": null,
-      "lastActivity": "2026-06-10T11:00:00.000Z",
-      "lat": -16.67,
-      "lng": -49.25,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/EdEsHVjz",
+      "createdAt": "2026-05-29T19:32:58.000Z",
+      "dateLastActivity": "2026-06-09T19:54:51.746Z"
     },
     {
       "name": "Paulínia - S10 - Ipiranga",
@@ -398,12 +308,9 @@
       "status": "concluido",
       "due": null,
       "dueComplete": true,
-      "url": "https://trello.com/c/6NaruipS/29-paul%C3%ADnia-s10-ipiranga",
-      "createdAt": null,
-      "lastActivity": "2026-05-30T10:00:00.000Z",
-      "lat": -22.76,
-      "lng": -47.15,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/6NaruipS",
+      "createdAt": "2026-05-22T19:08:43.000Z",
+      "dateLastActivity": "2026-06-18T18:32:32.457Z"
     },
     {
       "name": "BID - Santos - Jun/26",
@@ -411,12 +318,9 @@
       "status": "concluido",
       "due": null,
       "dueComplete": true,
-      "url": "https://trello.com/c/Zqo2ULpR/28-bid-santos-jun-26",
-      "createdAt": null,
-      "lastActivity": "2026-06-28T15:00:00.000Z",
-      "lat": -23.96,
-      "lng": -46.33,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/Zqo2ULpR",
+      "createdAt": "2026-05-22T18:58:11.000Z",
+      "dateLastActivity": "2026-06-18T18:36:29.746Z"
     },
     {
       "name": "Transpetro - Itajaí, Biguaçu, Guaramirim",
@@ -424,38 +328,29 @@
       "status": "concluido",
       "due": null,
       "dueComplete": true,
-      "url": "https://trello.com/c/NdPIw6hT/21-transpetro-itaja%C3%AD-bigua%C3%A7u-guaramirim",
-      "createdAt": null,
-      "lastActivity": "2026-06-20T14:00:00.000Z",
-      "lat": -26.91,
-      "lng": -48.66,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/NdPIw6hT",
+      "createdAt": "2026-05-18T17:26:28.000Z",
+      "dateLastActivity": "2026-06-30T18:47:48.853Z"
     },
     {
       "name": "Phase out Rio Grande",
       "listName": "Concluído",
       "status": "concluido",
-      "due": "2026-05-29T12:00:00.000Z",
+      "due": "2026-05-29",
       "dueComplete": true,
-      "url": "https://trello.com/c/DrVH81BX/6-phase-out-rio-grande",
-      "createdAt": null,
-      "lastActivity": "2026-05-29T12:00:00.000Z",
-      "lat": -32.03,
-      "lng": -52.09,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/DrVH81BX",
+      "createdAt": "2026-04-29T18:32:35.000Z",
+      "dateLastActivity": "2026-06-18T18:39:24.893Z"
     },
     {
       "name": "Phase-out Uberaba",
       "listName": "Concluído",
       "status": "concluido",
-      "due": "2026-05-29T12:00:00.000Z",
+      "due": "2026-05-29",
       "dueComplete": true,
-      "url": "https://trello.com/c/tpN5zT9m/17-phase-out-uberaba",
-      "createdAt": null,
-      "lastActivity": "2026-05-29T12:00:00.000Z",
-      "lat": -19.75,
-      "lng": -47.93,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/tpN5zT9m",
+      "createdAt": "2026-04-30T17:56:40.000Z",
+      "dateLastActivity": "2026-06-18T18:39:28.229Z"
     },
     {
       "name": "Phase-Out Maceió",
@@ -463,12 +358,9 @@
       "status": "concluido",
       "due": null,
       "dueComplete": true,
-      "url": "https://trello.com/c/t45xilBr/4-phase-out-macei%C3%B3",
-      "createdAt": null,
-      "lastActivity": "2025-11-30T10:00:00.000Z",
-      "lat": -9.67,
-      "lng": -35.73,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/t45xilBr",
+      "createdAt": "2026-04-29T18:32:08.000Z",
+      "dateLastActivity": "2026-06-18T18:43:15.799Z"
     },
     {
       "name": "Phase-out Crato",
@@ -476,12 +368,9 @@
       "status": "concluido",
       "due": null,
       "dueComplete": true,
-      "url": "https://trello.com/c/wnuUchmA/5-phase-out-crato",
-      "createdAt": null,
-      "lastActivity": "2025-12-15T10:00:00.000Z",
-      "lat": -7.23,
-      "lng": -39.41,
-      "createdAtSource": "unknown"
+      "url": "https://trello.com/c/wnuUchmA",
+      "createdAt": "2026-04-29T18:32:18.000Z",
+      "dateLastActivity": "2026-06-18T18:43:17.998Z"
     }
   ]
 }
