@@ -1,0 +1,61 @@
+name: Atualizar dashboard.zip
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'bases.html'
+      - 'suprimento.html'
+      - 'cores.html'
+      - 'dashboard_cessao.html'
+      - 'trello-projetos.html'
+      - 'trello-status.json'
+      - 'style.css'
+      - 'app.js'
+      - 'data.js'
+      - 'bases-data.js'
+      - 'terminals-data.js'
+      - 'suprimento-data.js'
+      - 'scripts/sync-trello.cjs'
+
+jobs:
+  zip:
+    name: Rebuild dashboard.zip
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Gerar dashboard.zip
+        run: |
+          zip dashboard.zip \
+            index.html \
+            bases.html \
+            suprimento.html \
+            dashboard_cessao.html \
+            trello-projetos.html \
+            style.css \
+            app.js \
+            data.js \
+            bases-data.js \
+            terminals-data.js \
+            suprimento-data.js \
+            trello-status.json \
+            scripts/sync-trello.cjs
+          echo "dashboard.zip gerado com $(unzip -l dashboard.zip | tail -1 | awk '{print $2}') arquivos"
+
+      - name: Commit dashboard.zip
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dashboard.zip
+          if git diff --cached --quiet; then
+            echo "Sem mudanças no zip."
+          else
+            git commit -m "chore: rebuild dashboard.zip [$(date -u '+%Y-%m-%d %H:%M')] UTC"
+            git push origin main
+          fi
