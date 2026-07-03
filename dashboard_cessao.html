@@ -103,13 +103,19 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .ins.critical .it{color:#f87171}.ins.warning .it{color:#fbbf24}
 .ins.positive .it{color:#34d399}.ins.info .it{color:#60a5fa}
 .ins .ix{font-size:11px;color:#94a3b8;line-height:1.5}
+.hdr-right{display:flex;align-items:center;gap:16px}
+.hdr-btn{padding:6px 14px;border-radius:6px;border:1px solid #2d3452;background:#1e2130;color:#00c2ff;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;transition:.2s}
+.hdr-btn:hover{border-color:#00c2ff;background:#00c2ff22}
 @media(max-width:900px){.cr2,.sin-cards{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="hdr">
   <h1>Dashboard <span>Cessão de Espaço</span> — Terminais de Combustível</h1>
-  <div class="meta">Gerado em 02/07/2026 13:01</div>
+  <div class="hdr-right">
+    <div class="meta">Gerado em 02/07/2026 13:01</div>
+    <a href="index.html" class="hdr-btn">🏠 Projetos</a>
+  </div>
 </div>
 <div class="tabs">
   <button class="tab-btn active" id="btn-desp" onclick="showTab('desp')">💸 Despesas</button>
