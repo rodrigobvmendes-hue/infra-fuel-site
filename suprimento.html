@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suprimento · InfraFuel</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root {
+      --color-primary: #E61E2D;
+      --color-secondary: #1B3A5F;
+      --color-gray: #6b7280;
+    }
+
+    .sup-header {
+      background: linear-gradient(135deg, #1B3A5F 0%, #E61E2D 100%);
+      color: white;
+      padding: 3rem 0;
+      text-align: center;
+    }
+
+    .sup-header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    .sup-header p {
+      margin: 0.5rem 0 0;
+      opacity: 0.95;
+      font-size: 1.05rem;
+    }
+
+    .sup-header small {
+      display: block;
+      margin-top: 0.4rem;
+      opacity: 0.85;
+      font-size: 0.8rem;
+    }
+
+    .sup-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--color-primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .stat-card .number {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .stat-card .label {
+      font-size: 0.85rem;
+      color: var(--color-gray);
+      margin-top: 0.5rem;
+    }
+
+    .filters-panel {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: end;
+    }
+
+    .filters-panel h3 {
+      margin: 0 0 0.2rem;
+      color: #1f2937;
+      font-size: 0.95rem;
+      width: 100%;
+    }
+
+    .filter-group {
+      flex: 1 1 160px;
+      min-width: 140px;
+    }
+
+    .filter-group label {
+      display: block;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.35rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .filter-group select,
+    .filter-group input {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-family: inherit;
+    }
+
+    .filter-group select:focus,
+    .filter-group input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+    }
+
+    .btn-reset {
+      width: auto;
+      min-width: 140px;
+      padding: 0.55rem 0.9rem;
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.78rem;
+      transition: background 0.2s;
+    }
+
+    .btn-reset:hover {
+      background: var(--color-secondary);
+    }
+
+    .map-section {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 1rem;
+    }
+
+    #map {
+      height: 520px;
+      width: 100%;
+    }
+
+    .map-info {
+      padding: 1rem;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      font-size: 0.85rem;
+      color: var(--color-gray);
+    }
+
+    .leaflet-popup-content { font-size: 0.8rem; }
+    .popup-title { font-weight: 700; margin-bottom: 0.3rem; color: #1f2937; }
+    .popup-table { width: 100%; border-collapse: collapse; }
+    .popup-table td { padding: 0.15rem 0.3rem 0.15rem 0; border-bottom: 1px dotted #e5e7eb; }
+    .popup-table td:last-child { text-align: right; font-weight: 600; }
+
+    .results-section { margin-top: 2rem; }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0 0.5rem;
+    }
+
+    .results-header h2 {
+      margin: 0;
+      font-size: 1.3rem;
+      color: #1f2937;
+    }
+
+    .results-count {
+      font-size: 0.9rem;
+      color: var(--color-gray);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .result-card {
+      background: white;
+      padding: 0.9rem;
+      border-radius: 6px;
+      border-left: 3px solid var(--color-primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .result-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+
+    .result-name {
+      font-weight: 600;
+      color: #1f2937;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-price-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #374151;
+      margin: 0.2rem 0;
+      padding-bottom: 0.2rem;
+      border-bottom: 1px dotted #e5e7eb;
+    }
+
+    .result-price-row .produto-label { color: var(--color-gray); }
+    .result-price-row .preco-label { font-weight: 700; color: var(--color-secondary); }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--color-gray);
+    }
+
+    .legend {
+      padding: 1rem;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      font-size: 0.85rem;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 1.5rem;
+    }
+
+    .legend strong { color: #0f172a; font-weight: 700; }
+
+    .legend-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+      margin-top: 0.5rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      font-size: 0.78rem;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    @media (max-width: 1024px) {
+      #map { height: 400px; }
+      .results-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .sup-header { padding: 2rem 0; }
+      .sup-header h1 { font-size: 1.8rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+      .stat-card { padding: 1rem; }
+      .stat-card .number { font-size: 1.3rem; }
+      #map { height: 300px; }
+      .results-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-icon">⛽</span>
+        <div>
+          <span class="brand-title">InfraFuel</span>
+          <span class="brand-sub">Projetos de Infraestrutura</span>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="index.html">Projetos</a>
+        <a href="bases.html">📦 Bases</a>
+        <a href="suprimento.html" style="border-bottom: 3px solid #E61E2D;">⛽ Suprimento</a>
+        <a href="index.html#mapa">Mapa</a>
+        <a href="index.html#sobre">Sobre</a>
+        <a href="index.html#fontes">Fontes</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="sup-header">
+    <div class="sup-container">
+      <h1>⛽ Suprimento</h1>
+      <p>Pontos de fornecimento Petrobras — Diesel S10, Diesel S500 e Gasolina A</p>
+      <small id="vigencia-info">Carregando vigências...</small>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="sup-container">
+
+    <!-- Stats -->
+    <div class="stats-grid" id="stats">
+      <div class="stat-card">
+        <div class="number" id="stat-total">—</div>
+        <div class="label">Pontos de Fornecimento</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="stat-states">—</div>
+        <div class="label">UFs Atendidas</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="stat-s10">—</div>
+        <div class="label">Preço Médio Diesel S10 (R$/m³)</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="stat-s500">—</div>
+        <div class="label">Preço Médio Diesel S500 (R$/m³)</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="stat-gasa">—</div>
+        <div class="label">Preço Médio Gasolina A (R$/m³)</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-panel">
+      <h3>🔍 Filtros</h3>
+      <div class="filter-group">
+        <label>Produto</label>
+        <select id="filter-produto" onchange="render()">
+          <option value="__ALL__">Todos</option>
+          <option value="Diesel S10">Diesel S10</option>
+          <option value="Diesel S500">Diesel S500</option>
+          <option value="Gasolina A">Gasolina A</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>UF</label>
+        <select id="filter-uf" onchange="render()">
+          <option value="__ALL__">Todas</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Buscar</label>
+        <input type="text" id="search" onkeyup="render()" placeholder="Município...">
+      </div>
+      <button class="btn-reset" onclick="resetFilters()">Limpar Filtros</button>
+    </div>
+
+    <!-- Map -->
+    <div class="map-section">
+      <div id="map"></div>
+      <div class="map-info" id="map-info">Carregando mapa...</div>
+    </div>
+
+    <div class="legend">
+      <strong>Legenda</strong>
+      <div class="legend-items">
+        <div class="legend-item"><div class="legend-dot" style="background:#E61E2D;"></div><span>Ponto de Fornecimento Petrobras</span></div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <div class="results-header">
+        <h2>📋 Resultados</h2>
+        <div class="results-count"><span id="result-count">—</span> ponto(s)</div>
+      </div>
+      <div class="results-grid" id="results">
+        <div class="loading">Carregando dados...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="suprimento-data.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    let map = null;
+    let markers = [];
+    const MODALIDADE_PRIORITY = ['EXA', 'LPA', 'ETM', 'LTM', 'LPC', 'LCT', 'ETD', 'LPD', 'ETT'];
+
+    function formatBRL(value) {
+      return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function representativePricesByProduct(point) {
+      const byProduct = new Map();
+      point.prices.forEach(p => {
+        if (!byProduct.has(p.produto)) byProduct.set(p.produto, []);
+        byProduct.get(p.produto).push(p);
+      });
+      const result = [];
+      byProduct.forEach((entries, produto) => {
+        entries.sort((a, b) => {
+          const ai = MODALIDADE_PRIORITY.indexOf(a.modalidade);
+          const bi = MODALIDADE_PRIORITY.indexOf(b.modalidade);
+          return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+        });
+        result.push(entries[0]);
+      });
+      return result;
+    }
+
+    function initMap() {
+      if (map) return;
+      map = L.map('map').setView([-14.5, -52], 4);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap, © CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+    }
+
+    function populateStateFilter() {
+      const select = document.getElementById('filter-uf');
+      const states = [...new Set(SUPRIMENTO_POINTS.map(p => p.state))].sort();
+      states.forEach(uf => {
+        const opt = document.createElement('option');
+        opt.value = uf;
+        opt.textContent = uf;
+        select.appendChild(opt);
+      });
+    }
+
+    function getFiltered() {
+      const search = (document.getElementById('search').value || '').toLowerCase();
+      const produto = document.getElementById('filter-produto').value;
+      const uf = document.getElementById('filter-uf').value;
+
+      return SUPRIMENTO_POINTS.filter(p => {
+        const matchSearch = !search || p.municipality.toLowerCase().includes(search);
+        const matchUf = uf === '__ALL__' || p.state === uf;
+        const matchProduto = produto === '__ALL__' || p.prices.some(pr => pr.produto === produto);
+        return matchSearch && matchUf && matchProduto;
+      });
+    }
+
+    function updateStats() {
+      const all = SUPRIMENTO_POINTS;
+      document.getElementById('stat-total').textContent = all.length;
+      document.getElementById('stat-states').textContent = new Set(all.map(p => p.state)).size;
+
+      ['S10', 'S500', 'GasA'].forEach(() => {});
+      const avg = (produto) => {
+        const vals = [];
+        all.forEach(p => {
+          representativePricesByProduct(p).forEach(pr => {
+            if (pr.produto === produto) vals.push(pr.preco);
+          });
+        });
+        if (!vals.length) return '—';
+        return formatBRL(vals.reduce((a, b) => a + b, 0) / vals.length);
+      };
+      document.getElementById('stat-s10').textContent = avg('Diesel S10');
+      document.getElementById('stat-s500').textContent = avg('Diesel S500');
+      document.getElementById('stat-gasa').textContent = avg('Gasolina A');
+
+      document.getElementById('vigencia-info').textContent =
+        `Diesel (S10/S500): vigência ${SUPRIMENTO_META.vigenciaDiesel} · Gasolina A: vigência ${SUPRIMENTO_META.vigenciaGasolina} · preços de tabela, sem tributos, à vista (R$/m³)`;
+    }
+
+    function renderMap() {
+      if (!map) initMap();
+      markers.forEach(m => map.removeLayer(m));
+      markers = [];
+
+      const filtered = getFiltered();
+      filtered.forEach(p => {
+        const marker = L.circleMarker([p.lat, p.lng], {
+          radius: 6,
+          fillColor: '#E61E2D',
+          color: '#fff',
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.9
+        });
+
+        const rows = representativePricesByProduct(p)
+          .map(pr => `<tr><td>${pr.produto} <span style="color:#9ca3af;">(${pr.modalidade})</span></td><td>R$ ${formatBRL(pr.preco)}</td></tr>`)
+          .join('');
+
+        marker.bindPopup(`
+          <div class="popup-title">${p.municipality} (${p.state})</div>
+          <table class="popup-table">${rows}</table>
+        `);
+
+        marker.addTo(map);
+        markers.push(marker);
+      });
+
+      document.getElementById('map-info').textContent = `${filtered.length} ponto(s) de fornecimento exibido(s) no mapa.`;
+    }
+
+    function renderResults() {
+      const filtered = getFiltered();
+      const container = document.getElementById('results');
+      document.getElementById('result-count').textContent = filtered.length;
+
+      if (!filtered.length) {
+        container.innerHTML = '<div class="loading">Nenhum ponto encontrado com os filtros selecionados.</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(p => {
+        const rows = representativePricesByProduct(p)
+          .map(pr => `<div class="result-price-row"><span class="produto-label">${pr.produto}</span><span class="preco-label">R$ ${formatBRL(pr.preco)}</span></div>`)
+          .join('');
+        return `<div class="result-card">
+          <div class="result-name">📍 ${p.municipality} (${p.state})</div>
+          ${rows}
+        </div>`;
+      }).join('');
+    }
+
+    function render() {
+      renderMap();
+      renderResults();
+    }
+
+    function resetFilters() {
+      document.getElementById('filter-produto').value = '__ALL__';
+      document.getElementById('filter-uf').value = '__ALL__';
+      document.getElementById('search').value = '';
+      render();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initMap();
+      populateStateFilter();
+      updateStats();
+      render();
+    });
+  </script>
+</body>
+</html>

@@ -487,6 +487,7 @@
       <nav class="header-nav">
         <a href="index.html">Projetos</a>
         <a href="bases.html" style="border-bottom: 3px solid #E61E2D;">📦 Bases</a>
+        <a href="suprimento.html">⛽ Suprimento</a>
         <a href="index.html#mapa">Mapa</a>
         <a href="index.html#sobre">Sobre</a>
         <a href="index.html#fontes">Fontes</a>
@@ -694,10 +695,10 @@
         .trim();
     }
 
-    function formatCapacityInThousands(valueInCubicMeters) {
+    function formatCapacity(valueInCubicMeters) {
       const parsed = Number(valueInCubicMeters);
       if (!Number.isFinite(parsed)) return 'Não informado';
-      return `${Math.round(parsed / 1000).toLocaleString('pt-BR')} mil m³`;
+      return `${Math.round(parsed).toLocaleString('pt-BR')} m³`;
     }
 
     function formatAggregatedCapacity(valueInCubicMeters) {
@@ -1250,7 +1251,7 @@
             ${b.municipality}, ${b.state}<br/>
             ${effectiveClassification} • ${b.baseType}<br/>
             ${poolDetails}
-            📦 ${formatCapacityInThousands(String(b.capacity).replace(/\D/g, ''))}
+            📦 ${formatCapacity(String(b.capacity).replace(/\D/g, ''))}
           `);
           
           marker.addTo(map);
@@ -1319,7 +1320,7 @@
       });
       filteredTerminals.forEach(terminal => {
         const num = parseInt(String(terminal.capacity).replace(/\D/g, '')) || 0;
-        capacity += num;
+        capacity += num * 1000;
       });
       
       document.getElementById('stat-total').textContent = filtered.length;
@@ -1337,7 +1338,7 @@
         const poolMeta = b.isPoolAggregate
           ? `<div class="result-meta">👥 ${b.poolParticipantCount} participante(s)</div><div class="result-meta">${b.poolParticipants.slice(0, 4).join(' • ')}${b.poolParticipants.length > 4 ? ' • ...' : ''}</div>`
           : '';
-        return `<div class="result-card"><div class="result-name">${b.name}</div><div class="result-meta">📍 ${b.municipality}, ${b.state}</div><div class="result-meta">${effectiveClassification} • ${b.baseType}</div>${poolMeta}<div style="margin-top:0.3rem;"><span class="result-badge ${classBadgeClass}">${effectiveClassification}</span><span class="result-badge">${sizeEmoji[b.sizeCategory] || '—'} ${b.sizeCategory}</span><span class="result-badge">📦 ${formatCapacityInThousands(String(b.capacity).replace(/\D/g, ''))}</span></div></div>`;
+        return `<div class="result-card"><div class="result-name">${b.name}</div><div class="result-meta">📍 ${b.municipality}, ${b.state}</div><div class="result-meta">${effectiveClassification} • ${b.baseType}</div>${poolMeta}<div style="margin-top:0.3rem;"><span class="result-badge ${classBadgeClass}">${effectiveClassification}</span><span class="result-badge">${sizeEmoji[b.sizeCategory] || '—'} ${b.sizeCategory}</span><span class="result-badge">📦 ${formatCapacity(String(b.capacity).replace(/\D/g, ''))}</span></div></div>`;
       });
       const terminalHtml = filteredTerminals.map(terminal => `<div class="result-card"><div class="result-name">${terminal.name}</div><div class="result-meta">📍 ${terminal.municipality}, ${terminal.state}</div><div class="result-meta">TERMINAL • ${terminal.terminalType}</div><div style="margin-top:0.3rem;"><span class="result-badge result-badge--terminal">TERMINAL</span><span class="result-badge">🛢️ ${terminal.tankCount || '—'} tanque(s)</span><span class="result-badge">📦 ${terminal.capacity}</span></div></div>`);
       const html = (baseHtml.length || terminalHtml.length)
