@@ -1,6 +1,6 @@
 name: Atualizar dashboard.zip
 
-on:
+"on":
   push:
     branches: [main]
     paths:
