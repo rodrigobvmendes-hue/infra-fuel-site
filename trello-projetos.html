@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Projetos Trello · InfraFuel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0f1117;color:#e2e8f0;font-size:14px}
+.hdr{background:#161929;border-bottom:1px solid #2d3452;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.hdr h1{font-size:18px;font-weight:700;color:#fff}.hdr h1 span{color:#00c2ff}
+.hdr-right{display:flex;align-items:center;gap:12px}
+.hdr .meta{font-size:11px;color:#475569}
+.hdr-btn{padding:5px 14px;border-radius:6px;border:1px solid #2d3452;background:#1e2130;color:#00c2ff;font-size:12px;font-weight:600;text-decoration:none;transition:.2s}
+.hdr-btn:hover{border-color:#00c2ff;background:#00c2ff22}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:20px 28px;background:#0d1021;border-bottom:1px solid #1e2844}
+.kpi{background:#1e2130;border:1px solid #2d3452;border-radius:8px;padding:16px 18px;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden;user-select:none}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi-total::before{background:linear-gradient(90deg,#00c2ff,#0066ff)}
+.kpi-ativo::before{background:#3b82f6}
+.kpi-holding::before{background:#8b5cf6}
+.kpi-concluido::before{background:#22c55e}
+.kpi:hover,.kpi.active{border-color:#00c2ff;background:#1a2340}
+.kpi.active .kpi-val,.kpi:hover .kpi-val{color:#00c2ff}
+.kpi-lbl{font-size:10px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+.kpi-val{font-size:26px;font-weight:700;color:#f1f5f9;line-height:1;transition:color .15s}
+.kpi-sub{font-size:11px;color:#475569;margin-top:4px}
+.toolbar{padding:12px 28px;background:#0d1021;border-bottom:1px solid #1e2844;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:57px;z-index:199}
+.fbts{display:flex;gap:6px;flex-wrap:wrap}
+.fbt{padding:5px 12px;border-radius:5px;border:1px solid #2d3452;background:#1e2130;color:#94a3b8;font-size:12px;cursor:pointer;font-family:inherit;transition:.15s}
+.fbt:hover{border-color:#00c2ff;color:#00c2ff}
+.fbt.active{background:#00c2ff22;border-color:#00c2ff;color:#00c2ff;font-weight:600}
+.sep{width:1px;height:22px;background:#2d3452;flex-shrink:0}
+.srch{position:relative}
+.srch input{background:#1e2130;border:1px solid #2d3452;color:#e2e8f0;border-radius:5px;padding:6px 28px 6px 26px;font-size:12px;font-family:inherit;outline:none;width:210px;transition:border .2s}
+.srch input:focus{border-color:#00c2ff}
+.srch .si{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:11px;pointer-events:none}
+.srch .sc{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:#64748b;cursor:pointer;font-size:11px;padding:2px;display:none}
+.count-lbl{font-size:11px;color:#475569;margin-left:auto;white-space:nowrap}
+.content{max-width:1600px;margin:0 auto;padding:24px 28px}
+.sec-title{font-size:13px;font-weight:600;color:#94a3b8;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #1e2844;display:flex;align-items:center;gap:6px}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:36px}
+.pcard{background:#1e2130;border:1px solid #2d3452;border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;transition:border-color .2s,transform .15s}
+.pcard:hover{border-color:#3d4a6d;transform:translateY(-2px)}
+.pcard[hidden]{display:none}
+.pcard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.pcard-name{font-size:13px;font-weight:600;color:#e2e8f0;line-height:1.35;flex:1}
+.pcard-link{color:#475569;font-size:12px;text-decoration:none;flex-shrink:0;padding:2px 5px;border-radius:3px;transition:.15s}
+.pcard-link:hover{color:#00c2ff;background:#00c2ff15}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px}
+.b-andamento{background:#1d3461;color:#93c5fd;border:1px solid #2563eb}
+.b-renovacao{background:#3d2a00;color:#fde68a;border:1px solid #d97706}
+.b-analise{background:#3d1e00;color:#fdba74;border:1px solid #ea580c}
+.b-afazer{background:#1e293b;color:#94a3b8;border:1px solid #334155}
+.b-holding{background:#2e1065;color:#c4b5fd;border:1px solid #7c3aed}
+.b-concluido{background:#052e16;color:#86efac;border:1px solid #16a34a}
+.due-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;background:#422006;color:#fed7aa;border:1px solid #c2410c}
+.due-over{background:#450a0a;color:#fca5a5;border:1px solid #dc2626}
+.pcard-divider{height:1px;background:#1e2844;margin:2px 0}
+.pcard-meta{display:flex;flex-direction:column;gap:3px}
+.pcard-row{display:flex;align-items:center;gap:6px;font-size:11px;color:#64748b}
+.pcard-row .v{color:#94a3b8}
+.dias-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;margin-top:2px}
+.dias-ok{background:#052e16;color:#86efac;border:1px solid #15803d}
+.dias-warn{background:#422006;color:#fed7aa;border:1px solid #c2410c}
+.dias-alert{background:#450a0a;color:#fca5a5;border:1px solid #dc2626}
+#map{height:420px;border-radius:8px;border:1px solid #2d3452;overflow:hidden;margin-bottom:12px}
+.leaflet-popup-content-wrapper{background:#1e2130;border:1px solid #2d3452;color:#e2e8f0;border-radius:7px;font-family:'Inter',sans-serif}
+.leaflet-popup-content{font-size:12px;line-height:1.6;margin:10px 14px}
+.leaflet-popup-content b{color:#00c2ff}
+.leaflet-popup-tip{background:#1e2130}
+.map-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#64748b;margin-bottom:32px}
+.map-legend span{display:flex;align-items:center;gap:5px}
+.leg-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0}
+.empty-msg{text-align:center;padding:48px;color:#475569;font-size:13px;grid-column:1/-1}
+@media(max-width:900px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.cards-grid{grid-template-columns:1fr}.kpi-row{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>📋 Projetos <span>Trello</span> — InfraFuel</h1>
+  <div class="hdr-right">
+    <span class="meta" id="updated-lbl"></span>
+    <a href="index.html" class="hdr-btn">🏠 Início</a>
+    <a href="dashboard_cessao.html" class="hdr-btn">📊 Cessão</a>
+  </div>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi kpi-total" id="kpi-all" onclick="setKpi('all')">
+    <div class="kpi-lbl">Total de projetos</div>
+    <div class="kpi-val" id="v-all">—</div>
+    <div class="kpi-sub">todos os status</div>
+  </div>
+  <div class="kpi kpi-ativo" id="kpi-ativo" onclick="setKpi('ativo')">
+    <div class="kpi-lbl">Em Andamento</div>
+    <div class="kpi-val" id="v-ativo">—</div>
+    <div class="kpi-sub">negociação · renovação · análise</div>
+  </div>
+  <div class="kpi kpi-holding" id="kpi-holding" onclick="setKpi('em-holding')">
+    <div class="kpi-lbl">Em Holding</div>
+    <div class="kpi-val" id="v-holding">—</div>
+    <div class="kpi-sub">aguardando definição</div>
+  </div>
+  <div class="kpi kpi-concluido" id="kpi-concluido" onclick="setKpi('concluido')">
+    <div class="kpi-lbl">Concluído</div>
+    <div class="kpi-val" id="v-concluido">—</div>
+    <div class="kpi-sub">entregues</div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="fbts" id="filter-btns">
+    <button class="fbt active" data-f="all">Todos</button>
+    <button class="fbt" data-f="em-andamento">🔵 Negociação</button>
+    <button class="fbt" data-f="renovacao">🟡 Renovações</button>
+    <button class="fbt" data-f="em-analise">🟠 Phase-out</button>
+    <button class="fbt" data-f="a-fazer">⚪ A Fazer</button>
+    <button class="fbt" data-f="em-holding">🟣 Holding</button>
+    <button class="fbt" data-f="concluido">🟢 Concluído</button>
+  </div>
+  <div class="sep"></div>
+  <button class="fbt" id="sort-btn" title="Ordenar por tempo sem avanço">⏱ Sem avanço: <span id="sort-lbl">↓ Mais</span></button>
+  <div class="sep"></div>
+  <div class="srch">
+    <span class="si">🔍</span>
+    <input type="text" id="search" placeholder="Buscar projeto…" autocomplete="off">
+    <button class="sc" id="sclear">✕</button>
+  </div>
+  <span class="count-lbl" id="count-lbl"></span>
+</div>
+
+<div class="content">
+  <div class="sec-title">🗂 Projetos <span id="filter-lbl" style="font-size:11px;color:#475569;font-weight:400;margin-left:6px"></span></div>
+  <div class="cards-grid" id="cards-grid"></div>
+
+  <div class="sec-title">🗺 Distribuição Geográfica</div>
+  <div id="map"></div>
+  <div class="map-legend">
+    <span><span class="leg-dot" style="background:#3b82f6"></span>Negociação</span>
+    <span><span class="leg-dot" style="background:#f59e0b"></span>Renovações</span>
+    <span><span class="leg-dot" style="background:#f97316"></span>Phase-out</span>
+    <span><span class="leg-dot" style="background:#64748b"></span>A Fazer</span>
+    <span><span class="leg-dot" style="background:#8b5cf6"></span>Em Holding</span>
+    <span><span class="leg-dot" style="background:#22c55e"></span>Concluído</span>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const CARDS=[
+  {n:"Transpetro - Caxias - Duto",l:"A fazer",s:"a-fazer",due:null,url:"https://trello.com/c/SAVFQnv4",cr:null,la:"2026-05-20",lat:-22.77,lng:-43.31},
+  {n:"Projeto Inpasa",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/3poJ6FTq",cr:"2026-05-27",crOk:true,la:"2026-07-02",lat:-15.60,lng:-56.09},
+  {n:"Stang - Itajaí",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/AvvBPMRz",cr:null,la:"2026-06-30",lat:-26.91,lng:-48.66},
+  {n:"Greenfield - Itajaí - Rede galo",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/gSMODKlK",cr:null,la:"2026-06-20",lat:-26.91,lng:-48.66},
+  {n:"PECEM",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/qON4sNVZ",cr:null,la:"2026-06-15",lat:-3.55,lng:-38.72},
+  {n:"Vitória - SPE - Navegantes",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/2eV1Az70",cr:null,la:"2026-07-01",lat:-26.90,lng:-48.65},
+  {n:"Vitória - Base Santa Rosa",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/XLFTbGmr",cr:null,la:"2026-06-25",lat:-20.31,lng:-40.33},
+  {n:"Vitória - Atlântica",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/0qZc8d7o",cr:null,la:"2026-06-28",lat:-20.33,lng:-40.29},
+  {n:"WM - Vila Velha",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/if5aYqfE",cr:null,la:"2026-06-18",lat:-20.33,lng:-40.29},
+  {n:"Negociação EFEN - Caxias",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/jNUIX0qo",cr:null,la:"2026-06-01",lat:-22.77,lng:-43.31},
+  {n:"Rumos - Uberlândia",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/HYXtcV4B",cr:null,la:"2026-06-10",lat:-18.91,lng:-48.27},
+  {n:"Paulínia - Torrão",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/pOP1QEF7",cr:null,la:"2026-06-22",lat:-22.76,lng:-47.15},
+  {n:"Chapecó - Maxsul",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/Bj6BXkGy",cr:null,la:"2026-06-15",lat:-27.10,lng:-52.62},
+  {n:"Formação de pool - LEM/Açailândia",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/kBGvH0LV",cr:null,la:"2026-05-15",lat:-12.00,lng:-44.71},
+  {n:"Ampliar contrato Pontual - Araucaria",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/bXwAKeFJ",cr:null,la:"2026-07-01",lat:-25.59,lng:-49.41},
+  {n:"Ypetro - Maracanau (Ceará)",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/VaDEcACe",cr:null,la:"2026-07-02",lat:-3.87,lng:-38.62},
+  {n:"Vitória - Oiltank",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/R0dks6iu",cr:null,la:"2026-07-01",lat:-20.31,lng:-40.33},
+  {n:"Paulínia - Opla",l:"Em andamento",s:"em-andamento",due:null,url:"https://trello.com/c/K9DCJOpx",cr:null,la:"2026-06-25",lat:-22.76,lng:-47.15},
+  {n:"BID São Luís",l:"Renovações",s:"renovacao",due:null,url:"https://trello.com/c/7ZzUlDPi",cr:null,la:"2026-06-25",lat:-2.53,lng:-44.30},
+  {n:"BID Ipojuca",l:"Renovações",s:"renovacao",due:null,url:"https://trello.com/c/HpAiHrZQ",cr:null,la:"2026-06-18",lat:-8.40,lng:-35.07},
+  {n:"Belém - TOP",l:"Renovações",s:"renovacao",due:null,url:"https://trello.com/c/dN43g2c5",cr:null,la:"2026-05-20",lat:-1.45,lng:-48.50},
+  {n:"oPhase Out BA (Jequié e Itabuna)",l:"Análise de Phase-out",s:"em-analise",due:"2026-05-29",url:"https://trello.com/c/Alkg8d5b",cr:null,la:"2026-06-10",lat:-13.86,lng:-40.08},
+  {n:"IPP Guarulhos+",l:"Em Holding",s:"em-holding",due:null,url:"https://trello.com/c/83f9SFM3",cr:null,la:"2026-04-20",lat:-23.45,lng:-46.53},
+  {n:"Pool de Paulínia",l:"Em Holding",s:"em-holding",due:null,url:"https://trello.com/c/vHaFzr2O",cr:null,la:"2026-02-14",lat:-22.76,lng:-47.15},
+  {n:"IPP SJRP",l:"Em Holding",s:"em-holding",due:null,url:"https://trello.com/c/CZ42td05",cr:null,la:"2026-03-10",lat:-20.82,lng:-49.38},
+  {n:"Goiânia - Nexta",l:"Em Holding",s:"em-holding",due:null,url:"https://trello.com/c/JGqB08cp",cr:null,la:"2026-03-05",lat:-16.67,lng:-49.25},
+  {n:"Santa Maria",l:"Em Holding",s:"em-holding",due:null,url:"https://trello.com/c/doVXJzNU",cr:null,la:"2026-01-20",lat:-29.68,lng:-53.80},
+  {n:"Inpasa - NDA",l:"Concluído",s:"concluido",due:null,url:"https://trello.com/c/TfM7UZWf",cr:null,la:"2026-04-30",lat:-15.60,lng:-56.09},
+  {n:"PetroBahia - Caxias",l:"Concluído",s:"concluido",due:null,url:"https://trello.com/c/kotsy8by",cr:null,la:"2026-05-10",lat:-22.77,lng:-43.31},
+  {n:"Capex Goiânia - Swap de Tanques",l:"Concluído",s:"concluido",due:null,url:"https://trello.com/c/EdEsHVjz",cr:null,la:"2026-06-10",lat:-16.67,lng:-49.25},
+  {n:"Paulínia - S10 - Ipiranga",l:"Concluído",s:"concluido",due:null,url:"https://trello.com/c/6NaruipS",cr:null,la:"2026-05-30",lat:-22.76,lng:-47.15},
+  {n:"BID - Santos - Jun/26",l:"Concluído",s:"concluido",due:null,url:"https://trello.com/c/Zqo2ULpR",cr:null,la:"2026-06-28",lat:-23.96,lng:-46.33},
+  {n:"Transpetro - Itajaí, Biguaçu, Guaramirim",l:"Concluído",s:"concluido",due:null,url:"https://trello.com/c/NdPIw6hT",cr:null,la:"2026-06-20",lat:-26.91,lng:-48.66},
+  {n:"Phase out Rio Grande",l:"Concluído",s:"concluido",due:"2026-05-29",url:"https://trello.com/c/DrVH81BX",cr:null,la:"2026-05-29",lat:-32.03,lng:-52.09},
+  {n:"Phase-out Uberaba",l:"Concluído",s:"concluido",due:"2026-05-29",url:"https://trello.com/c/tpN5zT9m",cr:null,la:"2026-05-29",lat:-19.75,lng:-47.93},
+  {n:"Phase-Out Maceió",l:"Concluído",s:"concluido",due:null,url:"https://trello.com/c/t45xilBr",cr:null,la:"2025-11-30",lat:-9.67,lng:-35.73},
+  {n:"Phase-out Crato",l:"Concluído",s:"concluido",due:null,url:"https://trello.com/c/wnuUchmA",cr:null,la:"2025-12-15",lat:-7.23,lng:-39.41}
+];
+
+const UPDATED="2026-07-03T12:55:02Z";
+const TODAY=new Date("2026-07-03");
+const ACTIVE=new Set(["em-andamento","renovacao","em-analise","a-fazer"]);
+const SM={
+  "em-andamento":{label:"Negociação",cls:"b-andamento"},
+  "renovacao":{label:"Renovações",cls:"b-renovacao"},
+  "em-analise":{label:"Phase-out",cls:"b-analise"},
+  "a-fazer":{label:"A Fazer",cls:"b-afazer"},
+  "em-holding":{label:"Em Holding",cls:"b-holding"},
+  "concluido":{label:"Concluído",cls:"b-concluido"}
+};
+const MC={"em-andamento":"#3b82f6","renovacao":"#f59e0b","em-analise":"#f97316","a-fazer":"#64748b","em-holding":"#8b5cf6","concluido":"#22c55e"};
+
+let activeKpi="all",activeFilter="all",searchQ="",sortOrder=null;
+
+function days(d){return d?Math.floor((TODAY-new Date(d))/(864e5)):null}
+function fd(d){if(!d)return"—";const p=d.slice(0,10).split("-");return`${p[2]}/${p[1]}/${p[0]}`}
+function diasBadge(d,s){
+  if(s==="concluido"||d===null)return"";
+  const cl=d<=14?"dias-ok":d<=30?"dias-warn":"dias-alert";
+  const ic=d<=14?"✅":d<=30?"⚠️":"🔴";
+  return`<span class="dias-badge ${cl}">${ic} ${d}d sem avanço</span>`;
+}
+function diasCriacaoBadge(cr,crOk){
+  const d=days(cr);
+  if(d===null)return`<span style="font-size:10px;color:#475569;font-style:italic">📋 Criação: execute sync-trello para obter data real</span>`;
+  const note=crOk?"":"*";
+  return`<span class="dias-badge" style="background:#0f172a;border:1px solid #334155;color:#94a3b8">🗓 ${d}d desde criação${note}</span>`;
+}
+
+function matches(c){
+  if(activeKpi!=="all"){
+    if(activeKpi==="ativo"&&!ACTIVE.has(c.s))return false;
+    if(activeKpi==="em-holding"&&c.s!=="em-holding")return false;
+    if(activeKpi==="concluido"&&c.s!=="concluido")return false;
+  }
+  if(activeFilter!=="all"&&c.s!==activeFilter)return false;
+  if(searchQ&&!c.n.toLowerCase().includes(searchQ))return false;
+  return true;
+}
+
+function buildKpis(){
+  document.getElementById("v-all").textContent=CARDS.length;
+  document.getElementById("v-ativo").textContent=CARDS.filter(c=>ACTIVE.has(c.s)).length;
+  document.getElementById("v-holding").textContent=CARDS.filter(c=>c.s==="em-holding").length;
+  document.getElementById("v-concluido").textContent=CARDS.filter(c=>c.s==="concluido").length;
+}
+
+function setKpi(k){
+  activeKpi=k;activeFilter="all";searchQ="";
+  document.getElementById("search").value="";
+  document.getElementById("sclear").style.display="none";
+  ["all","ativo","em-holding","concluido"].forEach(id=>{
+    document.getElementById("kpi-"+(id==="all"?"all":id==="ativo"?"ativo":id==="em-holding"?"holding":"concluido"))
+      .classList.toggle("active",id===k);
+  });
+  document.querySelectorAll("#filter-btns .fbt").forEach(b=>b.classList.toggle("active",b.dataset.f==="all"));
+  render();
+}
+
+document.getElementById("filter-btns").addEventListener("click",e=>{
+  const b=e.target.closest(".fbt");if(!b)return;
+  activeFilter=b.dataset.f;activeKpi="all";
+  document.querySelectorAll("#filter-btns .fbt").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  document.querySelectorAll(".kpi").forEach(k=>k.classList.remove("active"));
+  render();
+});
+
+const srch=document.getElementById("search"),scl=document.getElementById("sclear");
+srch.addEventListener("input",()=>{searchQ=srch.value.trim().toLowerCase();scl.style.display=searchQ?"block":"none";render();});
+scl.addEventListener("click",()=>{srch.value="";searchQ="";scl.style.display="none";render();});
+
+document.getElementById("sort-btn").addEventListener("click",()=>{
+  if(sortOrder===null)       sortOrder="desc";
+  else if(sortOrder==="desc")sortOrder="asc";
+  else                       sortOrder=null;
+  document.getElementById("sort-lbl").textContent=sortOrder==="asc"?"↑ Menos":"↓ Mais";
+  document.getElementById("sort-btn").classList.toggle("active",sortOrder!==null);
+  render();
+});
+
+function render(){
+  let vis=CARDS.filter(matches);
+  if(sortOrder){
+    vis=[...vis].sort((a,b)=>{
+      // Concluído sempre vai para o final
+      const aConcl=a.s==="concluido"?1:0;
+      const bConcl=b.s==="concluido"?1:0;
+      if(aConcl!==bConcl) return aConcl-bConcl;
+      // Dentro do mesmo grupo: ordena por dias sem avanço
+      const da=days(a.la)??-1, db=days(b.la)??-1;
+      return sortOrder==="desc"?db-da:da-db;
+    });
+  }
+  document.getElementById("count-lbl").textContent=
+    vis.length===CARDS.length?`${CARDS.length} projetos`:`${vis.length} de ${CARDS.length}`;
+  const lblMap={"all":"","ativo":"Em Andamento","em-holding":"Em Holding","concluido":"Concluído"};
+  const fLbl={"all":"","em-andamento":"Negociação","renovacao":"Renovações","em-analise":"Phase-out","a-fazer":"A Fazer","em-holding":"Holding","concluido":"Concluído"};
+  const lbl=activeFilter!=="all"?fLbl[activeFilter]:(activeKpi!=="all"?lblMap[activeKpi]:"");
+  document.getElementById("filter-lbl").textContent=lbl?`· filtro: ${lbl}`:"";
+
+  const grid=document.getElementById("cards-grid");
+  if(!vis.length){grid.innerHTML='<div class="empty-msg">Nenhum projeto encontrado.</div>';updateMap(vis);return;}
+  grid.innerHTML=vis.map(c=>{
+    const st=SM[c.s];
+    const d=days(c.la);
+    const dueHtml=c.due?`<span class="due-badge${new Date(c.due)<TODAY?" due-over":""}">📅 ${fd(c.due)}</span>`:"";
+    const db=diasBadge(d,c.s);
+    const dcr=diasCriacaoBadge(c.cr,c.crOk);
+    return`<div class="pcard">
+      <div class="pcard-top"><span class="pcard-name">${c.n}</span><a class="pcard-link" href="${c.url}" target="_blank" rel="noopener" title="Abrir no Trello">↗</a></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="badge ${st.cls}">${st.label}</span>${dueHtml}</div>
+      <div class="pcard-divider"></div>
+      <div class="pcard-meta">
+        <div class="pcard-row"><span>📋 Lista</span><span class="v">${c.l}</span></div>
+        <div class="pcard-row"><span>📅 Criado em</span><span class="v">${fd(c.cr)}${c.crOk?"":" <span style='color:#475569;font-size:10px'>(a confirmar)</span>"}</span></div>
+        <div class="pcard-row"><span>🔄 Última atualização</span><span class="v">${fd(c.la)}</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-top:2px">
+        ${dcr}
+        ${db?db:""}
+      </div>
+    </div>`;
+  }).join("");
+  updateMap(vis);
+}
+
+// ── MAP ───────────────────────────────────────────────────────────────────────
+let map,mLayer;
+function initMap(){
+  map=L.map("map",{center:[-15,-52],zoom:4,attributionControl:false});
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{maxZoom:18}).addTo(map);
+  mLayer=L.layerGroup().addTo(map);
+  updateMap(CARDS);
+}
+function updateMap(vis){
+  if(!mLayer)return;
+  mLayer.clearLayers();
+  const vs=new Set(vis.map(c=>c.n));
+  CARDS.forEach(c=>{
+    if(!c.lat)return;
+    const on=vs.has(c.n);
+    const d=days(c.la);
+    const ds=c.s!=="concluido"&&d!==null?`<br>⏱ ${d}d sem avanço`:"";
+    L.circleMarker([c.lat,c.lng],{radius:on?9:5,color:"#0f1117",weight:1.5,fillColor:on?MC[c.s]:"#2d3452",fillOpacity:on?.88:.22})
+      .bindPopup(`<b>${c.n}</b><br>${SM[c.s].label}<br>🔄 ${fd(c.la)}${ds}`)
+      .addTo(mLayer);
+  });
+}
+
+document.getElementById("updated-lbl").textContent=
+  "Sync "+new Date(UPDATED).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
+
+buildKpis();render();initMap();
+</script>
+</body>
+</html>
