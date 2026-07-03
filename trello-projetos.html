@@ -39,9 +39,16 @@ body{font-family:'Inter',sans-serif;background:#0f1117;color:#e2e8f0;font-size:1
 .srch .si{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:11px;pointer-events:none}
 .srch .sc{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:#64748b;cursor:pointer;font-size:11px;padding:2px;display:none}
 .count-lbl{font-size:11px;color:#475569;margin-left:auto;white-space:nowrap}
-.content{max-width:1600px;margin:0 auto;padding:24px 28px}
+.content{max-width:1800px;margin:0 auto;padding:20px 24px}
 .sec-title{font-size:13px;font-weight:600;color:#94a3b8;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #1e2844;display:flex;align-items:center;gap:6px}
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-bottom:36px}
+/* two-col layout */
+.main-layout{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
+.cards-col{min-width:0}
+.map-col{position:sticky;top:118px}
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+#map{height:calc(100vh - 200px);min-height:420px;max-height:700px;border-radius:8px;border:1px solid #2d3452;overflow:hidden}
+@media(max-width:1100px){.main-layout{grid-template-columns:1fr}.map-col{position:static}.cards-grid{grid-template-columns:repeat(2,1fr)}#map{height:360px}}
+@media(max-width:640px){.cards-grid{grid-template-columns:1fr}}
 .pcard{background:#1e2130;border:1px solid #2d3452;border-radius:7px;padding:11px 13px;display:flex;flex-direction:column;gap:6px;transition:border-color .2s,transform .15s;border-left:3px solid transparent}
 .pcard:hover{border-color:#3d4a6d;transform:translateY(-1px)}
 .pcard.alert-card{border-left-color:#dc2626}
@@ -76,7 +83,7 @@ body{font-family:'Inter',sans-serif;background:#0f1117;color:#e2e8f0;font-size:1
 .ins-ok{background:#052e16;color:#86efac;border:1px solid #14532d}
 .ins-info{background:#0f172a;color:#93c5fd;border:1px solid #1e3a5f}
 .ins-neutral{background:#1e2130;color:#94a3b8;border:1px solid #2d3452}
-#map{height:420px;border-radius:8px;border:1px solid #2d3452;overflow:hidden;margin-bottom:12px}
+/* #map height controlled by .map-col rule above */
 .leaflet-popup-content-wrapper{background:#1e2130;border:1px solid #2d3452;color:#e2e8f0;border-radius:7px;font-family:'Inter',sans-serif}
 .leaflet-popup-content{font-size:12px;line-height:1.6;margin:10px 14px}
 .leaflet-popup-content b{color:#00c2ff}
@@ -147,18 +154,25 @@ body{font-family:'Inter',sans-serif;background:#0f1117;color:#e2e8f0;font-size:1
 <div class="insights" id="insights-strip"></div>
 
 <div class="content">
-  <div class="sec-title">🗂 Projetos <span id="filter-lbl" style="font-size:11px;color:#475569;font-weight:400;margin-left:6px"></span></div>
-  <div class="cards-grid" id="cards-grid"></div>
-
-  <div class="sec-title">🗺 Distribuição Geográfica</div>
-  <div id="map"></div>
-  <div class="map-legend">
-    <span><span class="leg-dot" style="background:#3b82f6"></span>Negociação</span>
-    <span><span class="leg-dot" style="background:#f59e0b"></span>Renovações</span>
-    <span><span class="leg-dot" style="background:#f97316"></span>Phase-out</span>
-    <span><span class="leg-dot" style="background:#64748b"></span>A Fazer</span>
-    <span><span class="leg-dot" style="background:#8b5cf6"></span>Em Holding</span>
-    <span><span class="leg-dot" style="background:#22c55e"></span>Concluído</span>
+  <div class="main-layout">
+    <!-- esquerda: cards -->
+    <div class="cards-col">
+      <div class="sec-title">🗂 Projetos <span id="filter-lbl" style="font-size:11px;color:#475569;font-weight:400;margin-left:6px"></span></div>
+      <div class="cards-grid" id="cards-grid"></div>
+    </div>
+    <!-- direita: mapa fixo -->
+    <div class="map-col">
+      <div class="sec-title">🗺 Brasil</div>
+      <div id="map"></div>
+      <div class="map-legend" style="margin-top:10px">
+        <span><span class="leg-dot" style="background:#3b82f6"></span>Negociação</span>
+        <span><span class="leg-dot" style="background:#f59e0b"></span>Renovações</span>
+        <span><span class="leg-dot" style="background:#f97316"></span>Phase-out</span>
+        <span><span class="leg-dot" style="background:#64748b"></span>A Fazer</span>
+        <span><span class="leg-dot" style="background:#8b5cf6"></span>Holding</span>
+        <span><span class="leg-dot" style="background:#22c55e"></span>Concluído</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -344,8 +358,15 @@ function render(){
 
 // ── MAP ───────────────────────────────────────────────────────────────────────
 let map,mLayer;
+const BRAZIL_BOUNDS=L.latLngBounds(L.latLng(-34.0,-75.0),L.latLng(5.5,-28.0));
 function initMap(){
-  map=L.map("map",{center:[-15,-52],zoom:4,attributionControl:false});
+  map=L.map("map",{
+    center:[-15,-52],zoom:4,
+    attributionControl:false,
+    minZoom:3,maxZoom:10,
+    maxBounds:BRAZIL_BOUNDS,
+    maxBoundsViscosity:0.85
+  });
   L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{maxZoom:18}).addTo(map);
   mLayer=L.layerGroup().addTo(map);
   updateMap(CARDS);
