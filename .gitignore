@@ -31,6 +31,8 @@ __pycache__/
 .venv/
 venv/
 dist/
+build/
+.pytest_cache/
 tmp/
 *.log
 
