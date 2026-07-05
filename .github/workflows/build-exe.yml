@@ -1,0 +1,59 @@
+name: Build Bussola.exe (Windows)
+
+"on":
+  workflow_dispatch:
+  push:
+    branches: [claude/bussola-logistica-summary-uw7hay]
+    paths:
+      - 'src/bussola/**'
+      - 'scripts/run_app.py'
+      - 'scripts/bussola.spec'
+      - 'requirements.txt'
+      - '.github/workflows/build-exe.yml'
+
+jobs:
+  build:
+    name: PyInstaller em Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt pyinstaller
+
+      - name: Rodar testes
+        run: python -m pytest tests/ -q
+
+      - name: Build do executável
+        run: pyinstaller scripts/bussola.spec --noconfirm
+
+      - name: Smoke test — exe sobe e responde
+        shell: pwsh
+        run: |
+          $proc = Start-Process -FilePath dist/Bussola.exe -PassThru -NoNewWindow
+          $ok = $false
+          foreach ($i in 1..24) {
+            Start-Sleep -Seconds 5
+            try {
+              $r = Invoke-WebRequest -Uri http://localhost:8501/_stcore/health -UseBasicParsing -TimeoutSec 5
+              if ($r.Content -eq 'ok') { $ok = $true; break }
+            } catch {}
+          }
+          Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+          if (-not $ok) { throw 'exe não respondeu ao health check em 120s' }
+          Write-Host 'health check ok'
+
+      - name: Publicar artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bussola-windows
+          path: dist/Bussola.exe
+          retention-days: 30
