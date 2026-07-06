@@ -9,6 +9,7 @@ frete mais barato do par origem→destino.
 """
 
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import openpyxl
 
@@ -213,10 +214,20 @@ TEMPLATE_SHEETS = {
 
 
 def make_template(path: str) -> None:
-    """Gera o template guiado com as 5 abas e cabeçalhos esperados."""
+    """Gera o template guiado: 5 abas com a geografia da malha pré-preenchida.
+
+    As linhas vêm de template_data.json (portado do protótipo) — nomes de
+    origens/destinos/filiais já reconciliados entre abas, valores em branco
+    para preencher. Quem preenche digita números, não geografia.
+    """
+    import json
+
+    data = json.loads((Path(__file__).parent / "template_data.json").read_text(encoding="utf-8"))
     wb = openpyxl.Workbook()
     wb.remove(wb.active)
     for name, headers in TEMPLATE_SHEETS.items():
         ws = wb.create_sheet(name)
         ws.append(headers)
+        for row in data.get(name, []):
+            ws.append([row.get(h) for h in headers])
     wb.save(path)

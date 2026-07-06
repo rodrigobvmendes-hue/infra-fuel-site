@@ -85,9 +85,17 @@ def test_missing_sheet_raises(tmp_path):
         load_base(str(p))
 
 
-def test_template_has_all_sheets(tmp_path):
+def test_template_has_all_sheets_and_prefilled_geography(tmp_path):
     p = tmp_path / "template.xlsx"
     make_template(str(p))
     wb = openpyxl.load_workbook(str(p))
     assert wb.sheetnames == list(TEMPLATE_SHEETS)
-    assert [c.value for c in wb["Tabela de frete"][1]] == TEMPLATE_SHEETS["Tabela de frete"]
+    frete = wb["Tabela de frete"]
+    assert [c.value for c in frete[1]] == TEMPLATE_SHEETS["Tabela de frete"]
+    # geografia pré-preenchida (nomes reconciliados), valores em branco
+    assert frete.max_row > 2000  # 2.079 rotas portadas do protótipo
+    row2 = {h: c.value for h, c in zip(TEMPLATE_SHEETS["Tabela de frete"], frete[2])}
+    assert row2["Origem"] and row2["Destino"] and row2["Modal"]
+    assert row2["Frete (R$/m³)"] is None  # valor é de quem preenche
+    assert wb["Disponibilidade"].max_row == 85   # 84 origens + cabeçalho
+    assert wb["Demanda"].max_row == 78           # 77 filiais + cabeçalho
