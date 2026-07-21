@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-03T19:38:41.029Z",
+  "updatedAt": "2026-07-20T18:44:36.880Z",
   "boardId": "69f24cd6f0e0329b17b7bcce",
   "cards": [
     {
@@ -10,7 +10,107 @@
       "dueComplete": false,
       "url": "https://trello.com/c/SAVFQnv4",
       "createdAt": "2026-06-05T13:39:12.000Z",
-      "dateLastActivity": "2026-06-18T18:44:55.295Z"
+      "dateLastActivity": "2026-07-07T18:02:38.965Z"
+    },
+    {
+      "name": "ODM - Caxias - Vibra e Pandenor",
+      "listName": "A fazer",
+      "status": "a-fazer",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/waJRda7L",
+      "createdAt": "2026-07-07T19:56:05.000Z",
+      "dateLastActivity": "2026-07-16T17:13:18.569Z"
+    },
+    {
+      "name": "Solicitação de Armazenagem Ale (Cedente) - Caxias - World Comércio Atacadista de Combustíveis Ltda",
+      "listName": "A fazer",
+      "status": "a-fazer",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/5gfvyNjd",
+      "createdAt": "2026-07-07T19:59:18.000Z",
+      "dateLastActivity": "2026-07-16T17:14:20.865Z"
+    },
+    {
+      "name": "Solicitação de Armazenagem Ale (Cedente) - Nimofast",
+      "listName": "A fazer",
+      "status": "a-fazer",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/DIukFyjy",
+      "createdAt": "2026-07-08T12:21:44.000Z",
+      "dateLastActivity": "2026-07-16T17:15:15.985Z"
+    },
+    {
+      "name": "Solicitação de Aumento de tancagem - RDP - Caxias",
+      "listName": "A fazer",
+      "status": "a-fazer",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/8QLqGxeX",
+      "createdAt": "2026-07-10T14:20:33.000Z",
+      "dateLastActivity": "2026-07-16T17:15:29.530Z"
+    },
+    {
+      "name": "Solicitação de Armazenagem - Caxias - Federal",
+      "listName": "A fazer",
+      "status": "a-fazer",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/8yUdIIGv",
+      "createdAt": "2026-07-16T17:16:56.000Z",
+      "dateLastActivity": "2026-07-16T17:17:53.716Z"
+    },
+    {
+      "name": "Solicitação de Aditivo - LEM - Vibra",
+      "listName": "A fazer",
+      "status": "a-fazer",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/JUC3AY2Q",
+      "createdAt": "2026-07-15T20:10:46.000Z",
+      "dateLastActivity": "2026-07-15T20:11:24.673Z"
+    },
+    {
+      "name": "Cedente - Aditivo Guarulhos - Raízen - 30/08",
+      "listName": "A fazer",
+      "status": "a-fazer",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/BoomeiJr",
+      "createdAt": "2026-07-15T20:12:23.000Z",
+      "dateLastActivity": "2026-07-15T20:13:34.401Z"
+    },
+    {
+      "name": "Cedente - Aditivo Betim - Atlântica - 02/09",
+      "listName": "A fazer",
+      "status": "a-fazer",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/sKKOSGQ5",
+      "createdAt": "2026-07-15T20:12:48.000Z",
+      "dateLastActivity": "2026-07-15T20:13:43.021Z"
+    },
+    {
+      "name": "Cedente - Aditivo Betim - Ciapetro - 04/11",
+      "listName": "A fazer",
+      "status": "a-fazer",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/Tdh4iFtd",
+      "createdAt": "2026-07-15T20:13:18.000Z",
+      "dateLastActivity": "2026-07-15T20:13:50.964Z"
+    },
+    {
+      "name": "ACR Braskem - Contratos vencidos",
+      "listName": "A fazer",
+      "status": "a-fazer",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/dYJOlHGS",
+      "createdAt": "2026-07-15T20:17:54.000Z",
+      "dateLastActivity": "2026-07-16T18:21:38.262Z"
     },
     {
       "name": "Projeto Inpasa",
@@ -20,7 +120,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/3poJ6FTq",
       "createdAt": "2026-05-27T20:03:34.000Z",
-      "dateLastActivity": "2026-06-22T17:39:12.343Z"
+      "dateLastActivity": "2026-07-16T18:27:03.060Z"
     },
     {
       "name": "Stang - Itajaí",
@@ -30,7 +130,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/AvvBPMRz",
       "createdAt": "2026-06-18T19:29:33.000Z",
-      "dateLastActivity": "2026-06-22T17:41:38.588Z"
+      "dateLastActivity": "2026-07-17T14:17:24.629Z"
     },
     {
       "name": "Greenfield - Itajaí - Rede galo",
@@ -40,7 +140,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/gSMODKlK",
       "createdAt": "2026-04-30T15:38:47.000Z",
-      "dateLastActivity": "2026-06-22T17:42:53.408Z"
+      "dateLastActivity": "2026-07-16T17:36:46.250Z"
     },
     {
       "name": "PECEM",
@@ -50,107 +150,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/qON4sNVZ",
       "createdAt": "2026-04-29T18:26:24.000Z",
-      "dateLastActivity": "2026-06-22T17:45:56.764Z"
-    },
-    {
-      "name": "Vitória - SPE - navegantes",
-      "listName": "Em andamento/",
-      "status": "em-andamento",
-      "due": null,
-      "dueComplete": false,
-      "url": "https://trello.com/c/2eV1Az70",
-      "createdAt": "2026-04-30T17:40:55.000Z",
-      "dateLastActivity": "2026-06-18T18:30:01.480Z"
-    },
-    {
-      "name": "Vitória - Base Santa Rosa",
-      "listName": "Em andamento/",
-      "status": "em-andamento",
-      "due": null,
-      "dueComplete": false,
-      "url": "https://trello.com/c/XLFTbGmr",
-      "createdAt": "2026-05-27T20:17:46.000Z",
-      "dateLastActivity": "2026-06-18T18:27:13.419Z"
-    },
-    {
-      "name": "Vitória - Atlântica",
-      "listName": "Em andamento/",
-      "status": "em-andamento",
-      "due": null,
-      "dueComplete": false,
-      "url": "https://trello.com/c/0qZc8d7o",
-      "createdAt": "2026-04-30T17:40:45.000Z",
-      "dateLastActivity": "2026-06-18T18:27:17.841Z"
-    },
-    {
-      "name": "WM - Vila velha",
-      "listName": "Em andamento/",
-      "status": "em-andamento",
-      "due": null,
-      "dueComplete": false,
-      "url": "https://trello.com/c/if5aYqfE",
-      "createdAt": "2026-06-18T18:09:02.000Z",
-      "dateLastActivity": "2026-06-22T17:36:30.925Z"
-    },
-    {
-      "name": "Negociação EFEN - Caxias",
-      "listName": "Em andamento/",
-      "status": "em-andamento",
-      "due": null,
-      "dueComplete": false,
-      "url": "https://trello.com/c/jNUIX0qo",
-      "createdAt": "2026-04-30T17:40:31.000Z",
-      "dateLastActivity": "2026-06-30T18:46:59.149Z"
-    },
-    {
-      "name": "Rumos - Uberlândia",
-      "listName": "Em andamento/",
-      "status": "em-andamento",
-      "due": null,
-      "dueComplete": false,
-      "url": "https://trello.com/c/HYXtcV4B",
-      "createdAt": "2026-05-06T13:58:06.000Z",
-      "dateLastActivity": "2026-06-18T18:31:24.373Z"
-    },
-    {
-      "name": "Paulínia - Torrão",
-      "listName": "Em andamento/",
-      "status": "em-andamento",
-      "due": null,
-      "dueComplete": false,
-      "url": "https://trello.com/c/pOP1QEF7",
-      "createdAt": "2026-05-19T14:33:06.000Z",
-      "dateLastActivity": "2026-06-18T18:32:00.493Z"
-    },
-    {
-      "name": "Chapecó - Maxsul",
-      "listName": "Em andamento/",
-      "status": "em-andamento",
-      "due": null,
-      "dueComplete": false,
-      "url": "https://trello.com/c/Bj6BXkGy",
-      "createdAt": "2026-05-22T18:31:39.000Z",
-      "dateLastActivity": "2026-06-18T18:34:49.444Z"
-    },
-    {
-      "name": "Formação de pool - LEM/Açailândia",
-      "listName": "Em andamento/",
-      "status": "em-andamento",
-      "due": null,
-      "dueComplete": false,
-      "url": "https://trello.com/c/kBGvH0LV",
-      "createdAt": "2026-05-28T18:27:35.000Z",
-      "dateLastActivity": "2026-06-22T17:53:36.167Z"
-    },
-    {
-      "name": "Ampliar o contrato da Pontual - Araucaria",
-      "listName": "Em andamento/",
-      "status": "em-andamento",
-      "due": null,
-      "dueComplete": false,
-      "url": "https://trello.com/c/bXwAKeFJ",
-      "createdAt": "2026-06-09T19:01:52.000Z",
-      "dateLastActivity": "2026-06-26T14:17:19.549Z"
+      "dateLastActivity": "2026-07-16T17:38:38.491Z"
     },
     {
       "name": "Ypetro - Maracanau (Ceará)",
@@ -160,17 +160,97 @@
       "dueComplete": false,
       "url": "https://trello.com/c/VaDEcACe",
       "createdAt": "2026-06-18T18:18:24.000Z",
-      "dateLastActivity": "2026-06-30T18:50:38.604Z"
+      "dateLastActivity": "2026-07-16T17:44:33.269Z"
+    },
+    {
+      "name": "Vitória - SPE - navegantes",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/2eV1Az70",
+      "createdAt": "2026-04-30T17:40:55.000Z",
+      "dateLastActivity": "2026-07-16T17:46:31.526Z"
+    },
+    {
+      "name": "Vitória - Base Santa Rosa",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/XLFTbGmr",
+      "createdAt": "2026-05-27T20:17:46.000Z",
+      "dateLastActivity": "2026-07-07T19:17:46.815Z"
+    },
+    {
+      "name": "Vitória - Atlântica",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/0qZc8d7o",
+      "createdAt": "2026-04-30T17:40:45.000Z",
+      "dateLastActivity": "2026-07-14T11:36:45.720Z"
+    },
+    {
+      "name": "WM - Vila velha",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/if5aYqfE",
+      "createdAt": "2026-06-18T18:09:02.000Z",
+      "dateLastActivity": "2026-07-16T17:48:34.071Z"
     },
     {
       "name": "Vitória - Oiltank",
       "listName": "Em andamento/",
       "status": "em-andamento",
       "due": null,
-      "dueComplete": false,
+      "dueComplete": true,
       "url": "https://trello.com/c/R0dks6iu",
       "createdAt": "2026-06-30T18:48:53.000Z",
-      "dateLastActivity": "2026-06-30T18:49:01.229Z"
+      "dateLastActivity": "2026-07-16T17:48:47.525Z"
+    },
+    {
+      "name": "Negociação EFEN - Caxias",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/jNUIX0qo",
+      "createdAt": "2026-04-30T17:40:31.000Z",
+      "dateLastActivity": "2026-07-07T19:20:01.745Z"
+    },
+    {
+      "name": "Rumos - Uberlândia",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/HYXtcV4B",
+      "createdAt": "2026-05-06T13:58:06.000Z",
+      "dateLastActivity": "2026-07-17T14:16:55.955Z"
+    },
+    {
+      "name": "Chapecó - Maxsul",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/Bj6BXkGy",
+      "createdAt": "2026-05-22T18:31:39.000Z",
+      "dateLastActivity": "2026-07-16T17:53:15.866Z"
+    },
+    {
+      "name": "Formação de pool - LEM/Açailândia",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/kBGvH0LV",
+      "createdAt": "2026-05-28T18:27:35.000Z",
+      "dateLastActivity": "2026-07-16T17:55:41.433Z"
     },
     {
       "name": "Paulínia - Opla",
@@ -180,7 +260,27 @@
       "dueComplete": false,
       "url": "https://trello.com/c/K9DCJOpx",
       "createdAt": "2026-06-30T18:50:11.000Z",
-      "dateLastActivity": "2026-06-30T18:52:36.228Z"
+      "dateLastActivity": "2026-07-16T17:56:17.878Z"
+    },
+    {
+      "name": "Sap - Aumento/Avanço de espaço",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/Q66NLTHh",
+      "createdAt": "2026-07-15T18:23:43.000Z",
+      "dateLastActivity": "2026-07-15T18:25:32.657Z"
+    },
+    {
+      "name": "Spot - Vila do Conde -  (Ultracargo)",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/wtJkClFL",
+      "createdAt": "2026-07-15T20:14:26.000Z",
+      "dateLastActivity": "2026-07-15T20:15:02.191Z"
     },
     {
       "name": "BID São Luís",
@@ -190,7 +290,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/7ZzUlDPi",
       "createdAt": "2026-04-30T15:46:15.000Z",
-      "dateLastActivity": "2026-06-22T17:54:37.091Z"
+      "dateLastActivity": "2026-07-07T19:44:57.565Z"
     },
     {
       "name": "BID Ipojuca",
@@ -200,7 +300,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/HpAiHrZQ",
       "createdAt": "2026-04-30T15:46:20.000Z",
-      "dateLastActivity": "2026-06-18T18:36:22.009Z"
+      "dateLastActivity": "2026-07-16T17:58:14.297Z"
     },
     {
       "name": "Belém - TOP",
@@ -210,7 +310,97 @@
       "dueComplete": false,
       "url": "https://trello.com/c/dN43g2c5",
       "createdAt": "2026-04-30T15:46:39.000Z",
-      "dateLastActivity": "2026-06-22T17:56:58.314Z"
+      "dateLastActivity": "2026-07-07T19:52:42.115Z"
+    },
+    {
+      "name": "BID Santos - 5° spot - Julho/Agosto",
+      "listName": "Renovações",
+      "status": "renovacao",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/868q2XSg",
+      "createdAt": "2026-07-10T11:40:01.000Z",
+      "dateLastActivity": "2026-07-20T13:07:51.748Z"
+    },
+    {
+      "name": "Aditivo Origem - Maceió",
+      "listName": "Renovações",
+      "status": "renovacao",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/AlbbZzN8",
+      "createdAt": "2026-07-20T13:50:37.000Z",
+      "dateLastActivity": "2026-07-20T13:51:24.600Z"
+    },
+    {
+      "name": "Contrato Pontual - Araucária - 01/08",
+      "listName": "Renovações",
+      "status": "renovacao",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/bXwAKeFJ",
+      "createdAt": "2026-06-09T19:01:52.000Z",
+      "dateLastActivity": "2026-07-20T12:04:42.644Z"
+    },
+    {
+      "name": "BID - São Francisco do Conde - 15/08",
+      "listName": "Renovações",
+      "status": "renovacao",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/sHMGOk3t",
+      "createdAt": "2026-07-15T18:27:26.000Z",
+      "dateLastActivity": "2026-07-15T18:35:59.884Z"
+    },
+    {
+      "name": "Contrato Fortaleza (Aditivo) - Raízen - 31/08",
+      "listName": "Renovações",
+      "status": "renovacao",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/vaF4C1U0",
+      "createdAt": "2026-07-15T18:28:08.000Z",
+      "dateLastActivity": "2026-07-15T18:37:07.196Z"
+    },
+    {
+      "name": "Contrato Rio Verde (Aditivo) - DTC - 15 - 10/07",
+      "listName": "Renovações",
+      "status": "renovacao",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/49Y2fVrq",
+      "createdAt": "2026-07-15T18:30:25.000Z",
+      "dateLastActivity": "2026-07-15T18:38:46.186Z"
+    },
+    {
+      "name": "BID - Rondonópolis - 30/10",
+      "listName": "Renovações",
+      "status": "renovacao",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/nYOCkyY8",
+      "createdAt": "2026-07-15T18:32:22.000Z",
+      "dateLastActivity": "2026-07-20T12:03:48.967Z"
+    },
+    {
+      "name": "Contrato Goiânia (Aditivo) - DTC - 27/11",
+      "listName": "Renovações",
+      "status": "renovacao",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/kAEj9ZO1",
+      "createdAt": "2026-07-15T18:33:47.000Z",
+      "dateLastActivity": "2026-07-15T18:40:56.814Z"
+    },
+    {
+      "name": "Renovações Vibra - 31/12",
+      "listName": "Renovações",
+      "status": "renovacao",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/JCWqhQHn",
+      "createdAt": "2026-07-16T18:02:25.000Z",
+      "dateLastActivity": "2026-07-16T18:05:01.117Z"
     },
     {
       "name": "oPhase Out BA (Jequié e Itabuna)",
@@ -220,7 +410,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/Alkg8d5b",
       "createdAt": "2026-04-29T18:32:56.000Z",
-      "dateLastActivity": "2026-06-18T18:40:08.352Z"
+      "dateLastActivity": "2026-07-07T19:54:36.524Z"
     },
     {
       "name": "IPP Guarulhos+",
@@ -371,6 +561,16 @@
       "url": "https://trello.com/c/wnuUchmA",
       "createdAt": "2026-04-29T18:32:18.000Z",
       "dateLastActivity": "2026-06-18T18:43:17.998Z"
+    },
+    {
+      "name": "Paulínia - Torrão",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": null,
+      "dueComplete": true,
+      "url": "https://trello.com/c/pOP1QEF7",
+      "createdAt": "2026-05-19T14:33:06.000Z",
+      "dateLastActivity": "2026-07-07T17:26:39.077Z"
     }
   ]
 }
