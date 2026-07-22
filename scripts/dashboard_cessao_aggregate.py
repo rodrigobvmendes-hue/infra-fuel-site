@@ -333,6 +333,16 @@ def _cong_period_totals(rows):
     return out, filiais
 
 
+def _contract_to_row(c):
+    return {
+        "period": c["period"], "filial": c["filial"], "lado": c["lado"],
+        "congenere": c["congenere"], "classe": c["classe"],
+        "vol_minimo": c["vol_minimo"], "vol_mov": c["vol_mov"],
+        "utilizacao": c["utilizacao"], "tarifa_ef": c["tarifa_efetiva"],
+        "valor": c["valor"], "top": c["top"],
+    }
+
+
 def build_sinergia(d_contracts, r_contracts, d_rows, r_rows):
     """Nota sobre d_pct/r_pct: o denominador (total geral, todas as
     linhas, com fallback orçado) reproduz o percentual do D atual com
@@ -381,6 +391,10 @@ def build_sinergia(d_contracts, r_contracts, d_rows, r_rows):
             "r_tef": round(r_val / r_vol, 6) if r_vol else 0,
             "r_contratos": len(r_filiais.get(cong, ())),
             "monthly": monthly,
+            "rows": (
+                [_contract_to_row(c) for c in d_contracts if c["congenere"] == cong]
+                + [_contract_to_row(c) for c in r_contracts if c["congenere"] == cong]
+            ),
         }
 
     d_bi_total = sum(v["d_total"] for v in by_cong.values())
