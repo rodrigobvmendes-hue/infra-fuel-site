@@ -110,6 +110,15 @@ Resultado: **18 das 43 bases são híbridas** (têm mais de 1 papel operacional)
 
 Nas 18 bases híbridas, o `modelo_operacional` único da aba Capacidade ALE mostra só o papel predominante — para o dashboard, o correto é mostrar a composição por papel (`capacidade_por_modelo.csv`), não um único rótulo.
 
+**Achado confirmado:** Betim é o mesmo caso de Duque de Caxias (própria + cedente, cedendo 2.170 m³ a um terceiro que opera junto, dentro da própria base — só que sem o componente cessionária que Caxias tem em Raízen). E, batendo com a expectativa: **as 5 bases classificadas como `Própria` na aba Capacidade ALE (Betim, Duque de Caxias, Goiânia, Guarulhos, Lem) são todas híbridas — 100%, nenhuma é "própria pura"**. O mesmo vale para as 6 bases `Democrática` (100% híbridas, por natureza — sempre cessionárias em algum congênere) e 4 das 5 `Pool`. Só o modelo `Terceiros` tem a maioria das bases sem hibridismo (24 de 27 puras) — faz sentido, é o modelo em que a ALE já é 100% cessionária por definição, então não há uma "própria" para cruzar com.
+
+| Modelo (Capacidade ALE) | Bases híbridas / total |
+|---|---|
+| Própria | 5 / 5 |
+| Democrática | 6 / 6 |
+| Pool | 4 / 5 |
+| Terceiros | 3 / 27 |
+
 ## Cruzamento com TOP (Take or Pay)
 
 TOP não está em `02 - CAPACIDADES.xlsx` — vem de `arquivos_apoio/Despesas.xlsx` (aba `Despesas`). A chave de junção usada foi `codigo_base` (Capacidade ALE) == `COD.FILIAL` (Despesas.xlsx) — **join numérico**, confirmado batendo 1:1 com o nome da filial em ambas as fontes (ex.: código 18 = Araucária nas duas), sem precisar normalizar nome/acentuação.
