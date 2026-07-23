@@ -1,17 +1,21 @@
 # Mapeamento — `02 - CAPACIDADES.xlsx` / aba "Capacidade ALE"
 
-Fonte: `arquivos_apoio/02 - CAPACIDADES.xlsx` (+ `arquivos_apoio/Despesas.xlsx` para o TOP)
-Saída tratada: `dados_tratados/capacidade_ale.csv` (`scripts/extract_capacidade_ale.py`) e `dados_tratados/capacidade_ale_top.csv` (`scripts/build_capacidade_top.py`)
+Fonte: `arquivos_apoio/02 - CAPACIDADES.xlsx` (abas "Capacidade ALE" e "Detalhamento Tancagem") + `arquivos_apoio/Despesas.xlsx` (TOP)
+Saídas tratadas:
+- `dados_tratados/capacidade_ale.csv` (`scripts/extract_capacidade_ale.py`)
+- `dados_tratados/capacidade_ale_top.csv` (`scripts/build_capacidade_top.py`)
+- `dados_tratados/detalhamento_tancagem.csv` (`scripts/extract_detalhamento_tancagem.py`)
+- `dados_tratados/capacidade_por_modelo.csv` (`scripts/build_capacidade_por_modelo.py`)
 
 ## Abas do arquivo
 
 | Aba | Conteúdo |
 |---|---|
 | Resumo | Rankings (top N) por filial: recebimento rodo, venda, expedição rodo |
-| **Capacidade ALE** | **Mapeada nesta rodada** — relatório Base x Produto com capacidades e modelo operacional |
+| **Capacidade ALE** | **Mapeada nesta rodada** — relatório Base x Produto com capacidades e modelo operacional (resumido a 1 modelo por base) |
 | Recebimento Rodo - ALE | Capacidade de recebimento rodoviário por base |
 | Expedição Rodo - ALE | Capacidade de expedição rodoviária por base |
-| Detalhamento Tancagem | Tancagem por tanque/produto, com Tipo De Espaço, Tipo De Base, Tipo De Operação, Modal |
+| **Detalhamento Tancagem** | **Mapeada nesta rodada** (parcial) — tancagem por tanque/produto/armazenador, com Tipo De Espaço, Tipo De Base, Tipo De Operação, Modal. É o grão em que bases "híbridas" aparecem (ver seção abaixo) |
 | ATA Tancagem | Manutenções em andamento em tanques (por filial/produto) |
 | Movimentação | Médias de movimentação por produto (3/6/12 meses) |
 | BD Cap Venda ALE | Base de dados "flat" (fonte de lookup) por Base+Produto, sem coluna de modelo operacional |
@@ -54,7 +58,40 @@ A coluna D bate exatamente com os 4 modelos descritos:
 - **Democrática** — base "bico" (cessão de espaço de biocombustível + compra de derivado direto do tanque, sem estoque)
 - **Própria** — base 100% própria
 
-43 bases mapeadas, cada uma com exatamente 1 modelo (nenhuma base aparece em mais de um modelo).
+43 bases mapeadas, cada uma com exatamente 1 modelo **nesta aba**. Mas isso é uma simplificação: ver seção "Bases híbridas" abaixo — no grão tanque/produto (aba Detalhamento Tancagem), 8 dessas 43 bases operam sob mais de um modelo ao mesmo tempo.
+
+## Bases híbridas (mais de um modelo na mesma base)
+
+Confirmado, por exemplo, na Duque de Caxias: é `Própria` mas também tem `armazenagem de terceiro` (cessão de espaço à RAÍZEN em vários produtos) — uma operação híbrida que a aba "Capacidade ALE" não mostra, porque resume cada base a 1 único `modelo_operacional`.
+
+O grão certo para isso é a aba **Detalhamento Tancagem** (1 linha = 1 alocação de tancagem por Base x Produto x Armazenador x Tipo de Espaço), extraída em `scripts/extract_detalhamento_tancagem.py` → `dados_tratados/detalhamento_tancagem.csv` (362 linhas).
+
+| Coluna origem | Nome no CSV | Descrição |
+|---|---|---|
+| A | `codigo_base` | Código numérico da base |
+| B | `unidade` | Nome da unidade/filial |
+| C | `tipo_espaco` | `ESPAÇO ALE - BASE PRÓPRIA`, `ESPAÇO EM TERCEIROS` ou `CARREGAMENTO` |
+| D | `modelo` | Modelo operacional **desta alocação** (não da base inteira): `Terceiros`, `Pool`, `Democrática` ou `Própria` |
+| E | `tipo_operacao` | `Própria`, `Cessão de Espaço`, `Compra congênere`, `Carregamento`, `Arm Livre Acesso`, `-` |
+| F | `produto` | Produto |
+| G | `base_armazenador` | Congênere/operador do espaço (ex. VIBRA, ALESAT, RAÍZEN) |
+| H | `modal` | `Rodo`, `Duto`, `Ferro`, `Cabotagem`, `-` |
+| I-N | `tancagem_operacional_m3`, `lastro_m3`, `tancagem_util_m3`, `reducao_manutencao_m3`, `espaco_cedido_m3`, `tancagem_disponivel_movimentacao_m3` | Composição da tancagem, do bruto até a disponível para movimentação (mesmo valor que soma para a coluna `tancagem_disponivel_m3` da aba Capacidade ALE) |
+
+`scripts/build_capacidade_por_modelo.py` agrega esse CSV por Base x Modelo → `dados_tratados/capacidade_por_modelo.csv`, com `base_hibrida` (bool) e `modelos_presentes_na_base`. **8 das 43 bases são híbridas:**
+
+| Base | Modelos presentes |
+|---|---|
+| Duque de Caxias | Própria (8.289 m³) + Terceiros (650 m³) |
+| Goiânia | Própria (3.226 m³) + Terceiros (288 m³) |
+| Guarulhos | Própria (9.662 m³) + Democrática (95 m³) |
+| Araucária | Terceiros (1.250 m³) + Democrática (0 m³) |
+| São Fco do Conde | Terceiros (1.588 m³) + Democrática (0 m³) |
+| Cuiabá | Pool (1.248 m³) + Terceiros (285 m³) |
+| Itajaí | Terceiros (660 m³) + Democrática (67 m³) |
+| Paulínia | Pool (11.425 m³) + Terceiros (3.895 m³) |
+
+Nessas 8 bases, o `modelo_operacional` único da aba Capacidade ALE reflete só o modelo predominante — para o dashboard, o correto é mostrar a composição por modelo (esta tabela), não um único rótulo.
 
 ## Cruzamento com TOP (Take or Pay)
 
@@ -77,5 +114,5 @@ Resultado: **29 das 43 bases têm TOP**.
 
 1. **`capacidade_expedicao_rodo_m3` (coluna P)** só está preenchida numa parte das linhas (bases com expedição rodoviária relevante, ex. Diesel A S500 em Açailândia). Confirmar se célula vazia = "não aplicável" ou = "zero".
 2. **Duas linhas de "produto misturado"** (colunas N e S) são idênticas nos exemplos verificados — mantive só a de N (`produto_misturado`); avise se em algum caso elas divergem.
-4. A aba **BD Cap Venda ALE** parece ser a base "flat" de onde a "Capacidade ALE" é montada (mesma chave Unidade+Produto), mas tem 305 linhas contra 262 na aba mapeada e não tem a coluna de modelo operacional. Pode haver bases/linhas adicionais fora do relatório final — útil investigar se formos usar essa aba depois.
-5. Ainda não mapeei as abas de Detalhamento Tancagem, Recebimento/Expedição Rodo, BD Expedição/Descarga e ATA Tancagem — ficam para as próximas rodadas, conforme combinado.
+3. A aba **BD Cap Venda ALE** parece ser a base "flat" de onde a "Capacidade ALE" é montada (mesma chave Unidade+Produto), mas tem 305 linhas contra 262 na aba mapeada e não tem a coluna de modelo operacional. Pode haver bases/linhas adicionais fora do relatório final — útil investigar se formos usar essa aba depois.
+4. Ainda não mapeei as abas Recebimento/Expedição Rodo - ALE, BD Expedição, BD Descarga e ATA Tancagem — ficam para as próximas rodadas.
