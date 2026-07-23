@@ -121,7 +121,9 @@ Nas 18 bases híbridas, o `modelo_operacional` único da aba Capacidade ALE most
 
 ## Cruzamento com TOP (Take or Pay)
 
-TOP não está em `02 - CAPACIDADES.xlsx` — vem de `arquivos_apoio/Despesas.xlsx` (aba `Despesas`). A chave de junção usada foi `codigo_base` (Capacidade ALE) == `COD.FILIAL` (Despesas.xlsx) — **join numérico**, confirmado batendo 1:1 com o nome da filial em ambas as fontes (ex.: código 18 = Araucária nas duas), sem precisar normalizar nome/acentuação.
+TOP não está em `02 - CAPACIDADES.xlsx` — vem de `arquivos_apoio/Despesas.xlsx` (aba `Despesas`). A chave de junção é `unidade` (Capacidade ALE) normalizada (maiúsculas, sem acento) == `FILIAL` (Despesas.xlsx) normalizada.
+
+**Correção importante:** a primeira versão deste cruzamento usava `codigo_base` == `COD.FILIAL` como chave numérica, achando que era confiável (bateu em 3 testes manuais). Não é — `codigo_base` **não é estável entre abas/arquivos diferentes**: Paulínia é código 12 na Capacidade ALE mas 67 no Despesas.xlsx e no Detalhamento Tancagem; Rondonópolis é 69 vs 61; Cuiabá é 28 vs 73. O nome da unidade, depois de normalizado, bate 100% em todas as fontes — por isso o join foi trocado para usar `unidade` normalizada (`scripts/normalize.py::normalize_municipio`) em vez do código numérico. Esse mesmo cuidado se aplica ao cruzamento com `Detalhamento Tancagem` (seção anterior) — `capacidade_por_modelo.csv` usa o `codigo_base` da própria Detalhamento Tancagem, então `scripts/build_capacidade_dashboard_data.py` também juntou por `unidade`, não por código.
 
 Script: `scripts/build_capacidade_top.py` → `dados_tratados/capacidade_ale_top.csv` (mesmo grão Base x Produto de `capacidade_ale.csv`, com 4 colunas novas):
 
@@ -132,9 +134,9 @@ Script: `scripts/build_capacidade_top.py` → `dados_tratados/capacidade_ale_top
 | `top_valor_realizado` | Soma histórica (R$) da coluna "Take or Pay" nas linhas realizadas — mesma regra de `dashboard_cessao_aggregate.py::_row_top` (só conta quando há "Valor Total R$" realizado) |
 | `meses_com_top_realizado` | Nº de meses distintos em que o TOP foi de fato acionado (valor > 0) |
 
-Resultado: **29 das 43 bases têm TOP**.
+Resultado: **31 das 43 bases têm TOP**.
 
-**Ponto de atenção:** o flag é por base inteira (via `COD.FILIAL`), não por produto/tanque. Algumas bases classificadas como `Própria` ou `Pool` na aba Capacidade ALE aparecem com `tem_top=True` (ex.: Betim/Própria com TOP junto à congênere Potencial) — isso é coerente com a aba `Detalhamento Tancagem`, que registra `Tipo De Base` por tanque/linha (não por base inteira): uma base majoritariamente própria pode ter uma fração cedida a terceiros (cessão de espaço) que carrega cláusula TOP, mesmo que o modelo predominante da base seja outro. Se for preciso o TOP no grão tanque/produto, o próximo passo é mapear `Detalhamento Tancagem` e cruzar por lá em vez de por base inteira.
+**Ponto de atenção:** o flag é por base inteira (via `unidade`), não por produto/tanque. Algumas bases classificadas como `Própria` ou `Pool` na aba Capacidade ALE aparecem com `tem_top=True` (ex.: Betim/Própria com TOP junto à congênere Potencial) — isso é coerente com a aba `Detalhamento Tancagem`, que registra `Tipo De Base` por tanque/linha (não por base inteira): uma base majoritariamente própria pode ter uma fração cedida a terceiros (cessão de espaço) que carrega cláusula TOP, mesmo que o modelo predominante da base seja outro. Se for preciso o TOP no grão tanque/produto, o próximo passo é mapear `Detalhamento Tancagem` e cruzar por lá em vez de por base inteira.
 
 ## Dúvidas / pontos em aberto
 

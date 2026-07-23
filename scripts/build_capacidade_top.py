@@ -9,9 +9,14 @@ Fontes:
 Saída:
 - dados_tratados/capacidade_ale_top.csv
 
-Chave de junção: `codigo_base` (Capacidade ALE, coluna "Código Da Base")
-== `COD.FILIAL` (Despesas.xlsx) -- join numérico, confirmado batendo
-1:1 com o nome da FILIAL (ex.: código 18 = Araucária em ambas as fontes).
+Chave de junção: `unidade` (Capacidade ALE) normalizada (maiúsculas,
+sem acento) == `FILIAL` (Despesas.xlsx) normalizada.
+
+`codigo_base` ("Código Da Base") NÃO é uma chave confiável entre abas
+diferentes do mesmo arquivo -- confirmado batendo errado para 3 bases
+(Paulínia: 12 na Capacidade ALE vs 67 no Despesas.xlsx/Detalhamento
+Tancagem; Rondonópolis: 69 vs 61; Cuiabá: 28 vs 73). O nome da unidade,
+depois de normalizado, bate 100% em todas as fontes.
 
 Definição de "tem TOP": a base tem pelo menos um contrato de
 "Operação Normal" com Volume Mínimo (garantia contratual) preenchido e
@@ -24,6 +29,7 @@ cláusula já custou de fato.
 """
 
 import csv
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -32,6 +38,9 @@ import openpyxl
 BASE_DIR = Path(__file__).resolve().parent.parent
 APOIO_DIR = BASE_DIR / "arquivos_apoio"
 TRATADOS_DIR = BASE_DIR / "dados_tratados"
+
+sys.path.insert(0, str(BASE_DIR / "scripts"))
+from normalize import normalize_municipio  # noqa: E402
 
 CAPACIDADE_CSV = TRATADOS_DIR / "capacidade_ale.csv"
 DESPESAS_XLSX = APOIO_DIR / "Despesas.xlsx"
@@ -49,37 +58,34 @@ def _load_top_por_base():
     meses_com_top = defaultdict(set)
 
     for row in ws.iter_rows(min_row=2, values_only=True):
-        cod_filial = row[idx["COD.FILIAL"]]
-        if not cod_filial:
+        filial = row[idx["FILIAL"]]
+        if not filial:
             continue
-        try:
-            cod_filial = int(cod_filial)
-        except (TypeError, ValueError):
-            continue
+        chave = normalize_municipio(filial)
 
         tipo = row[idx["TIPO DE COBRANÇA"]]
         vol_minimo = row[idx["Volume Mínimo "]] or 0
         if tipo == "Operação Normal" and vol_minimo > 0:
-            congeneres_top[cod_filial].add(row[idx["CONGENERE"]])
+            congeneres_top[chave].add(row[idx["CONGENERE"]])
 
         valor_total = row[idx["Valor Total R$"]]
         if valor_total not in (None, 0):
             top_valor = row[idx["Take or Pay"]] or 0
             if top_valor:
-                top_valor_realizado[cod_filial] += top_valor
+                top_valor_realizado[chave] += top_valor
                 data = row[idx["DATA CONTABIL"]]
                 if data:
-                    meses_com_top[cod_filial].add((data.year, data.month))
+                    meses_com_top[chave].add((data.year, data.month))
 
-    bases = set(congeneres_top) | set(top_valor_realizado)
+    chaves = set(congeneres_top) | set(top_valor_realizado)
     return {
-        cod: {
-            "tem_top": cod in congeneres_top,
-            "congeneres_top": "; ".join(sorted(congeneres_top.get(cod, []))),
-            "top_valor_realizado": round(top_valor_realizado.get(cod, 0.0), 2),
-            "meses_com_top_realizado": len(meses_com_top.get(cod, [])),
+        chave: {
+            "tem_top": chave in congeneres_top,
+            "congeneres_top": "; ".join(sorted(congeneres_top.get(chave, []))),
+            "top_valor_realizado": round(top_valor_realizado.get(chave, 0.0), 2),
+            "meses_com_top_realizado": len(meses_com_top.get(chave, [])),
         }
-        for cod in bases
+        for chave in chaves
     }
 
 
@@ -94,8 +100,8 @@ def build_capacidade_top():
     ]
     out_rows = []
     for r in rows:
-        cod_base = int(r["codigo_base"])
-        info = top_por_base.get(cod_base, {
+        chave = normalize_municipio(r["unidade"])
+        info = top_por_base.get(chave, {
             "tem_top": False, "congeneres_top": "",
             "top_valor_realizado": 0.0, "meses_com_top_realizado": 0,
         })
