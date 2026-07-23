@@ -58,13 +58,19 @@ A coluna D bate exatamente com os 4 modelos descritos:
 - **Democrática** — base "bico" (cessão de espaço de biocombustível + compra de derivado direto do tanque, sem estoque)
 - **Própria** — base 100% própria
 
-43 bases mapeadas, cada uma com exatamente 1 modelo **nesta aba**. Mas isso é uma simplificação: ver seção "Bases híbridas" abaixo — no grão tanque/produto (aba Detalhamento Tancagem), 8 dessas 43 bases operam sob mais de um modelo ao mesmo tempo.
+43 bases mapeadas, cada uma com exatamente 1 modelo **nesta aba**. Mas isso é uma simplificação: ver seção "Bases híbridas" abaixo — no grão tanque/produto (aba Detalhamento Tancagem), 18 dessas 43 bases operam sob mais de um papel operacional ao mesmo tempo.
 
-## Bases híbridas (mais de um modelo na mesma base)
+## Bases híbridas (mais de uma operação na mesma base)
 
-Confirmado, por exemplo, na Duque de Caxias: é `Própria` mas também tem `armazenagem de terceiro` (cessão de espaço à RAÍZEN em vários produtos) — uma operação híbrida que a aba "Capacidade ALE" não mostra, porque resume cada base a 1 único `modelo_operacional`.
+Duque de Caxias é o exemplo que expôs isso: não são 2 operações, são **3**:
 
-O grão certo para isso é a aba **Detalhamento Tancagem** (1 linha = 1 alocação de tancagem por Base x Produto x Armazenador x Tipo de Espaço), extraída em `scripts/extract_detalhamento_tancagem.py` → `dados_tratados/detalhamento_tancagem.csv` (362 linhas).
+1. **Base própria (uso próprio)** — tancagem própria que a ALE usa.
+2. **Cessão de espaço, papel cedente** — dentro dessa mesma base própria, parte da tancagem é cedida a um terceiro que opera junto com a ALE ali (a ALE cede espaço).
+3. **Cessão de espaço, papel cessionária** — a ALE também opera na base da Raízen (um congênere), movimentando parte das suas próprias movimentações lá (a ALE recebe/usa espaço de terceiro).
+
+Papéis 2 e 3 são operações opostas (cedente x cessionária) e a aba "Capacidade ALE" não distingue nenhuma delas — resume a base inteira a 1 único `modelo_operacional` ("Própria", nesse caso).
+
+Fonte no grão certo: **Detalhamento Tancagem** (1 linha = 1 alocação de tancagem por Base x Produto x Armazenador x Tipo de Espaço), extraída em `scripts/extract_detalhamento_tancagem.py` → `dados_tratados/detalhamento_tancagem.csv` (362 linhas).
 
 | Coluna origem | Nome no CSV | Descrição |
 |---|---|---|
@@ -76,22 +82,33 @@ O grão certo para isso é a aba **Detalhamento Tancagem** (1 linha = 1 alocaç�
 | F | `produto` | Produto |
 | G | `base_armazenador` | Congênere/operador do espaço (ex. VIBRA, ALESAT, RAÍZEN) |
 | H | `modal` | `Rodo`, `Duto`, `Ferro`, `Cabotagem`, `-` |
-| I-N | `tancagem_operacional_m3`, `lastro_m3`, `tancagem_util_m3`, `reducao_manutencao_m3`, `espaco_cedido_m3`, `tancagem_disponivel_movimentacao_m3` | Composição da tancagem, do bruto até a disponível para movimentação (mesmo valor que soma para a coluna `tancagem_disponivel_m3` da aba Capacidade ALE) |
+| I-N | `tancagem_operacional_m3`, `lastro_m3`, `tancagem_util_m3`, `reducao_manutencao_m3`, `espaco_cedido_m3`, `tancagem_disponivel_movimentacao_m3` | Composição da tancagem, do bruto até a disponível para movimentação |
 
-`scripts/build_capacidade_por_modelo.py` agrega esse CSV por Base x Modelo → `dados_tratados/capacidade_por_modelo.csv`, com `base_hibrida` (bool) e `modelos_presentes_na_base`. **8 das 43 bases são híbridas:**
+`espaco_cedido_m3` (coluna M) só aparece em linhas `ESPAÇO ALE - BASE PRÓPRIA` — é exatamente o papel 2 (cedente): tancagem útil própria que ALE cede a um terceiro dentro da mesma base, reduzindo o que sobra para uso próprio (`tancagem_util_m3` → `tancagem_disponivel_movimentacao_m3`).
 
-| Base | Modelos presentes |
+`scripts/build_capacidade_por_modelo.py` decompõe cada linha em `papel_operacional` (não só `modelo`) → `dados_tratados/capacidade_por_modelo.csv`:
+
+- `{modelo} (uso próprio)` — ex. "Própria (uso próprio)", "Pool (uso próprio)"
+- `Cessão de espaço (cedente)` — sempre que `espaco_cedido_m3 > 0` numa linha própria/pool
+- `Cessão de espaço (cessionária) - {modelo}` — linhas `ESPAÇO EM TERCEIROS` (Terceiros ou Democrática)
+
+Resultado: **18 das 43 bases são híbridas** (têm mais de 1 papel operacional):
+
+| Base | Papéis presentes (m³) |
 |---|---|
-| Duque de Caxias | Própria (8.289 m³) + Terceiros (650 m³) |
-| Goiânia | Própria (3.226 m³) + Terceiros (288 m³) |
-| Guarulhos | Própria (9.662 m³) + Democrática (95 m³) |
-| Araucária | Terceiros (1.250 m³) + Democrática (0 m³) |
-| São Fco do Conde | Terceiros (1.588 m³) + Democrática (0 m³) |
-| Cuiabá | Pool (1.248 m³) + Terceiros (285 m³) |
-| Itajaí | Terceiros (660 m³) + Democrática (67 m³) |
-| Paulínia | Pool (11.425 m³) + Terceiros (3.895 m³) |
+| Duque de Caxias | Própria uso próprio (8.289) + cedente (750) + cessionária-Terceiros (650) |
+| Betim | Própria uso próprio (6.215) + cedente (2.170) |
+| Guamaré | Pool uso próprio (7.212) + cedente (1.100) |
+| Lem | Própria uso próprio (1.120) + cedente (1.380) |
+| São José do Rio Preto | Pool uso próprio (3.398) + cedente (185) |
+| Guarulhos | Própria uso próprio (9.662) + cedente (1.175) + cessionária-Democrática (95) |
+| Paulínia | Pool uso próprio (11.425) + cessionária-Terceiros (3.895) |
+| Cuiabá | Pool uso próprio (1.248) + cessionária-Terceiros (285) |
+| Goiânia | Própria uso próprio (3.226) + cessionária-Terceiros (288) |
+| Araucária, Itajaí, São Fco do Conde | Democrática + cessionária-Terceiros |
+| Biguaçu, Itabuna, Jequié, Rio Grande, Uberaba, Uberlândia | Democrática + cessionária-Democrática |
 
-Nessas 8 bases, o `modelo_operacional` único da aba Capacidade ALE reflete só o modelo predominante — para o dashboard, o correto é mostrar a composição por modelo (esta tabela), não um único rótulo.
+Nas 18 bases híbridas, o `modelo_operacional` único da aba Capacidade ALE mostra só o papel predominante — para o dashboard, o correto é mostrar a composição por papel (`capacidade_por_modelo.csv`), não um único rótulo.
 
 ## Cruzamento com TOP (Take or Pay)
 
