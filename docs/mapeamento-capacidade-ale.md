@@ -1,7 +1,7 @@
 # Mapeamento — `02 - CAPACIDADES.xlsx` / aba "Capacidade ALE"
 
-Fonte: `arquivos_apoio/02 - CAPACIDADES.xlsx`
-Saída tratada: `dados_tratados/capacidade_ale.csv` (gerado por `scripts/extract_capacidade_ale.py`)
+Fonte: `arquivos_apoio/02 - CAPACIDADES.xlsx` (+ `arquivos_apoio/Despesas.xlsx` para o TOP)
+Saída tratada: `dados_tratados/capacidade_ale.csv` (`scripts/extract_capacidade_ale.py`) e `dados_tratados/capacidade_ale_top.csv` (`scripts/build_capacidade_top.py`)
 
 ## Abas do arquivo
 
@@ -56,10 +56,26 @@ A coluna D bate exatamente com os 4 modelos descritos:
 
 43 bases mapeadas, cada uma com exatamente 1 modelo (nenhuma base aparece em mais de um modelo).
 
+## Cruzamento com TOP (Take or Pay)
+
+TOP não está em `02 - CAPACIDADES.xlsx` — vem de `arquivos_apoio/Despesas.xlsx` (aba `Despesas`). A chave de junção usada foi `codigo_base` (Capacidade ALE) == `COD.FILIAL` (Despesas.xlsx) — **join numérico**, confirmado batendo 1:1 com o nome da filial em ambas as fontes (ex.: código 18 = Araucária nas duas), sem precisar normalizar nome/acentuação.
+
+Script: `scripts/build_capacidade_top.py` → `dados_tratados/capacidade_ale_top.csv` (mesmo grão Base x Produto de `capacidade_ale.csv`, com 4 colunas novas):
+
+| Coluna | Descrição |
+|---|---|
+| `tem_top` | `True` se a base tem ao menos 1 contrato de "Operação Normal" em Despesas.xlsx com Volume Mínimo > 0 (cláusula contratual de garantia, existe independente de ter sido acionada) |
+| `congeneres_top` | Congêneres com cláusula TOP identificada nessa base |
+| `top_valor_realizado` | Soma histórica (R$) da coluna "Take or Pay" nas linhas realizadas — mesma regra de `dashboard_cessao_aggregate.py::_row_top` (só conta quando há "Valor Total R$" realizado) |
+| `meses_com_top_realizado` | Nº de meses distintos em que o TOP foi de fato acionado (valor > 0) |
+
+Resultado: **29 das 43 bases têm TOP**.
+
+**Ponto de atenção:** o flag é por base inteira (via `COD.FILIAL`), não por produto/tanque. Algumas bases classificadas como `Própria` ou `Pool` na aba Capacidade ALE aparecem com `tem_top=True` (ex.: Betim/Própria com TOP junto à congênere Potencial) — isso é coerente com a aba `Detalhamento Tancagem`, que registra `Tipo De Base` por tanque/linha (não por base inteira): uma base majoritariamente própria pode ter uma fração cedida a terceiros (cessão de espaço) que carrega cláusula TOP, mesmo que o modelo predominante da base seja outro. Se for preciso o TOP no grão tanque/produto, o próximo passo é mapear `Detalhamento Tancagem` e cruzar por lá em vez de por base inteira.
+
 ## Dúvidas / pontos em aberto
 
-1. ~~**"TOP" (Take or Pay?)**~~ — **resolvido.** TOP = Take or Pay, e não vem de `02 - CAPACIDADES.xlsx` — vem de `arquivos_apoio/Despesas.xlsx` (aba `Despesas`, colunas `Take or Pay` e `ORC.TAKE OR PAY`, por linha de `FILIAL` + `CONGENERE` + `TIPO DE COBRANÇA` + período) e já é processado no pipeline do `dashboard_cessao` (`scripts/dashboard_cessao_aggregate.py::_row_top`). Para juntar "tem TOP" à base da aba Capacidade ALE, será preciso casar `FILIAL` (Despesas, ex. `"Araucária"`) com `unidade` (Capacidade ALE, ex. `"ARAUCARIA"`) — nomes com capitalização/acentuação diferentes, precisa de normalização (mesmo padrão de `scripts/normalize.py::normalize_municipio`). Ainda não fiz esse cruzamento — avise se quer que eu já monte esse join agora ou se seguimos mapeando as outras abas antes de montar o dashboard final.
-2. **`capacidade_expedicao_rodo_m3` (coluna P)** só está preenchida numa parte das linhas (bases com expedição rodoviária relevante, ex. Diesel A S500 em Açailândia). Confirmar se célula vazia = "não aplicável" ou = "zero".
-3. **Duas linhas de "produto misturado"** (colunas N e S) são idênticas nos exemplos verificados — mantive só a de N (`produto_misturado`); avise se em algum caso elas divergem.
+1. **`capacidade_expedicao_rodo_m3` (coluna P)** só está preenchida numa parte das linhas (bases com expedição rodoviária relevante, ex. Diesel A S500 em Açailândia). Confirmar se célula vazia = "não aplicável" ou = "zero".
+2. **Duas linhas de "produto misturado"** (colunas N e S) são idênticas nos exemplos verificados — mantive só a de N (`produto_misturado`); avise se em algum caso elas divergem.
 4. A aba **BD Cap Venda ALE** parece ser a base "flat" de onde a "Capacidade ALE" é montada (mesma chave Unidade+Produto), mas tem 305 linhas contra 262 na aba mapeada e não tem a coluna de modelo operacional. Pode haver bases/linhas adicionais fora do relatório final — útil investigar se formos usar essa aba depois.
 5. Ainda não mapeei as abas de Detalhamento Tancagem, Recebimento/Expedição Rodo, BD Expedição/Descarga e ATA Tancagem — ficam para as próximas rodadas, conforme combinado.
