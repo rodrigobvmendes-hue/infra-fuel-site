@@ -26,15 +26,27 @@ def build_despesa_insights(d_contracts, d_kpi, r_kpi, d_cong_all, d_filiais, r_f
         texto += " ⚠ Abaixo de 15%."
     insights.append({"level": level, "title": f"Cobertura: {cobertura}%", "text": texto})
 
-    top_recs = sorted(
-        [c for c in d_contracts if c["status"] == "TOP Gerado"],
-        key=lambda c: -c["top"],
-    )
+    top_recs = [c for c in d_contracts if c["status"] == "TOP Gerado"]
     if top_recs:
-        maiores = " | ".join(f"{c['filial']}/{c['congenere']}: R${_fmt_money(c['top'])}" for c in top_recs[:5])
+        grouped = defaultdict(lambda: {"total": 0.0, "periods": []})
+        for c in top_recs:
+            g = grouped[(c["filial"], c["congenere"])]
+            g["total"] += c["top"] or 0
+            g["periods"].append(c["period"])
+        ranked = sorted(grouped.items(), key=lambda kv: -kv[1]["total"])
+        partes = []
+        for (filial, congenere), g in ranked[:5]:
+            periods = sorted(g["periods"])
+            qtd = len(periods)
+            if qtd > 1:
+                intervalo = f"{qtd}x, {periods[0]} a {periods[-1]}"
+            else:
+                intervalo = periods[0]
+            partes.append(f"{filial}/{congenere}: R${_fmt_money(g['total'])} ({intervalo})")
+        maiores = " | ".join(partes)
         insights.append({
             "level": "warning",
-            "title": f"Take or Pay — {len(top_recs)} registros",
+            "title": f"Take or Pay — {len(top_recs)} registros em {len(grouped)} contratos",
             "text": f"Maiores: {maiores}",
         })
 
