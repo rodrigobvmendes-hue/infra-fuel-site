@@ -14,6 +14,7 @@ Sem --patch-html, só imprime o JSON (modo de validação).
 
 import argparse
 import csv
+import datetime
 import json
 import sys
 from pathlib import Path
@@ -33,6 +34,16 @@ def _num(v):
     if v in (None, ""):
         return None
     return round(float(v), 3)
+
+
+def _last_complete_month(today=None):
+    """Último mês calendário fechado antes de hoje (ex.: se hoje é
+    17/08/2026, retorna '2026-07'), independente de quanto dado real já
+    foi lançado -- é uma referência de calendário, não de apuração."""
+    today = today or datetime.date.today()
+    first_of_this_month = today.replace(day=1)
+    last_day_prev = first_of_this_month - datetime.timedelta(days=1)
+    return f"{last_day_prev.year}-{last_day_prev.month:02d}"
 
 
 def build_cap_data():
@@ -79,12 +90,15 @@ def build_cap_data():
             "venda_media_12m_m3": _num(r["venda_media_12m_m3"]),
         })
 
+    ultimo_mes_completo = _last_complete_month()
+
     out_bases = []
     for cod, base in sorted(bases.items(), key=lambda kv: kv[1]["unidade"]):
         top = top_por_base.get(cod, {})
         tancagem_total = sum(p["tancagem_disponivel_m3"] or 0 for p in base["produtos"])
         venda_total = sum(p["capacidade_venda_m3"] or 0 for p in base["produtos"])
         papeis = papeis_por_base.get(normalize_municipio(base["unidade"]), [])
+        top_por_mes = json.loads(top.get("top_por_mes_json") or "{}")
         out_bases.append({
             **base,
             "tancagem_total_m3": round(tancagem_total, 3),
@@ -95,9 +109,11 @@ def build_cap_data():
             "congeneres_top": [c for c in (top.get("congeneres_top") or "").split("; ") if c],
             "top_valor_realizado": _num(top.get("top_valor_realizado")),
             "meses_com_top_realizado": int(top.get("meses_com_top_realizado") or 0),
+            "top_ultimo_mes": top_por_mes.get(ultimo_mes_completo, 0) > 0,
+            "top_valor_ultimo_mes": round(top_por_mes.get(ultimo_mes_completo, 0), 2),
         })
 
-    return {"bases": out_bases}
+    return {"bases": out_bases, "ultimo_mes_completo": ultimo_mes_completo}
 
 
 def patch_html(html_path, cap_data):

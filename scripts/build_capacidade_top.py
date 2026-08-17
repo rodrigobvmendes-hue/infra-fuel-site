@@ -29,6 +29,7 @@ cláusula já custou de fato.
 """
 
 import csv
+import json
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -56,6 +57,7 @@ def _load_top_por_base():
     congeneres_top = defaultdict(set)
     top_valor_realizado = defaultdict(float)
     meses_com_top = defaultdict(set)
+    top_por_mes = defaultdict(lambda: defaultdict(float))
 
     for row in ws.iter_rows(min_row=2, values_only=True):
         filial = row[idx["FILIAL"]]
@@ -76,6 +78,8 @@ def _load_top_por_base():
                 data = row[idx["DATA CONTABIL"]]
                 if data:
                     meses_com_top[chave].add((data.year, data.month))
+                    period = f"{data.year}-{data.month:02d}"
+                    top_por_mes[chave][period] += top_valor
 
     chaves = set(congeneres_top) | set(top_valor_realizado)
     return {
@@ -84,6 +88,9 @@ def _load_top_por_base():
             "congeneres_top": "; ".join(sorted(congeneres_top.get(chave, []))),
             "top_valor_realizado": round(top_valor_realizado.get(chave, 0.0), 2),
             "meses_com_top_realizado": len(meses_com_top.get(chave, [])),
+            "top_por_mes_json": json.dumps(
+                {p: round(v, 2) for p, v in top_por_mes.get(chave, {}).items()}
+            ),
         }
         for chave in chaves
     }
@@ -97,6 +104,7 @@ def build_capacidade_top():
 
     fieldnames = list(rows[0].keys()) + [
         "tem_top", "congeneres_top", "top_valor_realizado", "meses_com_top_realizado",
+        "top_por_mes_json",
     ]
     out_rows = []
     for r in rows:
@@ -104,6 +112,7 @@ def build_capacidade_top():
         info = top_por_base.get(chave, {
             "tem_top": False, "congeneres_top": "",
             "top_valor_realizado": 0.0, "meses_com_top_realizado": 0,
+            "top_por_mes_json": "{}",
         })
         out_rows.append({**r, **info})
 
