@@ -30,7 +30,9 @@ from dashboard_cessao_aggregate import (
     aggregate_monthly, build_contracts, aggregate_filial, aggregate_cong,
     build_kpi, build_top_data, build_topmon, build_sinergia,
 )
-from dashboard_cessao_insights import build_despesa_insights, build_receita_insights
+from dashboard_cessao_insights import (
+    build_despesa_insights, build_receita_insights, build_last_month_insight,
+)
 
 DESPESA_COLMAP = {
     "data": "DATA CONTABIL", "filial": "FILIAL", "congenere": "CONGENERE",
@@ -141,14 +143,40 @@ def build_dashboard_json(despesas_path, receitas_path, reference_html=None):
 
     tancagem = extract_tancagem_from_html(reference_html) if reference_html else []
 
-    d_filiais = {c["filial"] for c in d_contracts}
-    r_filiais = {c["filial"] for c in r_contracts}
+    # Insights: restritos a 2026 (o resto do dashboard segue com o
+    # histórico completo, só os cards de insight são limitados ao ano
+    # corrente).
+    d_contracts_26 = [c for c in d_contracts if c["period"].startswith("2026")]
+    r_contracts_26 = [c for c in r_contracts if c["period"].startswith("2026")]
+    d_monthly_26 = [m for m in d_monthly if m["period"].startswith("2026")]
+    r_monthly_26 = [m for m in r_monthly if m["period"].startswith("2026")]
+    d_rows_26 = [r for r in d_rows if r["data"] and r["data"].year == 2026]
+    r_rows_26 = [r for r in r_rows if r["data"] and r["data"].year == 2026]
+    periods_26 = [p for p in periods if p.startswith("2026")]
+
+    d_kpi_26 = build_kpi(d_contracts_26, d_monthly_26)
+    r_kpi_26 = build_kpi(r_contracts_26, r_monthly_26)
+    d_cong_26_all = aggregate_cong(d_contracts_26, d_rows_26, periods_26)["__all__"]
+
+    d_filiais_26 = {c["filial"] for c in d_contracts_26}
+    r_filiais_26 = {c["filial"] for c in r_contracts_26}
     d_insights = build_despesa_insights(
-        d_contracts, d_kpi, r_kpi, d_cong["__all__"], d_filiais, r_filiais
+        d_contracts_26, d_kpi_26, r_kpi_26, d_cong_26_all, d_filiais_26, r_filiais_26
     )
 
+    sinergia_26 = build_sinergia(d_contracts_26, r_contracts_26, d_rows_26, r_rows_26)
+    r_topmon_26 = build_topmon(r_contracts_26, "TOP Recebido")
+    r_insights = build_receita_insights(r_contracts_26, r_topmon_26, sinergia_26["bilaterais"])
+
+    d_last_month = build_last_month_insight(d_contracts_26, d_monthly_26, "Despesas")
+    if d_last_month:
+        d_insights.append(d_last_month)
+    r_last_month = build_last_month_insight(r_contracts_26, r_monthly_26, "Receitas")
+    if r_last_month:
+        r_insights.append(r_last_month)
+
+    # `sinergia` (aba dedicada) continua com o histórico completo.
     sinergia = build_sinergia(d_contracts, r_contracts, d_rows, r_rows)
-    r_insights = build_receita_insights(r_contracts, r_topmon, sinergia["bilaterais"])
 
     D = {
         "periods": periods,

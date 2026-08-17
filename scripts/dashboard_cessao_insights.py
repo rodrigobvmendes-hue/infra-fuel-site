@@ -16,6 +16,45 @@ def _fmt_money(v):
     return f"{v:,.0f}".replace(",", "_").replace(".", ",").replace("_", ".")
 
 
+_MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+
+
+def _mlbl(period):
+    y, m = period.split("-")
+    return f"{_MESES[int(m) - 1]}/{y[2:]}"
+
+
+def build_last_month_insight(contracts, monthly, label):
+    """Insight dedicado ao último mês com dado real (mesmo critério de
+    `kpi.last_period`: último período com is_proj=0), comparando com o
+    mês anterior."""
+    non_proj = [m for m in monthly if not m["is_proj"] and m["n_real"] > 0]
+    if not non_proj:
+        return None
+    last = non_proj[-1]
+    period = last["period"]
+    prev = non_proj[-2] if len(non_proj) >= 2 else None
+
+    real_c = [c for c in contracts if c["period"] == period and c["is_realizado"]]
+    total = sum(c["valor"] or 0 for c in real_c)
+    top = sum(c["top"] or 0 for c in real_c)
+    top_pct = round(top / total * 100, 1) if total else 0
+
+    texto = f"{label} de {_mlbl(period)}: R$ {_fmt_money(total)}"
+    if top:
+        texto += f", sendo R$ {_fmt_money(top)} em Take or Pay ({top_pct}%)"
+    if prev:
+        prev_c = [c for c in contracts if c["period"] == prev["period"] and c["is_realizado"]]
+        prev_total = sum(c["valor"] or 0 for c in prev_c)
+        if prev_total:
+            var = round((total - prev_total) / prev_total * 100, 1)
+            seta = "▲" if var > 0 else ("▼" if var < 0 else "→")
+            texto += f". {seta} {abs(var)}% vs {_mlbl(prev['period'])}"
+    texto += f" ({last['n_real']} registros apurados)."
+
+    return {"level": "info", "title": f"Último Mês — {_mlbl(period)}", "text": texto}
+
+
 def build_despesa_insights(d_contracts, d_kpi, r_kpi, d_cong_all, d_filiais, r_filiais):
     insights = []
 
