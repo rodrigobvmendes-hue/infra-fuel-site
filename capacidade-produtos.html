@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capacidade por Produto · InfraFuel</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root {
+      --color-primary: #E61E2D;
+      --color-secondary: #1B3A5F;
+      --color-gray: #6b7280;
+      /* Paleta categórica (dataviz skill, ordem fixa validada p/ barras empilhadas) */
+      --cat-gasolina: #2a78d6;
+      --cat-s10: #eb6834;
+      --cat-s500: #1baf7a;
+      --cat-b100: #eda100;
+      --cat-anidro: #e87ba4;
+      --cat-hidratado: #008300;
+      --cat-outros: #4a3aa7;
+    }
+
+    .cp-header {
+      background: linear-gradient(135deg, #1B3A5F 0%, #E61E2D 100%);
+      color: white;
+      padding: 3rem 0;
+      text-align: center;
+    }
+    .cp-header h1 { margin: 0; font-size: 2.4rem; font-weight: 700; }
+    .cp-header p { margin: 0.5rem 0 0; opacity: 0.95; font-size: 1.05rem; }
+
+    .cp-container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: white;
+      padding: 1.25rem 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--color-primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .stat-card .number { font-size: 1.7rem; font-weight: 700; color: var(--color-primary); }
+    .stat-card .label { font-size: 0.82rem; color: var(--color-gray); margin-top: 0.2rem; }
+
+    .cp-filters {
+      display: flex; flex-wrap: wrap; gap: 0.85rem; align-items: flex-end;
+      background: white; border-radius: 8px; padding: 1rem 1.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem;
+    }
+    .cp-filter-group { display: flex; flex-direction: column; gap: 0.3rem; min-width: 170px; }
+    .cp-filter-group label { font-size: 0.75rem; font-weight: 600; color: var(--color-gray); text-transform: uppercase; letter-spacing: 0.03em; }
+    .cp-filter-group select, .cp-filter-group input {
+      padding: 0.5rem 0.6rem; border: 1px solid #d8dbe0; border-radius: 6px; font-size: 0.9rem; background: white;
+    }
+    .btn-reset {
+      padding: 0.55rem 1rem; border: none; border-radius: 6px; background: var(--color-secondary);
+      color: white; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    }
+    .btn-reset:hover { opacity: 0.88; }
+    .cp-active-filter {
+      display: inline-flex; align-items: center; gap: 0.4rem; background: #FFF1EE; color: var(--color-primary);
+      border: 1px solid #F7C7C0; padding: 0.4rem 0.75rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600;
+    }
+    .cp-active-filter button { border: none; background: none; color: inherit; cursor: pointer; font-weight: 700; font-size: 0.95rem; line-height: 1; }
+
+    .cp-main-grid {
+      display: grid; grid-template-columns: 340px 1fr; gap: 1.25rem; margin-bottom: 1.75rem;
+    }
+    @media (max-width: 900px) { .cp-main-grid { grid-template-columns: 1fr; } }
+
+    .cp-panel { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
+    .cp-panel-title {
+      padding: 0.85rem 1.1rem; border-bottom: 1px solid #eee; font-weight: 700; color: var(--color-secondary);
+      font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center;
+    }
+    .cp-panel-title small { font-weight: 500; color: var(--color-gray); font-size: 0.75rem; }
+
+    #ranking-list { max-height: 560px; overflow-y: auto; }
+    .cp-rank-row {
+      display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;
+      padding: 0.65rem 1.1rem; border-bottom: 1px solid #f2f2f2; cursor: pointer; transition: background 0.12s;
+    }
+    .cp-rank-row:hover { background: #FFF6F5; }
+    .cp-rank-row.active { background: #FFECE9; border-left: 3px solid var(--color-primary); }
+    .cp-rank-pos { font-size: 0.75rem; color: var(--color-gray); width: 1.6rem; flex-shrink: 0; }
+    .cp-rank-name { font-weight: 600; font-size: 0.87rem; color: #1f2937; flex: 1; line-height: 1.2; }
+    .cp-rank-meta { font-size: 0.72rem; color: var(--color-gray); }
+    .cp-rank-value { font-weight: 700; font-size: 0.82rem; color: var(--color-secondary); text-align: right; white-space: nowrap; }
+
+    #map { height: 560px; width: 100%; }
+
+    .cp-legend {
+      display: flex; flex-wrap: wrap; gap: 0.9rem; padding: 0.85rem 1.1rem; background: white;
+      border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.25rem; font-size: 0.82rem;
+    }
+    .cp-legend-item { display: flex; align-items: center; gap: 0.4rem; color: #1f2937; }
+    .cp-legend-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+    .cp-cards-note { color: var(--color-gray); font-size: 0.85rem; margin: -0.5rem 0 1rem; }
+
+    .cp-cards-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;
+    }
+    .cp-card {
+      background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 1.1rem;
+    }
+    .cp-card-title { font-weight: 700; font-size: 0.95rem; color: var(--color-secondary); margin-bottom: 0.15rem; }
+    .cp-card-sub { font-size: 0.8rem; color: var(--color-gray); margin-bottom: 0.7rem; }
+    .cp-card-total { font-weight: 700; color: var(--color-primary); font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .cp-stackbar { display: flex; height: 14px; border-radius: 4px; overflow: hidden; background: #f0efec; margin-bottom: 0.6rem; }
+    .cp-stackbar-seg { height: 100%; cursor: default; }
+    .cp-stackbar-seg + .cp-stackbar-seg { margin-left: 2px; }
+    .cp-card-breakdown { display: flex; flex-direction: column; gap: 0.28rem; }
+    .cp-breakdown-row { display: flex; align-items: center; gap: 0.45rem; font-size: 0.76rem; color: #374151; }
+    .cp-breakdown-row .sw { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+    .cp-breakdown-row .nm { flex: 1; }
+    .cp-breakdown-row .vl { font-variant-numeric: tabular-nums; color: var(--color-gray); }
+    .cp-card-maritimo { margin-top: 0.4rem; font-size: 0.72rem; color: var(--color-gray); font-style: italic; }
+    .cp-empty-state {
+      text-align: center; padding: 3rem 1rem; color: var(--color-gray); background: white; border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-icon">⛽</span>
+        <div>
+          <span class="brand-title">InfraFuel</span>
+          <span class="brand-sub">Projetos de Infraestrutura de Combustíveis</span>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="index.html#projetos">Projetos</a>
+        <a href="bases.html">📦 Bases</a>
+        <a href="suprimento.html">⛽ Suprimento</a>
+        <a href="capacidade-produtos.html" style="border-bottom: 3px solid #E61E2D;">🛢️ Capacidade</a>
+        <a href="dashboard_cessao.html">📊 Desp&amp;Receitas</a>
+        <a href="trello-projetos.html">📋 Trello</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="cp-header">
+    <div class="cp-container">
+      <h1>Capacidade de Tancagem por Produto</h1>
+      <p>Quem detém capacidade de armazenamento no Brasil, onde estão as bases e como a tancagem se distribui por produto — dados ANP (tanque a tanque).</p>
+    </div>
+  </section>
+
+  <div class="cp-container">
+
+    <div class="stats-grid" id="cp-stats"></div>
+
+    <div class="cp-filters">
+      <div class="cp-filter-group">
+        <label for="f-uf">UF</label>
+        <select id="f-uf"><option value="">Todas</option></select>
+      </div>
+      <div class="cp-filter-group">
+        <label for="f-municipio">Município</label>
+        <select id="f-municipio"><option value="">Todos</option></select>
+      </div>
+      <button class="btn-reset" id="btn-reset">Limpar Filtros</button>
+      <div id="cp-active-empresa" style="display:none;"></div>
+    </div>
+
+    <div class="cp-main-grid">
+      <div class="cp-panel">
+        <div class="cp-panel-title">
+          <span>Detentoras de Capacidade</span>
+          <small id="ranking-count"></small>
+        </div>
+        <div id="ranking-list"></div>
+      </div>
+      <div class="cp-panel">
+        <div id="map"></div>
+      </div>
+    </div>
+
+    <div class="cp-legend" id="cp-legend"></div>
+
+    <p class="cp-cards-note" id="cp-cards-note"></p>
+    <div class="cp-cards-grid" id="cp-cards"></div>
+
+  </div>
+
+  <script src="bases-data.js"></script>
+  <script src="capacidade-produtos-data.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const CATEGORY_COLORS = {
+      Gasolina: 'var(--cat-gasolina)',
+      S10: 'var(--cat-s10)',
+      S500: 'var(--cat-s500)',
+      B100: 'var(--cat-b100)',
+      Anidro: 'var(--cat-anidro)',
+      Hidratado: 'var(--cat-hidratado)',
+      Outros: 'var(--cat-outros)',
+    };
+    const CATEGORIAS = CAPACIDADE_PRODUTOS.categorias;
+    const BASES_CP = CAPACIDADE_PRODUTOS.bases;
+    const RANKING_NACIONAL = CAPACIDADE_PRODUTOS.ranking;
+
+    const state = { uf: '', municipio: '', empresaKey: null };
+
+    // ---------- coordenadas por município (reaproveita bases-data.js) ----------
+    function normalizeText(value) {
+      return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().trim();
+    }
+
+    function buildCoordinateIndex() {
+      const municipalityCoords = new Map();
+      const stateCoords = new Map();
+      (typeof BASES !== 'undefined' ? BASES : []).forEach(base => {
+        const mKey = `${normalizeText(base.municipality)}|${normalizeText(base.state)}`;
+        const sKey = normalizeText(base.state);
+        if (!municipalityCoords.has(mKey)) municipalityCoords.set(mKey, [base.lat, base.lng]);
+        if (!stateCoords.has(sKey)) stateCoords.set(sKey, [base.lat, base.lng]);
+      });
+      return { municipalityCoords, stateCoords };
+    }
+    const coordinateIndex = buildCoordinateIndex();
+
+    function getDeterministicJitter(seed, spread) {
+      let hash = 0;
+      for (let i = 0; i < seed.length; i++) { hash = ((hash << 5) - hash) + seed.charCodeAt(i); hash |= 0; }
+      const angle = Math.abs(hash % 360) * (Math.PI / 180);
+      const radius = ((Math.abs(hash) % 1000) / 1000) * spread;
+      return [Math.sin(angle) * radius, Math.cos(angle) * radius];
+    }
+
+    function getCoords(base) {
+      const mKey = `${normalizeText(base.municipio)}|${normalizeText(base.uf)}`;
+      const sKey = normalizeText(base.uf);
+      const exact = coordinateIndex.municipalityCoords.get(mKey);
+      const fallback = coordinateIndex.stateCoords.get(sKey) || [-14.5, -52];
+      const [lat, lng] = exact || fallback;
+      const spread = exact ? 0.1 : 0.25;
+      const [dLat, dLng] = getDeterministicJitter(`${base.ordem}|${base.cnpj}`, spread);
+      return [lat + dLat, lng + dLng];
+    }
+
+    // ---------- formatação ----------
+    function fmtM3(v) { return `${Math.round(v).toLocaleString('pt-BR')} m³`; }
+    function fmtM3k(v) { return `${Math.round(v / 1000).toLocaleString('pt-BR')} mil m³`; }
+    function pct(v, total) { return total > 0 ? ((v / total) * 100).toFixed(1) : '0.0'; }
+
+    // ---------- filtros ----------
+    function populateUfSelect() {
+      const ufs = [...new Set(BASES_CP.map(b => b.uf))].filter(Boolean).sort();
+      const sel = document.getElementById('f-uf');
+      ufs.forEach(uf => { const o = document.createElement('option'); o.value = uf; o.textContent = uf; sel.appendChild(o); });
+    }
+
+    function populateMunicipioSelect() {
+      const sel = document.getElementById('f-municipio');
+      sel.innerHTML = '<option value="">Todos</option>';
+      const pool = state.uf ? BASES_CP.filter(b => b.uf === state.uf) : BASES_CP;
+      const municipios = [...new Set(pool.map(b => b.municipio))].filter(Boolean).sort();
+      municipios.forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m; sel.appendChild(o); });
+      sel.value = state.municipio && municipios.includes(state.municipio) ? state.municipio : '';
+      if (sel.value === '') state.municipio = '';
+    }
+
+    function getFilteredBases() {
+      return BASES_CP.filter(b =>
+        (!state.uf || b.uf === state.uf) &&
+        (!state.municipio || b.municipio === state.municipio) &&
+        (!state.empresaKey || b.empresaKey === state.empresaKey)
+      );
+    }
+
+    // ranking local: recalculado a partir das bases filtradas por UF/Município
+    // (a agregação nacional pré-computada só vale quando não há filtro de local)
+    function getRankingForCurrentLocation() {
+      if (!state.uf && !state.municipio) return RANKING_NACIONAL;
+      const pool = BASES_CP.filter(b => (!state.uf || b.uf === state.uf) && (!state.municipio || b.municipio === state.municipio));
+      const porEmpresa = new Map();
+      pool.forEach(b => {
+        if (!porEmpresa.has(b.empresaKey)) {
+          porEmpresa.set(b.empresaKey, {
+            empresaKey: b.empresaKey, empresa: b.empresa, nomeReduzido: b.nomeReduzido,
+            totalM3: 0, qtdBases: 0, categorias: Object.fromEntries(CATEGORIAS.map(c => [c, 0])),
+          });
+        }
+        const e = porEmpresa.get(b.empresaKey);
+        e.totalM3 += b.totalM3;
+        e.qtdBases += 1;
+        CATEGORIAS.forEach(c => { e.categorias[c] += (b.categorias[c] || 0); });
+      });
+      return [...porEmpresa.values()].sort((a, b) => b.totalM3 - a.totalM3);
+    }
+
+    // ---------- render: stats ----------
+    function renderStats() {
+      const totalM3 = BASES_CP.reduce((s, b) => s + b.totalM3, 0);
+      const empresas = new Set(BASES_CP.map(b => b.empresaKey)).size;
+      const bases = new Set(BASES_CP.map(b => b.ordem)).size;
+      const el = document.getElementById('cp-stats');
+      el.innerHTML = [
+        { n: fmtM3k(totalM3), l: 'Capacidade Operacional Total' },
+        { n: empresas.toLocaleString('pt-BR'), l: 'Distribuidoras Detentoras' },
+        { n: bases.toLocaleString('pt-BR'), l: 'Instalações Mapeadas' },
+        { n: `${CATEGORIAS.length}`, l: 'Categorias de Produto' },
+      ].map(s => `<div class="stat-card"><div class="number">${s.n}</div><div class="label">${s.l}</div></div>`).join('');
+    }
+
+    // ---------- render: legenda ----------
+    function renderLegend() {
+      document.getElementById('cp-legend').innerHTML = CATEGORIAS.map(c =>
+        `<span class="cp-legend-item"><span class="cp-legend-swatch" style="background:${CATEGORY_COLORS[c]}"></span>${c}</span>`
+      ).join('') + `<span class="cp-legend-item" style="color:#6b7280;font-style:italic;">· dos quais Marítimo (dentro de Outros)</span>`;
+    }
+
+    // ---------- render: ranking ----------
+    function renderRanking() {
+      const ranking = getRankingForCurrentLocation();
+      document.getElementById('ranking-count').textContent = `${ranking.length} empresa(s)`;
+      const list = document.getElementById('ranking-list');
+      if (!ranking.length) {
+        list.innerHTML = '<div class="cp-empty-state">Nenhuma empresa encontrada para este filtro.</div>';
+        return;
+      }
+      list.innerHTML = ranking.map((e, i) => `
+        <div class="cp-rank-row ${state.empresaKey === e.empresaKey ? 'active' : ''}" data-key="${e.empresaKey}">
+          <span class="cp-rank-pos">${i + 1}º</span>
+          <span class="cp-rank-name">${e.nomeReduzido}<div class="cp-rank-meta">${e.qtdBases} base(s)</div></span>
+          <span class="cp-rank-value">${fmtM3k(e.totalM3)}</span>
+        </div>`).join('');
+
+      list.querySelectorAll('.cp-rank-row').forEach(row => {
+        row.addEventListener('click', () => {
+          const key = row.getAttribute('data-key');
+          state.empresaKey = state.empresaKey === key ? null : key;
+          renderActiveEmpresaChip();
+          renderAll(false);
+        });
+      });
+    }
+
+    function renderActiveEmpresaChip() {
+      const holder = document.getElementById('cp-active-empresa');
+      if (!state.empresaKey) { holder.style.display = 'none'; holder.innerHTML = ''; return; }
+      const item = BASES_CP.find(b => b.empresaKey === state.empresaKey);
+      holder.style.display = 'inline-flex';
+      holder.innerHTML = `<span class="cp-active-filter">🏢 ${item ? item.nomeReduzido : state.empresaKey} <button id="clear-empresa">✕</button></span>`;
+      document.getElementById('clear-empresa').addEventListener('click', () => {
+        state.empresaKey = null; renderActiveEmpresaChip(); renderAll(false);
+      });
+    }
+
+    // ---------- render: mapa ----------
+    let map, markersLayer;
+    function initMap() {
+      map = L.map('map').setView([-14.5, -52], 4);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap, © CARTO', subdomains: 'abcd', maxZoom: 19
+      }).addTo(map);
+      markersLayer = L.layerGroup().addTo(map);
+    }
+
+    function renderMap(filtered) {
+      markersLayer.clearLayers();
+      const bounds = [];
+      filtered.forEach(b => {
+        const [lat, lng] = getCoords(b);
+        const radius = Math.max(4, Math.min(16, Math.sqrt(b.totalM3) / 12));
+        const marker = L.circleMarker([lat, lng], {
+          radius, color: '#1B3A5F', weight: 1, fillColor: '#E61E2D', fillOpacity: 0.75,
+        });
+        marker.bindPopup(`
+          <strong>${b.nomeReduzido}</strong><br>
+          📍 ${b.municipio} - ${b.uf}<br>
+          Base nº ${b.ordem} · participação ${b.participacaoPct}%<br>
+          Capacidade atribuída: ${fmtM3(b.totalM3)}
+        `);
+        marker.addTo(markersLayer);
+        bounds.push([lat, lng]);
+      });
+      if (bounds.length) {
+        map.fitBounds(bounds, { padding: [30, 30], maxZoom: bounds.length === 1 ? 10 : 12 });
+      } else {
+        map.setView([-14.5, -52], 4);
+      }
+    }
+
+    // ---------- render: cards ----------
+    function stackBarHtml(categorias, total) {
+      return CATEGORIAS.filter(c => categorias[c] > 0).map(c => {
+        const w = total > 0 ? (categorias[c] / total) * 100 : 0;
+        return `<div class="cp-stackbar-seg" style="width:${w}%;background:${CATEGORY_COLORS[c]}" title="${c}: ${fmtM3(categorias[c])} (${pct(categorias[c], total)}%)"></div>`;
+      }).join('');
+    }
+
+    function breakdownRowsHtml(categorias, total) {
+      return CATEGORIAS.map(c => `
+        <div class="cp-breakdown-row">
+          <span class="sw" style="background:${CATEGORY_COLORS[c]}"></span>
+          <span class="nm">${c}</span>
+          <span class="vl">${fmtM3(categorias[c] || 0)} · ${pct(categorias[c] || 0, total)}%</span>
+        </div>`).join('');
+    }
+
+    const MAX_CARDS = 60;
+
+    function renderCards(filtered) {
+      const sorted = [...filtered].sort((a, b) => b.totalM3 - a.totalM3);
+      const shown = sorted.slice(0, MAX_CARDS);
+      const note = document.getElementById('cp-cards-note');
+      note.textContent = sorted.length > MAX_CARDS
+        ? `Mostrando as ${MAX_CARDS} maiores instalações de ${sorted.length} encontradas. Refine os filtros para ver as demais.`
+        : `${sorted.length} instalação(ões) · empresa proprietária por base.`;
+
+      const grid = document.getElementById('cp-cards');
+      if (!shown.length) {
+        grid.innerHTML = '<div class="cp-empty-state">Nenhuma instalação encontrada para este filtro.</div>';
+        return;
+      }
+      grid.innerHTML = shown.map(b => `
+        <div class="cp-card">
+          <div class="cp-card-title">${b.nomeReduzido}</div>
+          <div class="cp-card-sub">📍 ${b.municipio} · ${b.uf} — base nº ${b.ordem} (${b.participacaoPct}% de participação)</div>
+          <div class="cp-card-total">${fmtM3(b.totalM3)}</div>
+          <div class="cp-stackbar">${stackBarHtml(b.categorias, b.totalM3)}</div>
+          <div class="cp-card-breakdown">${breakdownRowsHtml(b.categorias, b.totalM3)}</div>
+          ${b.maritimoM3 > 0 ? `<div class="cp-card-maritimo">dos quais Marítimo: ${fmtM3(b.maritimoM3)}</div>` : ''}
+        </div>`).join('');
+    }
+
+    // ---------- orquestração ----------
+    function renderAll(refreshMunicipio) {
+      if (refreshMunicipio) populateMunicipioSelect();
+      const filtered = getFilteredBases();
+      renderRanking();
+      renderMap(filtered);
+      renderCards(filtered);
+    }
+
+    document.getElementById('f-uf').addEventListener('change', e => {
+      state.uf = e.target.value;
+      state.municipio = '';
+      renderAll(true);
+    });
+    document.getElementById('f-municipio').addEventListener('change', e => {
+      state.municipio = e.target.value;
+      renderAll(false);
+    });
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      state.uf = ''; state.municipio = ''; state.empresaKey = null;
+      document.getElementById('f-uf').value = '';
+      renderActiveEmpresaChip();
+      renderAll(true);
+    });
+
+    populateUfSelect();
+    populateMunicipioSelect();
+    renderStats();
+    renderLegend();
+    initMap();
+    renderAll(false);
+  </script>
+
+</body>
+</html>

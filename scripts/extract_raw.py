@@ -2,8 +2,7 @@
 
 Fontes:
 - arquivos_apoio/ANP Dados - Bases e Terminais.xlsx -> dados_brutos/anp_instalacoes.csv
-- arquivos_apoio/ANP Dados - Bases e Terminais.xlsx (filtro BASES DO RAMO DE COMBUSTÍVEIS)
-                                                   -> dados_brutos/bases_autorizadas.csv
+- arquivos_apoio/exportação (2).xlsx (aba Folha1)   -> dados_brutos/bases_autorizadas.csv
 - dados_brutos/bases_autorizadas.csv (empresas únicas) -> dados_brutos/empresas_alias.csv
 """
 
@@ -12,11 +11,14 @@ from pathlib import Path
 
 import openpyxl
 
+from normalize import nome_grupo
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 APOIO_DIR = BASE_DIR / "arquivos_apoio"
 OUT_DIR = BASE_DIR / "dados_brutos"
 
 ANP_XLSX = APOIO_DIR / "ANP Dados - Bases e Terminais.xlsx"
+EXPORTACAO_XLSX = APOIO_DIR / "exportação (2).xlsx"
 SEGMENTO_BASES = "BASES DO RAMO DE COMBUSTÍVEIS"
 
 
@@ -39,29 +41,34 @@ def extract_anp_instalacoes():
     return len(out_rows)
 
 
+def _load_bases_rows():
+    wb = openpyxl.load_workbook(EXPORTACAO_XLSX, read_only=True, data_only=True)
+    ws = wb["Folha1"]
+    rows = list(ws.iter_rows(min_row=2, values_only=True))
+    header = [c.value for c in next(ws.iter_rows(min_row=1, max_row=1))]
+    return header, rows
+
+
 def extract_bases_autorizadas():
-    header = ["Uf", "Municipio", "Razão Social", "Segmento", "DetalheInstalacao", "NumTanques", "TancagemTotalM3"]
-    out_rows = [
-        list(r) for r in _load_anp_rows()
-        if r[3] == SEGMENTO_BASES
-    ]
+    header, rows = _load_bases_rows()
+    out_rows = [list(r) for r in rows]
     _write_csv(OUT_DIR / "bases_autorizadas.csv", header, out_rows)
     return len(out_rows)
 
 
 def extract_empresas_alias():
     # Deriva alias a partir das empresas únicas nas bases autorizadas
+    header, rows = _load_bases_rows()
+    razao_idx = header.index("Razão Social")
     seen = set()
     alias_rows = []
-    for r in _load_anp_rows():
-        if r[3] != SEGMENTO_BASES:
-            continue
-        nome = r[2]
+    for r in rows:
+        nome = r[razao_idx]
         if nome and nome not in seen:
             seen.add(nome)
-            alias_rows.append([nome, nome, "DISTRIBUIDORA"])
-    header = ["RazaoSocialOriginal", "NomeReduzido", "TipoEmpresa"]
-    _write_csv(OUT_DIR / "empresas_alias.csv", header, alias_rows)
+            alias_rows.append([nome, nome_grupo(nome), "DISTRIBUIDORA"])
+    header_out = ["RazaoSocialOriginal", "NomeReduzido", "TipoEmpresa"]
+    _write_csv(OUT_DIR / "empresas_alias.csv", header_out, alias_rows)
     return len(alias_rows)
 
 

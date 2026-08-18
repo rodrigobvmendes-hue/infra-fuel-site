@@ -8,13 +8,13 @@ este script lê e reescreve os CSVs já tratados em `dados_tratados/`
 Saídas:
 - dados_tratados/anp_instalacoes.csv      (+ Municipio_Normalizado, Localizacao_Key, Id_Instalacao_ANP)
 - dados_tratados/bases_autorizadas.csv    (+ Municipio_Normalizado, Localizacao_Key, Id_Base_Autorizada,
-                                              Flag_CNPJ_Duplicado, Flag_Dado_Incompleto)
+                                              Flag_CNPJ_Duplicado, Flag_Dado_Incompleto, Tipo_Base)
 - dados_tratados/dim_localizacao.csv      (novo)
 - docs/validacao-tratamento-powerbi.md    (novo)
 """
 
 import csv
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 
 from normalize import build_localizacao_key, normalize_municipio, stable_id
@@ -77,12 +77,35 @@ def enrich_anp(anp_rows):
     return anp_rows
 
 
+def _tipo_base_por_instalacao(bases_rows):
+    """Classifica cada instalação (Número de Ordem) como Base Própria ou Pool.
+
+    Regra: participação = 100% para a única empresa da instalação -> Base
+    Própria. Mais de uma empresa, ou participação < 100% (mesmo com uma só
+    empresa listada -- sinal de cessionário faltante na exportação), -> Pool.
+    """
+    por_instalacao = defaultdict(list)
+    for row in bases_rows:
+        por_instalacao[row["Número de Ordem"]].append(_to_float(row["Participação (%)"]))
+
+    tipo = {}
+    for instalacao, participacoes in por_instalacao.items():
+        if len(participacoes) == 1 and abs(participacoes[0] - 100) < 0.01:
+            tipo[instalacao] = "Base Própria"
+        else:
+            tipo[instalacao] = "Pool"
+    return tipo
+
+
 def enrich_bases(bases_rows):
     cnpj_counts = Counter(
         row["CNPJ"].strip() for row in bases_rows if row.get("CNPJ", "").strip()
     )
+    tipo_base = _tipo_base_por_instalacao(bases_rows)
 
     for row in bases_rows:
+        row["Tipo_Base"] = tipo_base[row["Número de Ordem"]]
+
         municipio_normalizado = normalize_municipio(row["Município"])
         row["Municipio_Normalizado"] = municipio_normalizado
         row["Localizacao_Key"] = build_localizacao_key(row["UF"], municipio_normalizado)
@@ -160,6 +183,10 @@ def build_report(anp_raw, anp_trat, bases_raw, bases_trat, dim_empresa, dim_loca
     cnpjs_duplicados = sum(1 for r in bases_trat if r["Flag_CNPJ_Duplicado"] == "S")
     incompletos = sum(1 for r in bases_trat if r["Flag_Dado_Incompleto"] == "S")
 
+    tipo_por_instalacao = {r["Número de Ordem"]: r["Tipo_Base"] for r in bases_trat}
+    n_instalacoes_propria = sum(1 for t in tipo_por_instalacao.values() if t == "Base Própria")
+    n_instalacoes_pool = sum(1 for t in tipo_por_instalacao.values() if t == "Pool")
+
     em_ambas = sum(1 for r in dim_empresa if r["Presente_ANP"] == "S" and r["Presente_Bases_Autorizadas"] == "S")
     so_anp = sum(1 for r in dim_empresa if r["Presente_ANP"] == "S" and r["Presente_Bases_Autorizadas"] == "N")
     so_bases = sum(1 for r in dim_empresa if r["Presente_ANP"] == "N" and r["Presente_Bases_Autorizadas"] == "S")
@@ -196,6 +223,11 @@ def build_report(anp_raw, anp_trat, bases_raw, bases_trat, dim_empresa, dim_loca
         "",
         f"- CNPJs duplicados (registros com `Flag_CNPJ_Duplicado = S`): {cnpjs_duplicados}",
         f"- Registros incompletos (campos críticos, desconsiderando `Complemento`): {incompletos}",
+        "",
+        "## Classificação Base Própria x Pool",
+        "",
+        f"- Instalações classificadas como Base Própria (uma empresa, 100% de participação): {n_instalacoes_propria}",
+        f"- Instalações classificadas como Pool (mais de uma empresa, ou participação < 100%): {n_instalacoes_pool}",
         "",
         "## Relacionamento entre fontes — Empresas",
         "",
@@ -243,7 +275,7 @@ def main():
     (DOCS_DIR / "validacao-tratamento-powerbi.md").write_text(report, encoding="utf-8")
 
     print(f"anp_instalacoes.csv: {len(anp_trat)} registros (+3 colunas)")
-    print(f"bases_autorizadas.csv: {len(bases_trat)} registros (+5 colunas)")
+    print(f"bases_autorizadas.csv: {len(bases_trat)} registros (+6 colunas)")
     print(f"dim_localizacao.csv: {len(dim_localizacao)} localizações")
     print("docs/validacao-tratamento-powerbi.md gerado")
 

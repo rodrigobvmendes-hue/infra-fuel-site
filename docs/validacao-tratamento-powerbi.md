@@ -5,12 +5,12 @@ Relatório gerado automaticamente pelo pipeline (`extract_raw.py` -> `build_dim_
 ## Registros antes e depois
 
 - ANP — registros: 1554 (antes) / 1554 (depois)
-- Bases autorizadas — registros: 472 (antes) / 472 (depois)
+- Bases autorizadas — registros: 474 (antes) / 474 (depois)
 
 ## Totais agregados
 
 - Soma da tancagem ANP (m³): 46161750.00 (antes) / 46161750.00 (depois)
-- Soma da capacidade total (bases autorizadas): 8328734.61 (antes) / 8328734.61 (depois)
+- Soma da capacidade total (bases autorizadas): 8296344.37 (antes) / 8296344.37 (depois)
 - Confirmação: nenhuma capacidade ou tancagem foi consolidada, somada ou duplicada entre registros — os totais antes e depois são idênticos porque o tratamento apenas adiciona colunas derivadas, sem agregar ou remover linhas.
 
 ## Qualidade dos dados
@@ -18,23 +18,28 @@ Relatório gerado automaticamente pelo pipeline (`extract_raw.py` -> `build_dim_
 - CNPJs duplicados (registros com `Flag_CNPJ_Duplicado = S`): 2
 - Registros incompletos (campos críticos, desconsiderando `Complemento`): 6
 
+## Classificação Base Própria x Pool
+
+- Instalações classificadas como Base Própria (uma empresa, 100% de participação): 247
+- Instalações classificadas como Pool (mais de uma empresa, ou participação < 100%): 65
+
 ## Relacionamento entre fontes — Empresas
 
-- Total de empresas distintas (`dim_empresa.csv`): 1101
+- Total de empresas distintas (`dim_empresa.csv`): 1102
 - Empresas presentes nas duas fontes (ANP e bases autorizadas): 109
 - Empresas presentes somente na ANP: 920
-- Empresas presentes somente nas bases autorizadas: 72
+- Empresas presentes somente nas bases autorizadas: 73
 
 ## Relacionamento entre fontes — Localizações
 
-- Total de localizações distintas (`dim_localizacao.csv`): 773
-- Localizações presentes nas duas fontes: 133
-- Localizações presentes somente na ANP: 639
-- Localizações presentes somente nas bases autorizadas: 1
+- Total de localizações distintas (`dim_localizacao.csv`): 774
+- Localizações presentes nas duas fontes: 135
+- Localizações presentes somente na ANP: 637
+- Localizações presentes somente nas bases autorizadas: 2
 
 ## Unicidade dos identificadores técnicos
 
 - `Id_Instalacao_ANP` — valores duplicados: 0 (de 1554 registros)
-- `Id_Base_Autorizada` — valores duplicados: 0 (de 472 registros)
-- `Empresa_Key` (`dim_empresa.csv`) — valores duplicados: 0 (de 1101 registros)
-- `Localizacao_Key` (`dim_localizacao.csv`) — valores duplicados: 0 (de 773 registros)
+- `Id_Base_Autorizada` — valores duplicados: 0 (de 474 registros)
+- `Empresa_Key` (`dim_empresa.csv`) — valores duplicados: 0 (de 1102 registros)
+- `Localizacao_Key` (`dim_localizacao.csv`) — valores duplicados: 0 (de 774 registros)
