@@ -1,0 +1,107 @@
+{
+  "data_varredura": "2026-08-31",
+  "resumo": "Varredura manual (via Claude Code, sem uso da API paga) com busca na web. Encontrados 5 projetos novos e 4 atualizações relevantes de infraestrutura de combustíveis claros no Brasil, com foco em notícias dos últimos ~3 meses. Segunda rodada incluiu busca dedicada por projetos portuários.",
+  "novos": [
+    {
+      "name": "Transpetro — Novo Oleoduto SP–Mato Grosso",
+      "type": "Oleoduto",
+      "state": "SP/MT",
+      "status": "Planejado",
+      "companies": ["Petrobras", "Transpetro"],
+      "fuel": "Diesel · Gasolina",
+      "capacity": "~2.000 km de extensão",
+      "investment": "Mais de R$ 2 bi previstos até 2030 (sem decisão final de investimento)",
+      "description": "Novo oleoduto para atender o Centro-Oeste, substituindo parte do abastecimento importado por combustível nacional. Seria o primeiro oleoduto construído pela Petrobras desde o OSBRA (1996). Sem FID (decisão final de investimento); operação prevista só após 2030. Não constará no plano estratégico 2026-2030 (a ser divulgado em novembro).",
+      "fonte_url": "https://agenciainfra.com/blog/petrobras-ja-avalia-tracado-de-novo-oleoduto-com-2-mil-km-entre-sp-e-mt/",
+      "confianca": "alta"
+    },
+    {
+      "name": "Raízen/Ipiranga/Vibra — Base de Distribuição Miritituba",
+      "type": "Base",
+      "state": "PA",
+      "status": "Em Operação",
+      "companies": ["Raízen", "Ipiranga", "Vibra Energia"],
+      "fuel": "Gasolina A · Etanol Hidratado/Anidro · Biodiesel · Diesel Marítimo · Diesel S-10/S-500",
+      "capacity": "300 milhões de litros/ano · 21.250 m³ de armazenagem (9 tanques)",
+      "investment": "R$ 115 milhões (dividido igualmente entre as 3 empresas)",
+      "description": "Nova base de distribuição em pool operada pela Raízen em Miritituba (PA), atendendo à demanda crescente de diesel do agronegócio no Norte/Centro-Oeste.",
+      "fonte_url": "https://www.raizen.com.br/sala-de-imprensa/com-investimento-de-r-115-milhoes-nova-base-de-distribuicao-de-combustiveis-em-miritituba-pa-atendera-alta-demanda-do-setor-agricola",
+      "confianca": "alta"
+    },
+    {
+      "name": "Vibra — Ampliação Base de Suape",
+      "type": "Base",
+      "state": "PE",
+      "status": "Em Operação",
+      "companies": ["Vibra Energia", "Raízen", "Ipiranga"],
+      "fuel": "Gasolina · Diesel · Etanol · Biocombustíveis",
+      "capacity": "Armazenagem ampliada de 142.542 m³ para 247.996 m³",
+      "investment": "—",
+      "description": "Ampliação da Base de Suape (PE), operada em pool entre Vibra, Raízen e Ipiranga, consolidando o terminal como hub logístico estratégico de combustíveis e biocombustíveis para o Nordeste. Obras iniciadas em 2021, concluídas em setembro de 2025.",
+      "fonte_url": "https://logweb.com.br/vibra-amplia-base-de-suape-hub-logistico-nordeste/",
+      "confianca": "media"
+    },
+    {
+      "name": "Ultragaz/Supergasbras — Terminal de GLP do Pecém",
+      "type": "Terminal",
+      "state": "CE",
+      "status": "Planejado",
+      "companies": ["Ultragaz", "Supergasbras"],
+      "fuel": "GLP",
+      "capacity": "123.800 m³ de armazenagem",
+      "investment": "R$ 1,1 bi",
+      "description": "Terminal de importação de GLP no Porto do Pecém (CE), joint venture entre Ultragaz e Supergasbras, com projeto aprovado pelo Cade. Conclusão prevista para 2028.",
+      "fonte_url": "https://movimentoeconomico.com.br/economia/portos/2025/08/20/ultragaz-e-supergasbras-terao-terminal-de-glp-de-r-11-bi-em-pecem/",
+      "confianca": "alta"
+    },
+    {
+      "name": "OTGN — Terminal de GLP de Suape",
+      "type": "Terminal",
+      "state": "PE",
+      "status": "Em Construção",
+      "companies": ["Grupo Edson Queiroz", "Oiltanking Logística Brasil", "Copa Energia"],
+      "fuel": "GLP",
+      "capacity": "—",
+      "investment": "R$ 1,2 bi",
+      "description": "Terminal de GLP em Suape (PE) via joint venture OT Gás Nordeste (OTGN), entre Grupo Edson Queiroz, Oiltanking e Copa Energia. Operação prevista para meados de 2027.",
+      "fonte_url": "https://www.abegas.org.br/arquivos/95056",
+      "confianca": "media"
+    }
+  ],
+  "atualizacoes": [
+    {
+      "name_na_base": "RLAM / Acelen — Ref. Landulpho Alves",
+      "mudanca": "Mubadala (controladora da Acelen) anunciou compromisso de investir US$ 2,5 bi em combustíveis limpos no Brasil; aprovado projeto de biorrefinaria de US$ 1,5 bi integrado à Refinaria de Mataripe, com capacidade para produzir 1 bilhão de litros/ano de combustível renovável.",
+      "novo_status_ou_dado": "Biorrefinaria em Mataripe aprovada pelos acionistas — US$ 1,5 bi, 1 bi L/ano de renovável",
+      "fonte_url": "https://gulfnews.com/business/energy/abu-dhabis-mubadala-commits-to-investing-25-billion-in-clean-fuel-in-brazil-1.95157909",
+      "confianca": "alta"
+    },
+    {
+      "name_na_base": "RPBC — Ref. Presidente Bernardes",
+      "mudanca": "Investimento aprovado (não mais 'em licitação'): Petrobras aprovou US$ 1,2 bi em biorrefino na RPBC para bioQAV (querosene de aviação sustentável) e diesel renovável.",
+      "novo_status_ou_dado": "Investimento de US$ 1,2 bi aprovado para unidade de bioQAV + diesel renovável em Cubatão",
+      "fonte_url": "https://br.advfn.com/jornal/2026/06/petrobras-aprova-investimento-de-us-1-2-bilhao-em-biorrefino-na-rpbc-para-ampliar-producao-de-combustiveis-renovaveis",
+      "confianca": "alta"
+    },
+    {
+      "name_na_base": "Ultracargo — Terminal Itaqui (São Luís)",
+      "mudanca": "Detalhamento do novo terminal (área IQI13): bacia de contenção com 6 tanques e capacidade estática de 83 mil m³ para granéis líquidos, majoritariamente combustíveis.",
+      "novo_status_ou_dado": "Novo terminal IQI13 — 83 mil m³, 6 tanques, em processo de licenciamento na ANTAQ",
+      "fonte_url": "https://williams.com.br/br/antaq-solicita-ajuste-em-relatorio-de-novo-terminal-de-combustiveis-no-porto-de-itaqui/",
+      "confianca": "media"
+    },
+    {
+      "name_na_base": "Ultracargo / Opla — Terminal Paulínia",
+      "mudanca": "Opla (JV bp/Ultracargo) concluiu construção de novo tanque, elevando a capacidade estática do terminal para ~202 mil m³; novo tanque de 20 mil m³ dedicado a etanol anidro.",
+      "novo_status_ou_dado": "Capacidade estática ampliada para ~202 mil m³ (novo tanque de 20 mil m³ p/ etanol anidro)",
+      "fonte_url": "https://noticiasdepaulinia.com.br/terminal-de-paulinia-amplia-capacidade-e-fortalece-logistica-de-combustiveis-no-interior-paulista/",
+      "confianca": "alta"
+    }
+  ],
+  "_meta": {
+    "gerado_em": "2026-08-31T17:00:00.000Z",
+    "modelo": "claude-sonnet-5 (Claude Code, WebSearch — sem chamada à API paga)",
+    "buscas_web": 6,
+    "total_conhecidos": 225
+  }
+}
