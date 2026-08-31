@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-17T15:40:56.067Z",
+  "updatedAt": "2026-08-31T16:32:08.725Z",
   "boardId": "69f24cd6f0e0329b17b7bcce",
   "cards": [
     {
@@ -10,7 +10,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/dYJOlHGS",
       "createdAt": "2026-07-15T20:17:54.000Z",
-      "dateLastActivity": "2026-07-22T17:29:18.375Z"
+      "dateLastActivity": "2026-08-25T17:09:35.511Z"
     },
     {
       "name": "Avaliar aumento de tancagem - Cabedelo e Maceió",
@@ -33,6 +33,16 @@
       "dateLastActivity": "2026-08-12T12:18:00.396Z"
     },
     {
+      "name": "São José do Rio Preto",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
+      "due": null,
+      "dueComplete": false,
+      "url": "https://trello.com/c/J3i3dlVW",
+      "createdAt": "2026-08-25T17:59:29.000Z",
+      "dateLastActivity": "2026-08-25T18:01:12.336Z"
+    },
+    {
       "name": "Transpetro - Caxias - Duto",
       "listName": "Em andamento/",
       "status": "em-andamento",
@@ -50,7 +60,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/3poJ6FTq",
       "createdAt": "2026-05-27T20:03:34.000Z",
-      "dateLastActivity": "2026-08-06T12:03:07.749Z"
+      "dateLastActivity": "2026-08-25T17:13:42.168Z"
     },
     {
       "name": "Greenfield - Itajaí - Rede galo",
@@ -60,7 +70,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/gSMODKlK",
       "createdAt": "2026-04-30T15:38:47.000Z",
-      "dateLastActivity": "2026-07-30T14:45:41.939Z"
+      "dateLastActivity": "2026-08-25T17:23:57.861Z"
     },
     {
       "name": "PECEM",
@@ -70,7 +80,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/qON4sNVZ",
       "createdAt": "2026-04-29T18:26:24.000Z",
-      "dateLastActivity": "2026-08-12T18:31:08.670Z"
+      "dateLastActivity": "2026-08-25T17:31:23.495Z"
     },
     {
       "name": "Ypetro - Maracanau (Ceará)",
@@ -80,7 +90,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/VaDEcACe",
       "createdAt": "2026-06-18T18:18:24.000Z",
-      "dateLastActivity": "2026-07-16T17:44:33.269Z"
+      "dateLastActivity": "2026-08-25T17:31:51.236Z"
     },
     {
       "name": "Vitória - SPE - navegantes",
@@ -100,7 +110,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/XLFTbGmr",
       "createdAt": "2026-05-27T20:17:46.000Z",
-      "dateLastActivity": "2026-07-28T19:51:37.751Z"
+      "dateLastActivity": "2026-08-25T17:34:09.560Z"
     },
     {
       "name": "Vitória - Atlântica",
@@ -130,7 +140,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/jNUIX0qo",
       "createdAt": "2026-04-30T17:40:31.000Z",
-      "dateLastActivity": "2026-07-22T18:31:02.458Z"
+      "dateLastActivity": "2026-08-25T17:37:41.861Z"
     },
     {
       "name": "Rumos - Uberlândia",
@@ -140,7 +150,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/HYXtcV4B",
       "createdAt": "2026-05-06T13:58:06.000Z",
-      "dateLastActivity": "2026-07-22T13:02:55.286Z"
+      "dateLastActivity": "2026-08-25T17:39:24.557Z"
     },
     {
       "name": "Chapecó - Maxsul",
@@ -150,7 +160,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/Bj6BXkGy",
       "createdAt": "2026-05-22T18:31:39.000Z",
-      "dateLastActivity": "2026-07-22T13:08:59.518Z"
+      "dateLastActivity": "2026-08-25T17:43:22.885Z"
     },
     {
       "name": "Formação de pool - LEM/Açailândia",
@@ -160,7 +170,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/kBGvH0LV",
       "createdAt": "2026-05-28T18:27:35.000Z",
-      "dateLastActivity": "2026-07-24T12:59:04.776Z"
+      "dateLastActivity": "2026-08-25T17:44:57.757Z"
     },
     {
       "name": "Paulínia - Opla",
@@ -170,7 +180,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/K9DCJOpx",
       "createdAt": "2026-06-30T18:50:11.000Z",
-      "dateLastActivity": "2026-07-21T20:15:55.155Z"
+      "dateLastActivity": "2026-08-25T17:53:10.396Z"
     },
     {
       "name": "Contrato - Vila do Conde -  (Ultracargo)",
@@ -180,7 +190,7 @@
       "dueComplete": false,
       "url": "https://trello.com/c/wtJkClFL",
       "createdAt": "2026-07-15T20:14:26.000Z",
-      "dateLastActivity": "2026-08-12T12:19:37.577Z"
+      "dateLastActivity": "2026-08-25T17:53:04.427Z"
     },
     {
       "name": "Cotação Canoas - Ciapetro",
@@ -213,14 +223,14 @@
       "dateLastActivity": "2026-08-06T13:38:09.813Z"
     },
     {
-      "name": "BID - São Francisco do Conde - 15/08",
-      "listName": "Renovações",
-      "status": "renovacao",
+      "name": "Ociosidades",
+      "listName": "Em andamento/",
+      "status": "em-andamento",
       "due": null,
       "dueComplete": false,
-      "url": "https://trello.com/c/sHMGOk3t",
-      "createdAt": "2026-07-15T18:27:26.000Z",
-      "dateLastActivity": "2026-07-23T16:27:17.796Z"
+      "url": "https://trello.com/c/z9wXoHFp",
+      "createdAt": "2026-08-25T18:04:50.000Z",
+      "dateLastActivity": "2026-08-25T18:05:30.087Z"
     },
     {
       "name": "Contrato Fortaleza (Aditivo) - Raízen - 31/08",
@@ -301,16 +311,6 @@
       "url": "https://trello.com/c/Tdh4iFtd",
       "createdAt": "2026-07-15T20:13:18.000Z",
       "dateLastActivity": "2026-08-06T13:37:56.930Z"
-    },
-    {
-      "name": "SEI_ANP - 6204705 - Análise.pdf",
-      "listName": "Renovações",
-      "status": "renovacao",
-      "due": null,
-      "dueComplete": false,
-      "url": "https://trello.com/c/39OF7nOp",
-      "createdAt": "2026-08-12T12:20:56.000Z",
-      "dateLastActivity": "2026-08-12T12:20:57.281Z"
     },
     {
       "name": "Phase Out BA (Jequié e Itabuna)",
@@ -631,6 +631,26 @@
       "url": "https://trello.com/c/R0dks6iu",
       "createdAt": "2026-06-30T18:48:53.000Z",
       "dateLastActivity": "2026-08-05T18:33:18.177Z"
+    },
+    {
+      "name": "BID - São Francisco do Conde - 15/08",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": null,
+      "dueComplete": true,
+      "url": "https://trello.com/c/sHMGOk3t",
+      "createdAt": "2026-07-15T18:27:26.000Z",
+      "dateLastActivity": "2026-08-25T17:54:21.617Z"
+    },
+    {
+      "name": "SEI_ANP - 6204705 - Análise.pdf",
+      "listName": "Concluído",
+      "status": "concluido",
+      "due": null,
+      "dueComplete": true,
+      "url": "https://trello.com/c/39OF7nOp",
+      "createdAt": "2026-08-12T12:20:56.000Z",
+      "dateLastActivity": "2026-08-25T17:59:18.242Z"
     }
   ]
 }
