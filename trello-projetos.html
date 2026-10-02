@@ -385,12 +385,14 @@ const BRAZIL_BOUNDS=L.latLngBounds(L.latLng(-34.0,-75.0),L.latLng(5.5,-28.0));
 function initMap(){
   map=L.map("map",{
     center:[-15,-52],zoom:4,
-    attributionControl:false,
     minZoom:3,maxZoom:10,
     maxBounds:BRAZIL_BOUNDS,
     maxBoundsViscosity:0.85
   });
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{maxZoom:18}).addTo(map);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{
+    attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
+    maxZoom:18
+  }).addTo(map);
   mLayer=L.layerGroup().addTo(map);
   updateMap(CARDS);
 }

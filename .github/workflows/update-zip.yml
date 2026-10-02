@@ -7,6 +7,8 @@ name: Atualizar dashboard.zip
       - 'index.html'
       - 'bases.html'
       - 'suprimento.html'
+      - 'capacidade-produtos.html'
+      - 'capacidade-produtos-data.js'
       - 'cores.html'
       - 'dashboard_cessao.html'
       - 'trello-projetos.html'
@@ -36,6 +38,8 @@ jobs:
             index.html \
             bases.html \
             suprimento.html \
+            capacidade-produtos.html \
+            capacidade-produtos-data.js \
             dashboard_cessao.html \
             trello-projetos.html \
             style.css \
