@@ -493,8 +493,8 @@ function initMap() {
   map = L.map("map", { scrollWheelZoom: false, zoomControl: true })
     .setView([-15.5, -52.0], 4);
 
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+    attribution: 'Tiles © Esri — Sources: Esri, HERE, Garmin, © OpenStreetMap contributors, and the GIS user community',
     maxZoom: 18,
   }).addTo(map);
 }
